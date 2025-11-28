@@ -50,7 +50,7 @@ public class ProvinceInfo : MonoBehaviour
     }
 
     void Start() {
-        timeManager = ServiceLocator.Instance.GetService<TimeManager>();
+        timeManager = ServiceLocator.Get<TimeManager>();
         timeManager.OnDayPassedEvent+=debugShowInfo;
     }
 
