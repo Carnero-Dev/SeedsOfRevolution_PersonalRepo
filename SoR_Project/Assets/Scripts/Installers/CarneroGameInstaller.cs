@@ -4,7 +4,6 @@ using UnityEngine;
 public class CarneroGameInstaller : MonoBehaviour
 {
     public event Action OnAllInstalled;
-    // TODO: Handles para sistema de guardado
     public bool isActivated = false;
 
 
@@ -18,16 +17,16 @@ public class CarneroGameInstaller : MonoBehaviour
 
 	void OnEnable()
 	{
-		// SaveSystem.OnGameLoaded += HandleGameLoaded;
-        // SaveSystem.OnGameSaved += HandleGameSaved;
-        // SaveSystem.OnGameDataCleared += HandleDataCleared;
+		SaveSystem.OnGameLoaded += HandleGameLoaded;
+        SaveSystem.OnGameSaved += HandleGameSaved;
+        SaveSystem.OnGameDataCleared += HandleDataCleared;
 	}
     void OnDisable()
 	{
         OnAllInstalled -= StartGame;
-		// SaveSystem.OnGameLoaded -= HandleGameLoaded;
-        // SaveSystem.OnGameSaved -= HandleGameSaved;
-        // SaveSystem.OnGameDataCleared -= HandleDataCleared;
+		SaveSystem.OnGameLoaded -= HandleGameLoaded;
+        SaveSystem.OnGameSaved -= HandleGameSaved;
+        SaveSystem.OnGameDataCleared -= HandleDataCleared;
 	}
 
 	public void InstallGameScene()
@@ -39,6 +38,20 @@ public class CarneroGameInstaller : MonoBehaviour
         OnAllInstalled?.Invoke();
     }
 
+#region Handlers
+    void HandleGameLoaded() {
+		Debug.Log("Game Loaded");
+	}
+
+    void HandleGameSaved() {
+        Debug.Log("Game Saved");
+    }
+
+    void HandleDataCleared() {
+        Debug.Log("Data Cleared");
+    }
+#endregion
+# region GameFlow
     void StartGame()
     {
         Debug.Log("CarneroGameInstaller: Start Game.");
@@ -56,5 +69,5 @@ public class CarneroGameInstaller : MonoBehaviour
         // Lógica para cargar una partida guardada
     }
 
-
+#endregion
 }
