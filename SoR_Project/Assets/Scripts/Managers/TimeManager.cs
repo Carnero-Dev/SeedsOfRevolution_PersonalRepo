@@ -50,7 +50,7 @@ public class TimeManager : MonoBehaviour
     void CalculateTime() {
         hour += Time.deltaTime * _TIMESCALE;         
         // Comprueba si ha pasado 24 horas para pasar de dia y resetear el contador  
-        if(hour > 24) {
+        if(hour >= 23.99f) {
             hour = 0;
             OnDayPassedEvent?.Invoke();
             day = CheckMonth() ? 1 : day + 1; // Checkea si ha pasado de mes para resetear el dia        
