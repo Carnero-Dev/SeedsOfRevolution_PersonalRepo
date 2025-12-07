@@ -803,10 +803,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2560166732878420517, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
-      propertyPath: IsMainMenu
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8183116214513539195, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
       propertyPath: m_Name
       value: GAMEPLAY_INIT

@@ -65,9 +65,9 @@ public class DebugSaveUI : MonoBehaviour
     }
 
     void Reset() {
-        _gameManager.Reset();
-        GameDataService.Current.run.seed = SeedRandom.GetSeed();
+        //_gameManager.Reset();
         SeedRandom.Init();
+        GameDataService.Current.run.seed = SeedRandom.GetSeed();
         UpdateUI();
     }
 

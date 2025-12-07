@@ -5,6 +5,7 @@ public class CarneroGameInstaller : MonoBehaviour
 {
     public event Action OnAllInstalled;
     public bool isActivated = false;
+    public bool IsMainMenu = false;
 
 
     // SERVICES
@@ -12,31 +13,36 @@ public class CarneroGameInstaller : MonoBehaviour
     public GameManager gameManager;
     private void Awake() {
         OnAllInstalled += StartGame;
-        if(isActivated){ InstallGameScene(); }
+        if(isActivated){ 
+            if(IsMainMenu) InstallMainMenu();
+            else InstallGameScene(); 
+        }
     }
 
-	void OnEnable()
-	{
+	void OnEnable() {
 		SaveSystem.OnGameLoaded += HandleGameLoaded;
         SaveSystem.OnGameSaved += HandleGameSaved;
         SaveSystem.OnGameDataCleared += HandleDataCleared;
 	}
-    void OnDisable()
-	{
+    void OnDisable() {
         OnAllInstalled -= StartGame;
 		SaveSystem.OnGameLoaded -= HandleGameLoaded;
         SaveSystem.OnGameSaved -= HandleGameSaved;
         SaveSystem.OnGameDataCleared -= HandleDataCleared;
 	}
 
-	public void InstallGameScene()
-    {
+	public void InstallGameScene() {
         ServiceLocator.Reset();
         ServiceLocator.Register<CarneroGameInstaller>(this);
         ServiceLocator.Register<TimeManager>(timeManager);
         ServiceLocator.Register<IGameManager>(gameManager);
         OnAllInstalled?.Invoke();
     }
+
+    public void InstallMainMenu() {
+		ServiceLocator.Reset();
+        ServiceLocator.Register<CarneroGameInstaller>(this);
+	}
 
 #region Handlers
     void HandleGameLoaded() {
@@ -52,21 +58,29 @@ public class CarneroGameInstaller : MonoBehaviour
     }
 #endregion
 # region GameFlow
-    void StartGame()
-    {
-        Debug.Log("CarneroGameInstaller: Start Game.");
-        // Iniciar lógica del juego
+    void StartGame() {
         OnAllInstalled -= StartGame;
+        if (SaveSystem.IsFileExist<GameData>()) StartInContinueGame();
+        else StartInNewGame(SeedRandom.GetDebugState()); 
+        Debug.Log("Starting Game");
     }
 
-    void StartInNewGame()
-    {
-        // Lógica para empezar una nueva partida
+    void StartInNewGame(bool debugEnabled) {
+        // INICIALIZAR SISTEMA DE GUARDADO
+        var newData = DataFactory.Create<GameData>();
+        GameDataService.Init(newData);
+        SeedRandom.Init(newData.run.seed);
+
+        SaveSystem.Save(newData);
+        Debug.Log($"New Game, debug mode {debugEnabled}");
     }
 
-    void StartInLoadedGame()
-    {
-        // Lógica para cargar una partida guardada
+    void StartInContinueGame() {
+        // INIZIALIZAR DATOS DE CARGA
+        var data = SaveSystem.Load<GameData>();
+        GameDataService.Init(data);
+        SeedRandom.RestoreState(data.run.seedState);
+        Debug.Log("Continue Game");
     }
 
 #endregion

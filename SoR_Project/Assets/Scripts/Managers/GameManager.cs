@@ -10,6 +10,6 @@ public class GameManager : MonoBehaviour, IGameManager
         SceneManager.LoadScene("SaveSystem_Test");
     }
     public void Reset() {
-        SceneManager.LoadScene("SceneSystem_Test");
+        SceneManager.LoadScene("SaveSystem_Test");
     } 
 }
