@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public static class SaveSystem {
     private static string BasePath => Application.persistentDataPath;
@@ -41,10 +42,9 @@ public static class SaveSystem {
         if (data is GameData gd) {
             gd.run.seed = SeedRandom.GetSeed();
             gd.run.seedState = SeedRandom.GetState();
-            gd.run.seedState.Serialize();
         }
-
-        string json = JsonUtility.ToJson(data, true);
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+        //string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(path, json);
         if (data is GameData) OnGameSaved?.Invoke();
     }
@@ -57,16 +57,15 @@ public static class SaveSystem {
             var newData = DataFactory.Create<T>();
 
             if (newData is GameData gd) {
-                gd.run.seedState.Deserialize();
                 OnGameLoaded?.Invoke();
             }
             return newData;
         }
         string json = File.ReadAllText(path);
-        T data = JsonUtility.FromJson<T>(json);
+        //T data = JsonUtility.FromJson<T>(json);
+        T data = JsonConvert.DeserializeObject<T>(json);
 
         if (data is GameData gd2) {
-            gd2.run.seedState.Deserialize();
             OnGameLoaded?.Invoke(); 
         }
 
@@ -80,48 +79,4 @@ public static class SaveSystem {
     }
 
     private static string GetPath(string fileName) => Path.Combine(BasePath, $"{fileName}.json");
-
-    // Antiguo
-    // public static void SaveGameData(GameData data)
-    // {
-    //     Debug.Log("Saving data on Path => " + BasePath);
-    //     SeedState state = SeedRandom.GetState();
-    //     state.Serialize();
-
-    //     data.run.seed = SeedRandom.GetSeed();
-    //     data.run.seedState = state;
-
-    //     string json = JsonUtility.ToJson(data, true);
-    //     File.WriteAllText(BasePath, json);
-    //     OnGameSaved?.Invoke();
-    // }
-
-    // public static GameData LoadGameData() {
-    //     if (!IsFileExist()) {
-    //         Debug.Log("Save file not found. Creating new data");
-    //         GameData newData = DataFactory.Create<GameData>();
-    //         newData.run.seedState.Deserialize();
-
-    //         OnGameLoaded?.Invoke();
-    //         return newData;
-    //     }
-    //     string json = File.ReadAllText(BasePath);
-    //     Debug.Log("Game Data loaded succesfuly");
-    //     GameData data = JsonUtility.FromJson<GameData>(json);
-    //     data.run.seedState.Deserialize();
-    //     OnGameLoaded?.Invoke();
-    //     return data;
-    // }
-
-    // public static void ClearSaveData() {
-    //     if (IsFileExist())
-    //         Debug.Log("Deleting data from path =>" + BasePath);
-    //         File.Delete(BasePath);
-    //         SetNewGame();
-    //         OnDataCleared?.Invoke();
-    // }
-
-
-
-
 }
