@@ -5,18 +5,13 @@ using System;
 /// Clase que gestiona el tiempo de juego respecto al tiempo real y ejecuta acciones con respecto al paso de días, meses, años, etc
 /// Author: Carlos Carnero Cabrera
 /// </summary>
-public class TimeManager : MonoBehaviour
-{
+public class TimeManager : MonoBehaviour {
+    private TimeManagerData _data => GameDataService.Current.timeManager;
     [SerializeField] 
     [Tooltip("Cada segundo en la vida real es X horas en el juego")]
         private int _TIMESCALE = 20; // Controla la velocidad del mundo con respecto a las fechas
     private int [] _timesScales = new int [4]; // Establece las velocidades del juego (EN ORDEN INCLUYENDO PAUSA)
     public int currentTimeScaleIndex {get; private set;} = 1;  // Establece cual es la velocidad actual
-
-    public double hour {get; private set;}
-    public int day {get { return _currentDay; } private set { _currentDay = Math.Clamp(value, 1, 31);}}
-    public int month {get { return _currentMonth; } private set { _currentMonth = Math.Clamp(value, 1, 12);}}
-    public int year { get { return _currentYear; } private set { _currentYear = Math.Clamp(value, 0, 9999); }}
 
     [Header("Start Date")]
     [Range(1, 31)]
@@ -32,7 +27,7 @@ public class TimeManager : MonoBehaviour
     public Action OnYearPassedEvent;
 
     void Start() {
-        day = CheckMonth() ? 1 : day + 1; // Checkea si ha pasado de mes para resetear el dia
+        PauseTime();
     }
 
     void Update() {
@@ -48,37 +43,41 @@ public class TimeManager : MonoBehaviour
 
     #region Calculate Time
     void CalculateTime() {
-        hour += Time.deltaTime * _TIMESCALE;         
+        _data.hour += Time.deltaTime * _TIMESCALE;         
         // Comprueba si ha pasado 24 horas para pasar de dia y resetear el contador  
-        if(hour >= 23.99f) {
-            hour = 0;
+        if(_data.hour >= 23.99f || _data.hour < 0) {
+            _data.hour = 0;
             OnDayPassedEvent?.Invoke();
-            day = CheckMonth() ? 1 : day + 1; // Checkea si ha pasado de mes para resetear el dia        
+            _data.day = CheckMonth() ? 1 : _data.day + 1; // Checkea si ha pasado de mes para resetear el dia        
         }
     }
 
     bool CheckMonth(){
-        if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) 
-        && day >= 31) {
+        // Formatear valores mínimos
+        if (_data.month < 1) _data.month = 1;
+        if (_data.day < 1) _data.day = 1;
+
+        if ((_data.month == 1 || _data.month == 3 || _data.month == 5 || _data.month == 7 || _data.month == 8 || _data.month == 10 || _data.month == 12) 
+        && _data.day >= 31) {
             // Checkea si pasamos año nuevo para resetear mes y avanzar de año
-            if(month == 12) {
-                month = 1;
-                year++;
+            if(_data.month == 12) {
+                _data.month = 1;
+                _data.year++;
                 OnYearPassedEvent?.Invoke();
             } else {
-                month++;
+                _data.month++;
             }
             OnMonthPassedEvent?.Invoke();
             return true;
         }
-        if ((month == 4 || month == 6 || month == 9 || month == 11) 
-        && day >= 30) {
-            month++;
+        if ((_data.month == 4 || _data.month == 6 || _data.month == 9 || _data.month == 11) 
+        && _data.day >= 30) {
+            _data.month++;
             OnMonthPassedEvent?.Invoke();
             return true;
         }
-        if (month == 2 && day >= 28) {
-            month++;
+        if (_data.month == 2 && _data.day >= 28) {
+            _data.month++;
             OnMonthPassedEvent?.Invoke();
             return true;
         }

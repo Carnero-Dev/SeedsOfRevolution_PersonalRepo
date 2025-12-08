@@ -11,11 +11,14 @@ using Unity.VisualScripting;
 public class debug_ParametersTest_UI : MonoBehaviour
 {    
     [Header("Time Manager")]
-    [SerializeField] TimeManager timeManager;
+    TimeManager _timeManager;
+    private TimeManagerData _timeData => GameDataService.Current.timeManager;
     [SerializeField] TextMeshProUGUI txtDate;
     [SerializeField] TextMeshProUGUI txtVelocity;
     [SerializeField] Button pauseButton;
     [SerializeField] Button reanudeButton;
+    [SerializeField] Button accelerateButton;
+    [SerializeField] Button decreasesButton;
     [Header("Province Info")]
     [HideInInspector] public ProvinceInfo selectedProvince;
     [SerializeField] TextMeshProUGUI txtName;
@@ -24,14 +27,23 @@ public class debug_ParametersTest_UI : MonoBehaviour
     [SerializeField] TextMeshProUGUI txtAffiliates;
     [SerializeField] TextMeshProUGUI txtDetermination;
 
-    void Update()
+	void Start() {
+		_timeManager = ServiceLocator.Get<TimeManager>();
+
+        pauseButton.onClick.AddListener(_timeManager.ReanudeTime);
+        reanudeButton.onClick.AddListener(_timeManager.PauseTime);
+        accelerateButton.onClick.AddListener(_timeManager.AccelerateTime);
+        decreasesButton.onClick.AddListener(_timeManager.DecreaseTime);
+	}
+
+	void Update()
     {
         SetHourFormat();
         txtDate.text = SetHourFormat() + " / " 
-            + timeManager.day.ToString("D2") + " / " 
-            + timeManager.month.ToString("D2") + " / " 
-            + timeManager.year.ToString("D4");
-        txtVelocity.text = "X" + timeManager.currentTimeScaleIndex;
+            + _timeData.day.ToString("D2") + " / " 
+            + _timeData.month.ToString("D2") + " / " 
+            + _timeData.year.ToString("D4");
+        txtVelocity.text = "X" + _timeManager.currentTimeScaleIndex;
         if(selectedProvince != null) {
             txtName.text = selectedProvince.ProvinceName;
             txtPopulation.text = selectedProvince.Population.ToString();
@@ -40,7 +52,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
             txtDetermination.text = selectedProvince.determination.ToString() + " %";
         }
 
-        if (timeManager.currentTimeScaleIndex == 0) {
+        if (_timeManager.currentTimeScaleIndex == 0) {
             pauseButton.gameObject.SetActive(true);
             reanudeButton.gameObject.SetActive(false);
         } else {
@@ -51,9 +63,9 @@ public class debug_ParametersTest_UI : MonoBehaviour
     }
 
     string SetHourFormat() {
-        var minute = (int)(((decimal)timeManager.hour % 1) * 100);
+        var minute = (int)(((decimal)_timeData.hour % 1) * 100);
         minute = minute * 60 / 100;
-        var hour = (int)timeManager.hour;
+        var hour = (int)_timeData.hour;
         return string.Format("{0:D2} : {1:D2}", hour, minute);
     }
 

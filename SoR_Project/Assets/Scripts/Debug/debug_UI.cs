@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DebugSaveUI : MonoBehaviour
+public class debug_UI : MonoBehaviour
 {
     [Header("SERVICES")]
     IGameManager _gameManager;
