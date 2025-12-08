@@ -5,11 +5,14 @@ using UnityEngine;
 /// Script que se encarga de gestionar la información de la provincia y devolver sus valores
 /// Author: Carlos Carnero Cabrera
 /// </summary>
-public class ProvinceInfo : MonoBehaviour
+public class ProvinceInfo : MonoBehaviour, IInteractable
 {
     // REFERENCES
-    private TimeManager timeManager;
+    private TimeManager _timeManager;
+    private ProvinceManager _provinceManager;
+    private MeshRenderer _meshRenderer;
     public SO_Province soProvince;
+
     
     // SO -> TO INFO
     [SerializeField, ShowOnly] private string provinceName;
@@ -34,6 +37,7 @@ public class ProvinceInfo : MonoBehaviour
 
 
     private void OnValidate() {
+        _meshRenderer = GetComponent<MeshRenderer>();
         if (soProvince != null) {
             provinceName = soProvince._name;
             population = soProvince._population;
@@ -46,16 +50,39 @@ public class ProvinceInfo : MonoBehaviour
     }    
 
     void OnDisable() {
-        timeManager.OnDayPassedEvent-=debugShowInfo;
+        _timeManager.OnDayPassedEvent-=debugShowInfo;
     }
 
     void Start() {
-        timeManager = ServiceLocator.Get<TimeManager>();
-        timeManager.OnDayPassedEvent+=debugShowInfo;
+        _meshRenderer.material.color = Color.white;
+        _timeManager = ServiceLocator.Get<TimeManager>();
+        _provinceManager = ServiceLocator.Get<ProvinceManager>();
+        _timeManager.OnDayPassedEvent+=debugShowInfo;
     }
 
     void debugShowInfo() {
         _currentPopularity += 1024;
         _currentAffiliates += 512;
     }
+
+	public void LeftClickInteract() {
+        _provinceManager.SelectProvince(this);
+        _meshRenderer.material.color = Color.green;
+	}
+
+	public void OnHover() {
+        if(_provinceManager.selectedProvince == this) return;
+		_meshRenderer.material.color = Color.blue;
+	}
+
+	public void OnDeselect() {
+		_provinceManager.SelectProvince(null);
+        _meshRenderer.material.color = Color.white;
+	}
+
+	public void OnUnhover() {   
+        if(_provinceManager.selectedProvince == this) return;
+        _meshRenderer.material.color = Color.white;
+		
+	}
 }
