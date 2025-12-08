@@ -15,15 +15,15 @@ public class GameManager : MonoBehaviour, IGameManager
         SaveSystem.OnGameDataCleared -= HandleDataCleared;
     }
 #region Handlers
-	public void HandleDataCleared() {
+	private void HandleDataCleared() {
 		Debug.Log("Data Cleared");
 	}
 
-	public void HandleGameLoaded() {
+	private void HandleGameLoaded() {
 		Debug.Log("Game Loaded");
 	}
 
-	public void HandleGameSaved() {
+	private void HandleGameSaved() {
 		Debug.Log("Game Saved");
 	}
 #endregion
