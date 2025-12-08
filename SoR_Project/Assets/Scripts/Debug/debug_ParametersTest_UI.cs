@@ -25,7 +25,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
     [SerializeField] TextMeshProUGUI txtPopulation;
     [SerializeField] TextMeshProUGUI txtPopularity;
     [SerializeField] TextMeshProUGUI txtAffiliates;
-    [SerializeField] TextMeshProUGUI txtDetermination;
+    [SerializeField] TextMeshProUGUI txtStability;
 
 	void Start() {
 		_timeManager = ServiceLocator.Get<TimeManager>();
@@ -50,7 +50,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
             txtPopulation.text = _provinceManager.selectedProvince.Population.ToString();
             txtPopularity.text = (_provinceManager.selectedProvince.popularity / _provinceManager.selectedProvince.Population * 100).ToString("F2") + " %";
             txtAffiliates.text = _provinceManager.selectedProvince.affiliates.ToString();
-            txtDetermination.text = _provinceManager.selectedProvince.determination.ToString() + " %";
+            txtStability.text = _provinceManager.selectedProvince.stability.ToString();
         }
 
         if (_timeManager._currentTimeScaleIndex == 0) {

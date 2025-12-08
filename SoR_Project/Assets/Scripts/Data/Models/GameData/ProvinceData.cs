@@ -6,5 +6,4 @@ public class ProvinceData {
 	public float aligned;
 	public float affiliates;
 
-	//TODO: public int populationCap;
 }

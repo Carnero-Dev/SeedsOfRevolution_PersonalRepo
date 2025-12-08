@@ -22,27 +22,19 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     public string ProvinceName => provinceName;
     public int Population => population;
     public string ProvinceType => provinceType;
-    
-    // PARAMETERS
-    // public float popularity {
-    //     get {return _currentPopularity =  Mathf.Clamp(value: _currentPopularity, 0, population);}
-    //     set { _currentPopularity = Mathf.Clamp(value, 0, population);}}
-    // public float affiliates {
-    //     get {return _currentAffiliates = Math.Clamp(value: _currentAffiliates, 0, population);} 
-    //     set { _currentAffiliates = Mathf.Clamp(value, 0, population);}}
-    // [SerializeField, DynamicRange(0, "population"), Tooltip("Clampeado a los habitantes")] 
-    // private  float _currentPopularity;
-    // [SerializeField, DynamicRange(0, "population"), Tooltip("Clampeado a los habitantes")] 
-    // private  float _currentAffiliates;
-    [Range (0, 100)] public float determination;
+
+    public float stability {
+        get { return Mathf.Clamp(_currentData.stability, -100, 100) ;}
+        set {_currentData.stability = Mathf.Clamp(value, -100, 100); }
+    }
 
     public float popularity {
         get {return Mathf.Clamp(_currentData.popularity, 0, soProvince._population) ;}
-        set { _currentData.popularity = value; }
+        set { _currentData.popularity = Mathf.Clamp(value, 0, soProvince._population); }
     }
     public float affiliates {
         get {return Mathf.Clamp( _currentData.affiliates, 0, soProvince._population) ;} 
-        set { _currentData.affiliates = value; }
+        set { _currentData.affiliates = Mathf.Clamp(value, 0, soProvince._population); }
     }
 
     private void OnValidate() {
@@ -51,10 +43,12 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
             provinceName = soProvince._name;
             population = soProvince._population;
             provinceType = soProvince._provinceType;
+          //  stability = soProvince._stability;
         } else {
             provinceName = "(Unamed)";
             population = 1;
             provinceType = "Default";
+           // stability = 100;
         }
     }    
 
@@ -78,8 +72,6 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         if(_currentData == null) return;
         popularity += 1024;
         affiliates += 512;
-        // _currentPopularity += 1024;
-        // _currentAffiliates += 512;
     }
 
 	public void LeftClickInteract() {
