@@ -2,6 +2,11 @@ using UnityEngine;
 
 public interface IGameManager
 {
-    void LoadGame();
-    void Reset();
+    void StartGame();
+    void OnLoadGame();
+    void OnNewGame();
+
+    void HandleGameLoaded();
+    void HandleGameSaved();
+    void HandleDataCleared();
 }
