@@ -11,15 +11,8 @@ public class TimeManager : MonoBehaviour {
     [Tooltip("Cada segundo en la vida real es X horas en el juego")]
         private int _TIMESCALE = 20; // Controla la velocidad del mundo con respecto a las fechas
     private int [] _timesScales = new int [4]; // Establece las velocidades del juego (EN ORDEN INCLUYENDO PAUSA)
-    public int currentTimeScaleIndex {get; private set;} = 1;  // Establece cual es la velocidad actual
-
-    [Header("Start Date")]
-    [Range(1, 31)]
-    [SerializeField] private int _currentDay;
-    [Range(1, 12)]
-    [SerializeField] private int _currentMonth;
-    [Range(0, 9999)]
-    [SerializeField] private int _currentYear;
+    public int _currentTimeScaleIndex {get; private set;} = 1;  // Establece cual es la velocidad actual
+    private int _lastTimeScaleIndex = 1;  // Establece cual es la velocidad actual
 
     // Actions
     public Action OnDayPassedEvent;
@@ -27,7 +20,7 @@ public class TimeManager : MonoBehaviour {
     public Action OnYearPassedEvent;
 
     void Start() {
-        PauseTime();
+        PauseReanudeTime();
     }
 
     void Update() {
@@ -87,32 +80,41 @@ public class TimeManager : MonoBehaviour {
     #region Time Controller
     public void AccelerateTime() {        
         for (int i = 0; i < _timesScales.Length -1; i++) {
-            if (currentTimeScaleIndex == i) {
-                currentTimeScaleIndex++;
-                _TIMESCALE = _timesScales[currentTimeScaleIndex];
+            if (_currentTimeScaleIndex == i) {
+                _currentTimeScaleIndex++;
+                _TIMESCALE = _timesScales[_currentTimeScaleIndex];
                 break;
             }            
        }
     }
     public void DecreaseTime() {
        for (int i = 1; i < _timesScales.Length; i++) {
-            if (currentTimeScaleIndex == i) {
-                currentTimeScaleIndex--;
-                _TIMESCALE = _timesScales[currentTimeScaleIndex];
+            if (_currentTimeScaleIndex == i) {
+                _currentTimeScaleIndex--;
+                _TIMESCALE = _timesScales[_currentTimeScaleIndex];
                 break;
             }
        }
     }
-    public void PauseTime(){
-        currentTimeScaleIndex = 0;
-        _TIMESCALE = _timesScales[currentTimeScaleIndex];
-    }
-    public void ReanudeTime(){
-        if (currentTimeScaleIndex == 0) {
-            currentTimeScaleIndex = 1;
+    public void PauseReanudeTime(){
+        if (_currentTimeScaleIndex != 0) {
+            _lastTimeScaleIndex = _currentTimeScaleIndex;
+            _currentTimeScaleIndex = 0;
+        } else {
+            _currentTimeScaleIndex = _lastTimeScaleIndex;
         }
-        _TIMESCALE = _timesScales[currentTimeScaleIndex];
-    }    
+        _TIMESCALE = _timesScales[_currentTimeScaleIndex];
+    }  
+
+    public void SetTimeScale(int index)
+    {
+        int targetIndex = Mathf.Clamp(index, 1, _timesScales.Length - 1);
+        
+        _currentTimeScaleIndex = targetIndex;
+        
+        _TIMESCALE = _timesScales[_currentTimeScaleIndex];
+        
+    }
 
     #endregion
 }

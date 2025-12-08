@@ -26,6 +26,7 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
     public Action OnStopResumeTimeEvent;
     public Action OnIncrementTimeEvent;
     public Action OnDecrementTimeEvent;
+    public Action<int> OnSetTimeScale;
 
     #endregion
 
@@ -149,5 +150,16 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
         }
     }
 
-    #endregion
+	void PlayerInput.IPlayerActions.OnSetTimeScale(InputAction.CallbackContext context) {
+		if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
+        
+        string controlName = context.control.name;
+        
+        if (int.TryParse(controlName, out int scaleIndex)) {
+            OnSetTimeScale?.Invoke(scaleIndex); 
+        }
+    }
+	}
+
+	#endregion
 }

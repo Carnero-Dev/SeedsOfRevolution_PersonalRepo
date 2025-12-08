@@ -31,8 +31,8 @@ public class debug_ParametersTest_UI : MonoBehaviour
 		_timeManager = ServiceLocator.Get<TimeManager>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
 
-        pauseButton.onClick.AddListener(_timeManager.ReanudeTime);
-        reanudeButton.onClick.AddListener(_timeManager.PauseTime);
+        pauseButton.onClick.AddListener(_timeManager.PauseReanudeTime);
+        reanudeButton.onClick.AddListener(_timeManager.PauseReanudeTime);
         accelerateButton.onClick.AddListener(_timeManager.AccelerateTime);
         decreasesButton.onClick.AddListener(_timeManager.DecreaseTime);
 	}
@@ -44,7 +44,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
             + _timeData.day.ToString("D2") + " / " 
             + _timeData.month.ToString("D2") + " / " 
             + _timeData.year.ToString("D4");
-        txtVelocity.text = "X" + _timeManager.currentTimeScaleIndex;
+        txtVelocity.text = "X" + _timeManager._currentTimeScaleIndex;
         if(_provinceManager.selectedProvince != null) {
             txtName.text = _provinceManager.selectedProvince.ProvinceName;
             txtPopulation.text = _provinceManager.selectedProvince.Population.ToString();
@@ -53,7 +53,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
             txtDetermination.text = _provinceManager.selectedProvince.determination.ToString() + " %";
         }
 
-        if (_timeManager.currentTimeScaleIndex == 0) {
+        if (_timeManager._currentTimeScaleIndex == 0) {
             pauseButton.gameObject.SetActive(true);
             reanudeButton.gameObject.SetActive(false);
         } else {

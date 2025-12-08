@@ -198,6 +198,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SetTimeScale"",
+                    ""type"": ""Button"",
+                    ""id"": ""adc01a09-3098-4fd1-a091-0176876bf8be"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -369,7 +378,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""ab7a7d30-11a9-4858-a285-33d681269cb2"",
-                    ""path"": ""<Keyboard>/rightBracket"",
+                    ""path"": ""<Keyboard>/numpadPlus"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -380,11 +389,44 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a9d9c29d-5e3f-406d-a3a7-27c426fc511d"",
-                    ""path"": ""<Keyboard>/period"",
+                    ""path"": ""<Keyboard>/numpadMinus"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""DecrementTime"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""becd28f4-48b1-483c-ae21-db3e5afe81f2"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SetTimeScale"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b1442e3-fe33-48eb-8418-197ab39243c0"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SetTimeScale"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""909fb380-7a5d-4e68-bc97-0802783631f8"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SetTimeScale"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -446,6 +488,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Player_StopResumeTime = m_Player.FindAction("StopResumeTime", throwIfNotFound: true);
         m_Player_IncrementTime = m_Player.FindAction("IncrementTime", throwIfNotFound: true);
         m_Player_DecrementTime = m_Player.FindAction("DecrementTime", throwIfNotFound: true);
+        m_Player_SetTimeScale = m_Player.FindAction("SetTimeScale", throwIfNotFound: true);
         // UIMenu
         m_UIMenu = asset.FindActionMap("UIMenu", throwIfNotFound: true);
         m_UIMenu_ResumeGame = m_UIMenu.FindAction("ResumeGame", throwIfNotFound: true);
@@ -542,6 +585,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_StopResumeTime;
     private readonly InputAction m_Player_IncrementTime;
     private readonly InputAction m_Player_DecrementTime;
+    private readonly InputAction m_Player_SetTimeScale;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -601,6 +645,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/DecrementTime".
         /// </summary>
         public InputAction @DecrementTime => m_Wrapper.m_Player_DecrementTime;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/SetTimeScale".
+        /// </summary>
+        public InputAction @SetTimeScale => m_Wrapper.m_Player_SetTimeScale;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -663,6 +711,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @DecrementTime.started += instance.OnDecrementTime;
             @DecrementTime.performed += instance.OnDecrementTime;
             @DecrementTime.canceled += instance.OnDecrementTime;
+            @SetTimeScale.started += instance.OnSetTimeScale;
+            @SetTimeScale.performed += instance.OnSetTimeScale;
+            @SetTimeScale.canceled += instance.OnSetTimeScale;
         }
 
         /// <summary>
@@ -710,6 +761,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @DecrementTime.started -= instance.OnDecrementTime;
             @DecrementTime.performed -= instance.OnDecrementTime;
             @DecrementTime.canceled -= instance.OnDecrementTime;
+            @SetTimeScale.started -= instance.OnSetTimeScale;
+            @SetTimeScale.performed -= instance.OnSetTimeScale;
+            @SetTimeScale.canceled -= instance.OnSetTimeScale;
         }
 
         /// <summary>
@@ -930,6 +984,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDecrementTime(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SetTimeScale" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSetTimeScale(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UIMenu" which allows adding and removing callbacks.

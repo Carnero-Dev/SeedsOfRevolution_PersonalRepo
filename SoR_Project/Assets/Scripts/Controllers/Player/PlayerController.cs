@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
     [Header("REFERENCES")]
     public InputListener input;
     public Camera playerCamera;
+    private TimeManager _timeManager;
 
     [Header("INPUT SETTINGS")]
 
@@ -121,6 +122,7 @@ public class PlayerController : MonoBehaviour {
         input.OnStopResumeTimeEvent += HandleStopResumeTime;
         input.OnIncrementTimeEvent += HandleIncrementTime;
         input.OnDecrementTimeEvent += HandleDecrementTime;
+        input.OnSetTimeScale += HandleSetTimeScale;
     }
 
     void OnDisable() {
@@ -139,6 +141,7 @@ public class PlayerController : MonoBehaviour {
         input.OnStopResumeTimeEvent -= HandleStopResumeTime;
         input.OnIncrementTimeEvent -= HandleIncrementTime;
         input.OnDecrementTimeEvent -= HandleDecrementTime;
+        input.OnSetTimeScale -= HandleSetTimeScale;
     }
 
     #endregion
@@ -150,6 +153,7 @@ public class PlayerController : MonoBehaviour {
 
     void Start() {
         _targetHeight = transform.position.y;
+        _timeManager = ServiceLocator.Get<TimeManager>();
     }
 
     void Update() {
@@ -395,11 +399,12 @@ public class PlayerController : MonoBehaviour {
     private void HandleShowEnemyStats() { Debug.Log("Show Enemy Stats"); }
     private void HandleShowActionsWindow() { Debug.Log("Show Actions Menu"); }
     private void HandleShowNewsWindow() { Debug.Log("Show News Windows"); }
-    private void HandleStopResumeTime() { Debug.Log("Stop Resume Time"); }
-    private void HandleIncrementTime() { Debug.Log("Time Increse"); }
-    private void HandleDecrementTime() { Debug.Log("Time Decrease"); }
+    private void HandleStopResumeTime() { _timeManager.PauseReanudeTime(); }
+    private void HandleIncrementTime() { _timeManager.AccelerateTime(); }
+    private void HandleDecrementTime() { _timeManager.DecreaseTime(); }
     private void HandlePauseGame() { Debug.Log("Pause Game"); }
     private void HandleResumeGame() { Debug.Log("Resume Game"); }
+    private void HandleSetTimeScale(int index) { _timeManager.SetTimeScale(index); }
 
     #endregion
 }
