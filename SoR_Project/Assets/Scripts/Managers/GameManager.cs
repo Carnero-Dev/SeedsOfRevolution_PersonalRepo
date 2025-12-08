@@ -6,18 +6,22 @@ public class GameManager : MonoBehaviour, IGameManager
 	void Start() {
         
     }
+    
+#region Handlers
 	public void HandleDataCleared() {
-		throw new System.NotImplementedException();
+		Debug.Log("Data Cleared");
 	}
 
 	public void HandleGameLoaded() {
-		throw new System.NotImplementedException();
+		Debug.Log("Game Loaded");
 	}
 
 	public void HandleGameSaved() {
-		throw new System.NotImplementedException();
+		Debug.Log("Game Saved");
 	}
+#endregion
 
+#region GameFlow
 	public void OnLoadGame() {
 		throw new System.NotImplementedException();
 	}
@@ -36,4 +40,5 @@ public class GameManager : MonoBehaviour, IGameManager
     // public void Reset() {
     //     SceneManager.LoadScene("SaveSystem_Test");
     // } 
+#endregion
 }

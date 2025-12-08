@@ -46,7 +46,7 @@ public class debug_UI : MonoBehaviour
     }
 
     void LoadGame() {
-        _gameManager.LoadGame();
+        //_gameManager.LoadGame();
         UpdateUI();
     }
 
