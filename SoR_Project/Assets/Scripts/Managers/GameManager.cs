@@ -3,10 +3,17 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, IGameManager
 {
-	void Start() {
-        
+    private void OnEnable() {
+        SaveSystem.OnGameLoaded += HandleGameLoaded;
+        SaveSystem.OnGameSaved += HandleGameSaved;        
+        SaveSystem.OnGameDataCleared += HandleDataCleared;
     }
-    
+
+    private void OnDisable() {
+        SaveSystem.OnGameLoaded -= HandleGameLoaded;
+        SaveSystem.OnGameSaved -= HandleGameSaved;        
+        SaveSystem.OnGameDataCleared -= HandleDataCleared;
+    }
 #region Handlers
 	public void HandleDataCleared() {
 		Debug.Log("Data Cleared");
@@ -22,23 +29,26 @@ public class GameManager : MonoBehaviour, IGameManager
 #endregion
 
 #region GameFlow
-	public void OnLoadGame() {
-		throw new System.NotImplementedException();
-	}
-
-	public void OnNewGame() {
-		throw new System.NotImplementedException();
-	}
-
 	public void StartGame() {
-		throw new System.NotImplementedException();
+		if (SaveSystem.IsFileExist<GameData>()) OnLoadGame();
+        else OnNewGame(SeedRandom.GetDebugState()); 
+        Debug.Log("Starting Game");
+	}
+	private void OnLoadGame() {
+		// INIZIALIZAR DATOS DE CARGA
+        var data = SaveSystem.Load<GameData>();
+        GameDataService.Init(data);
+        SeedRandom.RestoreState(data.run.seedState);
 	}
 
-    // public void LoadGame() {
-    //     SceneManager.LoadScene("SaveSystem_Test");
-    // }
-    // public void Reset() {
-    //     SceneManager.LoadScene("SaveSystem_Test");
-    // } 
+	private void OnNewGame(bool debugEnabled) {
+		// INICIALIZAR SISTEMA DE GUARDADO
+        var newData = DataFactory.Create<GameData>();
+        GameDataService.Init(newData);
+        SeedRandom.Init(newData.run.seed);
+
+        SaveSystem.Save(newData);
+        Debug.Log($"New Game, debug mode: {debugEnabled}");
+	}
 #endregion
 }
