@@ -3,11 +3,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [CreateAssetMenu(fileName = "InputListener", menuName = "SOR/Input/InputListener")]
-public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, PlayerInput.IUIMenuActions
-{
+public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, PlayerInput.IUIMenuActions {
 
-    public enum GameModes
-    {
+    public enum GameModes {
         Game, UI
     }
 
@@ -16,8 +14,8 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
     public Action<Vector2> OnMoveEvent;
     public Action OnLeftStartClickEvent;
     public Action OnLeftCancelClickEvent;
-    public Action OnRightStartedClickEvent;
-    public Action OnRightCanceledClickEvent;
+    public Action OnRightStartedClickEvent; 
+    public Action OnRightCanceledClickEvent; 
     public Action OnShowStatsEvent;
     public Action OnShowEnemyStatsEvent;
     public Action OnShowActionsWindowEvent;
@@ -33,10 +31,8 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
 
     private PlayerInput _playerInput;
 
-    private void OnEnable()
-    {
-        if (_playerInput == null)
-        {
+    private void OnEnable() {
+        if (_playerInput == null) {
             _playerInput = new PlayerInput();
 
             _playerInput.Player.SetCallbacks(this);
@@ -46,15 +42,12 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
         }
     }
 
-    void OnDisable()
-    {
+    void OnDisable() {
         _playerInput.Player.Disable();
     }
 
-    public void ChangeGameMode(GameModes gMod)
-    {
-        switch (gMod)
-        {
+    public void ChangeGameMode(GameModes gMod) {
+        switch (gMod) {
             case GameModes.Game:
                 _playerInput.Player.Enable();
                 _playerInput.UIMenu.Disable();
@@ -68,93 +61,80 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
     }
 
     #region IPlayerActions Implementation
-    void PlayerInput.IPlayerActions.OnMove(InputAction.CallbackContext context)
-    {
+    void PlayerInput.IPlayerActions.OnMove(InputAction.CallbackContext context) {
         OnMoveEvent?.Invoke(context.ReadValue<Vector2>());
     }
 
-    void PlayerInput.IPlayerActions.OnLeftClick(InputAction.CallbackContext context)
-    {
+    void PlayerInput.IPlayerActions.OnLeftClick(InputAction.CallbackContext context) {
         if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
             OnLeftStartClickEvent?.Invoke();
         }
 
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Canceled){
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Canceled) {
             OnLeftCancelClickEvent?.Invoke();
         }
     }
 
-    void PlayerInput.IPlayerActions.OnRightClick(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    void PlayerInput.IPlayerActions.OnRightClick(InputAction.CallbackContext context) { 
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnRightStartedClickEvent?.Invoke();
         }
 
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Canceled){
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Canceled) {
             OnRightCanceledClickEvent?.Invoke();
         }
-        
     }
 
-    void PlayerInput.IPlayerActions.OnShowStats(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    void PlayerInput.IPlayerActions.OnShowStats(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnShowStatsEvent?.Invoke();
         }
     }
-    void PlayerInput.IPlayerActions.OnShowEnemyStats(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    void PlayerInput.IPlayerActions.OnShowEnemyStats(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnShowEnemyStatsEvent?.Invoke();
         }
     }
 
-    void PlayerInput.IPlayerActions.OnShowActionsWindow(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    void PlayerInput.IPlayerActions.OnShowActionsWindow(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnShowActionsWindowEvent?.Invoke();
         }
     }
 
-    void PlayerInput.IPlayerActions.OnShowNewsWindow(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    void PlayerInput.IPlayerActions.OnShowNewsWindow(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnShowNewsWindowEvent?.Invoke();
         }
     }
 
-    void PlayerInput.IPlayerActions.OnZoom(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    void PlayerInput.IPlayerActions.OnZoom(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnZoomEvent?.Invoke(context.ReadValue<Vector2>());
         }
     }
 
-    public void OnPauseGame(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    public void OnPauseGame(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnPauseEvent?.Invoke();
             ChangeGameMode(GameModes.UI);
         }
     }
 
-    public void OnStopResumeTime(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    public void OnStopResumeTime(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnStopResumeTimeEvent?.Invoke();
         }
     }
 
-    public void OnIncrementTime(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    public void OnIncrementTime(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnIncrementTimeEvent?.Invoke();
         }
     }
 
-    public void OnDecrementTime(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    public void OnDecrementTime(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnDecrementTimeEvent?.Invoke();
         }
     }
@@ -162,9 +142,8 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
     #endregion
 
     #region IUIActions Implementation
-    public void OnResumeGame(InputAction.CallbackContext context)
-    {
-        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed){
+    public void OnResumeGame(InputAction.CallbackContext context) {
+        if(context.phase == UnityEngine.InputSystem.InputActionPhase.Performed) {
             OnResumeEvent?.Invoke();
             ChangeGameMode(GameModes.Game);
         }
@@ -172,4 +151,3 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
 
     #endregion
 }
-

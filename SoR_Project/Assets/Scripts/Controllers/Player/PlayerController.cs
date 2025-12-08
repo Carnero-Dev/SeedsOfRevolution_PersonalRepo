@@ -4,8 +4,7 @@ using UnityEngine;
 // TODO: suavizar movimiento con wasd y dejarlo como opción para poder activarlo y desactivarlo
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     [Header("REFERENCES")]
     public InputListener input;
     public Camera playerCamera;
@@ -52,6 +51,9 @@ public class PlayerController : MonoBehaviour
     private LayerMask _interactionLayer;
     [SerializeField, Tooltip("Distancia máxima a la que se puede interactuar")]
     private float _interactionDistance = 500;
+    
+    [SerializeField, Tooltip("LayerMask del terreno o fondo, para saber cuándo deseleccionar")]
+    private LayerMask _terrainLayerMask; 
 
     [Header("DEBUG")]
     [SerializeField] private bool _enableDebug;
@@ -59,32 +61,29 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _debugLimits;
 
     private Rigidbody _rb;
-    private bool _rightClickHold;
+    private bool _rightClickHold; 
     private bool _leftClickHold;
     private float _holdTimer;
     private float _targetHeight;
     private float _scrollInput;
     private Vector3 _groundHitPoint;
-    private Vector3 _mouseInitialPosition;
-    private bool _isDragging;
+    private Vector3 _mouseInitialPosition; 
+    private bool _isDragging; 
     private float _mouseDragThreshold = 10f;
     private IInteractable _hoveredInteractable;
     private IInteractable _interactedItem;
+    private IInteractable _selectedInteractable;
 
     #region DEBUG
-    void OnDrawGizmos()
-    {
-        if (_enableDebug)
-        {
-            if (_debugInteractionRay && playerCamera != null)
-            {
+    void OnDrawGizmos() {
+        if (_enableDebug) {
+            if (_debugInteractionRay && playerCamera != null) {
                 Gizmos.color = Color.red;
                 Vector3 to = playerCamera.transform.forward * _interactionDistance;
                 DrawDebugRay(transform.position, to, playerCamera.transform.forward, _interactionDistance, Color.yellow);
             }
 
-            if (_debugLimits)
-            {
+            if (_debugLimits) {
                 DrawDebugRay(transform.position, transform.right * _limits.x, transform.right, _limits.x, Color.red);
                 DrawDebugRay(transform.position, -transform.right * _limits.x, -transform.right, _limits.x, Color.red);
                 DrawDebugRay(transform.position, transform.forward * _limits.z, transform.forward, _limits.z, Color.blue);
@@ -94,8 +93,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void DrawDebugRay(Vector3 from, Vector3 to, Vector3 direction, float distance, Color color)
-    {
+    private void DrawDebugRay(Vector3 from, Vector3 to, Vector3 direction, float distance, Color color) {
         Gizmos.color = color;
         Gizmos.DrawRay(from, to);
         Gizmos.DrawSphere(from + direction * distance, 0.1f);
@@ -105,12 +103,11 @@ public class PlayerController : MonoBehaviour
 
     #region ENABLE / DISABLE
 
-    void OnEnable()
-    {
+    void OnEnable() {
         input.OnMoveEvent += HandleMove;
         input.OnLeftStartClickEvent += HandlePerformLeftClick;
         input.OnLeftCancelClickEvent += HandleCancelLeftClick;
-        input.OnRightStartedClickEvent += HandlePerformRightClick;
+        input.OnRightStartedClickEvent += HandlePerformRightClick; 
         input.OnRightCanceledClickEvent += HandleCancelRightClick;
         input.OnShowStatsEvent += HandleShowStats;
         input.OnShowEnemyStatsEvent += HandleShowEnemyStats;
@@ -124,13 +121,12 @@ public class PlayerController : MonoBehaviour
         input.OnDecrementTimeEvent += HandleDecrementTime;
     }
 
-    void OnDisable()
-    {
+    void OnDisable() {
         input.OnMoveEvent -= HandleMove;
         input.OnLeftStartClickEvent -= HandlePerformLeftClick;
         input.OnLeftCancelClickEvent -= HandleCancelLeftClick;
-        input.OnRightStartedClickEvent -= HandlePerformRightClick;
-        input.OnRightCanceledClickEvent -= HandleCancelRightClick;
+        input.OnRightStartedClickEvent -= HandlePerformRightClick; 
+        input.OnRightCanceledClickEvent -= HandleCancelRightClick; 
         input.OnShowStatsEvent -= HandleShowStats;
         input.OnShowEnemyStatsEvent -= HandleShowEnemyStats;
         input.OnShowActionsWindowEvent -= HandleShowActionsWindow;
@@ -145,39 +141,30 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    void Awake()
-    {
+    void Awake() {
         if (playerCamera == null) playerCamera = GetComponentInChildren<Camera>();
         _rb = GetComponent<Rigidbody>();
     }
 
-    void Start()
-    {
+    void Start() {
         _targetHeight = transform.position.y;
     }
 
-    void Update()
-    {
+    void Update() {
         HoverRay();
-        RightClickHoldTimer();
         LeftCLickHoldTimer();
         CalculateZoomHeight();
         CheckGroundDistance();
         Zoom();
-
-        Debug.Log(_interactedItem);
     }
 
-    void FixedUpdate()
-    {
-        MouseMovement();
+    void FixedUpdate() {
+        MouseMovement(); // 
         AdjustCameraTilt();
     }
 
-    private void CalculateZoomHeight()
-    {
-        if (Math.Abs(_scrollInput) > 0.01f)
-        {
+    private void CalculateZoomHeight() {
+        if (Math.Abs(_scrollInput) > 0.01f) {
             _targetHeight -= _scrollInput * _zoomSpeed;
             _targetHeight = Mathf.Clamp(_targetHeight, _groundHitPoint.y + _groundDistanceOffset, _limits.y);
         }
@@ -185,8 +172,7 @@ public class PlayerController : MonoBehaviour
         _scrollInput = 0;
     }
 
-    private void Zoom()
-    {
+    private void Zoom() {
         float newHeight = Mathf.Lerp(_rb.position.y, _targetHeight, Time.deltaTime * _zoomSmoothness);
 
         float currentX = _rb.position.x;
@@ -202,8 +188,7 @@ public class PlayerController : MonoBehaviour
         _rb.MovePosition(finalNewPosition);
     }
 
-    private void CheckGroundDistance()
-    {
+    private void CheckGroundDistance() {
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
 
@@ -213,8 +198,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void AdjustCameraTilt()
-    {
+    private IInteractable GetInteractableUnderMouse() {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayer)){
+            return hit.collider.gameObject.GetComponent<IInteractable>();
+        }
+
+        if (Physics.Raycast(ray, out hit, _interactionDistance, _terrainLayerMask))
+        {
+            return null; 
+        }
+
+        return null;
+    }
+
+    private void AdjustCameraTilt() {
         if (playerCamera == null) return;
 
         float normalizedHeight = Mathf.InverseLerp(
@@ -230,15 +230,13 @@ public class PlayerController : MonoBehaviour
         playerCamera.transform.rotation = Quaternion.Lerp(playerCamera.transform.rotation, targetRotation, Time.fixedDeltaTime * _rotationSmoothness);
     }
 
-    private void MouseMovement()
-    {
+    private void MouseMovement() {
         if (!_rightClickHold) return;
 
         Vector3 currentMousePosition = Input.mousePosition;
         float mouseDragDistance = Vector3.Distance(_mouseInitialPosition, currentMousePosition);
 
-        if (mouseDragDistance > _mouseDragThreshold)
-        {
+        if (mouseDragDistance > _mouseDragThreshold) {
             _isDragging = true;
         }
 
@@ -255,44 +253,24 @@ public class PlayerController : MonoBehaviour
         );
 
         _rb.MovePosition(newPosition);
-        _mouseInitialPosition = currentMousePosition;
+        // NOTA: Para un drag suave, la posición inicial del mouse debe actualizarse en cada frame de drag
+        // o usar una lógica de arrastre basada en delta. Aquí usamos la actualización constante para mantener el arrastre.
+        _mouseInitialPosition = currentMousePosition; 
     }
 
     #region Interaction
-    private void InteractRay(string clickName)
-    {
+    private void InteractRay() {
         if (_isDragging) return;
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        IInteractable interactable = GetInteractableUnderMouse();
+        if (interactable != null) {
+            _interactedItem = interactable;
 
-        if (Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayer))
-        {
-            IInteractable interactable = hit.collider.gameObject.GetComponent<IInteractable>();
-            if (interactable != null)
-            {
-                _interactedItem = interactable;
-                switch (clickName)
-                {
-                    case "left":
-                        interactable.LeftClickInteract();
-                        break;
-
-                    case "right":
-                        interactable.RightClickInteract();
-                        break;
-                    default:
-                        Debug.LogError("No se reconoce el click " + clickName);
-                        break;
-                }
-            }
         }
     }
 
-    private void HoverRay()
-    {
-        if (_isDragging)
-        {
+    private void HoverRay() {
+        if (_isDragging) {
             _hoveredInteractable = null;
             return;
         }
@@ -300,43 +278,30 @@ public class PlayerController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
+        IInteractable previousHover = _hoveredInteractable;
         _hoveredInteractable = null;
 
-        if (Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayer))
-        {
+        if (Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayer)) {
             IInteractable interactable = hit.collider.gameObject.GetComponent<IInteractable>();
-            if (interactable == null)
-            {
-                _interactedItem = null;
-                return;
+            
+            if (interactable != null) {
+                _hoveredInteractable = interactable;
+                
+                if (previousHover != interactable)
+                {
+                    _hoveredInteractable.OnHover();
+                }
             }
-
-            _hoveredInteractable = interactable;
-            _hoveredInteractable.OnHover();
         }
+        // Nota: Considera implementar un OnUnhover aquí si (previousHover != null && _hoveredInteractable == null)
     }
 
-
-    private void RightClickHoldTimer()
-    {
-        if (_isDragging || !_rightClickHold) return;
-
-        _holdTimer += Time.deltaTime;
-
-        if (_holdTimer >= _holdTimeThreshold && _interactedItem != null)
-        {
-            _interactedItem.OnRightClickHold();
-        }
-    }
-
-    private void LeftCLickHoldTimer()
-    {
+    private void LeftCLickHoldTimer() {
         if (_isDragging || !_leftClickHold) return;
 
         _holdTimer += Time.deltaTime;
 
-        if (_holdTimer >= _holdTimeThreshold && _interactedItem != null)
-        {
+        if (_holdTimer >= _holdTimeThreshold && _interactedItem != null) {
             _interactedItem.OnLeftClickHold();
         }
     }
@@ -344,8 +309,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Input Event Handlers
-    private void HandleMove(Vector2 inputValue)
-    {
+    private void HandleMove(Vector2 inputValue) {
         float normalizedHeight = Mathf.InverseLerp(
             _groundHitPoint.y + _groundDistanceOffset,
             _limits.y,
@@ -359,85 +323,66 @@ public class PlayerController : MonoBehaviour
         _rb.linearVelocity = velocity;
     }
 
-    private void HandleZoom(Vector2 inputValue)
-    {
+    private void HandleZoom(Vector2 inputValue) {
         _scrollInput = inputValue.y;
     }
 
-    private void HandlePerformLeftClick()
-    {
-        Debug.Log("Left Click");
+    private void HandlePerformLeftClick() {
+        Debug.Log("Left Click START");
         _leftClickHold = true;
-        InteractRay("left");
+        _holdTimer = 0;
+        
+        if (_isDragging) return;
+
+        IInteractable hitInteractable = GetInteractableUnderMouse();
+            
+        if (hitInteractable != null) {
+            hitInteractable.LeftClickInteract(); 
+            
+            _interactedItem = hitInteractable; 
+            _selectedInteractable = hitInteractable; 
+            
+            Debug.Log("Objeto Seleccionado: " + ((MonoBehaviour)hitInteractable).gameObject.name);
+        }
+        else {
+            // Golpeó el terreno (o nada). Deselecciona.
+            if (_selectedInteractable != null) {
+                Debug.Log("Deseleccionado: " + ((MonoBehaviour)_selectedInteractable).gameObject.name);
+                _selectedInteractable = null;
+            }
+            _interactedItem = null;
+        }
     }
 
-    private void HandleCancelLeftClick()
-    {
+    private void HandleCancelLeftClick() {
+        if (_holdTimer < _holdTimeThreshold) {
+        }
+        
         _leftClickHold = false;
         _holdTimer = 0;
         _interactedItem = null;
     }
 
-    private void HandlePerformRightClick()
-    {
-        Debug.Log("Right Click");
+    private void HandlePerformRightClick() { 
+        Debug.Log("Right Click START (Drag)");
         _rightClickHold = true;
-        InteractRay("right");
         _mouseInitialPosition = Input.mousePosition;
     }
 
-    private void HandleCancelRightClick()
-    {
+    private void HandleCancelRightClick() { 
         _rightClickHold = false;
-        _holdTimer = 0;
         _isDragging = false;
-        _interactedItem = null;
     }
 
-    private void HandleShowStats()
-    {
-        Debug.Log("Show Stats");
-    }
-
-    private void HandleShowEnemyStats()
-    {
-        Debug.Log("Show Enemy Stats");
-    }
-
-    private void HandleShowActionsWindow()
-    {
-        Debug.Log("Show Actions Menu");
-    }
-
-    private void HandleShowNewsWindow()
-    {
-        Debug.Log("Show News Windows");
-    }
-
-    private void HandleStopResumeTime()
-    {
-        Debug.Log("Stop Resume Time");
-    }
-
-    private void HandleIncrementTime()
-    {
-        Debug.Log("Time Increse");
-    }
-
-    private void HandleDecrementTime()
-    {
-        Debug.Log("Time Decrease");
-    }
-
-    private void HandlePauseGame()
-    {
-        Debug.Log("Pause Game");
-    }
-
-    private void HandleResumeGame()
-    {
-        Debug.Log("Resume Game");
-    }
+    private void HandleShowStats() { Debug.Log("Show Stats"); }
+    private void HandleShowEnemyStats() { Debug.Log("Show Enemy Stats"); }
+    private void HandleShowActionsWindow() { Debug.Log("Show Actions Menu"); }
+    private void HandleShowNewsWindow() { Debug.Log("Show News Windows"); }
+    private void HandleStopResumeTime() { Debug.Log("Stop Resume Time"); }
+    private void HandleIncrementTime() { Debug.Log("Time Increse"); }
+    private void HandleDecrementTime() { Debug.Log("Time Decrease"); }
+    private void HandlePauseGame() { Debug.Log("Pause Game"); }
+    private void HandleResumeGame() { Debug.Log("Resume Game"); }
 
     #endregion
 }

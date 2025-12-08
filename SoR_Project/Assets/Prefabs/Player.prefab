@@ -58,12 +58,12 @@ MonoBehaviour:
   _groundDistanceOffset: 3
   _groundLayerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   _rotationSmoothness: 5
   limitTiltAngles: {x: 90, y: 30}
   _interactionLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   _interactionDistance: 500
   _enableDebug: 1
   _debugInteractionRay: 1
