@@ -12,6 +12,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
 {    
     [Header("Time Manager")]
     TimeManager _timeManager;
+    ProvinceManager _provinceManager;
     private TimeManagerData _timeData => GameDataService.Current.timeManager;
     [SerializeField] TextMeshProUGUI txtDate;
     [SerializeField] TextMeshProUGUI txtVelocity;
@@ -20,7 +21,6 @@ public class debug_ParametersTest_UI : MonoBehaviour
     [SerializeField] Button accelerateButton;
     [SerializeField] Button decreasesButton;
     [Header("Province Info")]
-    [HideInInspector] public ProvinceInfo selectedProvince;
     [SerializeField] TextMeshProUGUI txtName;
     [SerializeField] TextMeshProUGUI txtPopulation;
     [SerializeField] TextMeshProUGUI txtPopularity;
@@ -29,6 +29,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
 
 	void Start() {
 		_timeManager = ServiceLocator.Get<TimeManager>();
+        _provinceManager = ServiceLocator.Get<ProvinceManager>();
 
         pauseButton.onClick.AddListener(_timeManager.ReanudeTime);
         reanudeButton.onClick.AddListener(_timeManager.PauseTime);
@@ -44,12 +45,12 @@ public class debug_ParametersTest_UI : MonoBehaviour
             + _timeData.month.ToString("D2") + " / " 
             + _timeData.year.ToString("D4");
         txtVelocity.text = "X" + _timeManager.currentTimeScaleIndex;
-        if(selectedProvince != null) {
-            txtName.text = selectedProvince.ProvinceName;
-            txtPopulation.text = selectedProvince.Population.ToString();
-            txtPopularity.text = (selectedProvince.popularity / selectedProvince.Population * 100).ToString("F2") + " %";
-            txtAffiliates.text = selectedProvince.affiliates.ToString();
-            txtDetermination.text = selectedProvince.determination.ToString() + " %";
+        if(_provinceManager.selectedProvince != null) {
+            txtName.text = _provinceManager.selectedProvince.ProvinceName;
+            txtPopulation.text = _provinceManager.selectedProvince.Population.ToString();
+            txtPopularity.text = (_provinceManager.selectedProvince.popularity / _provinceManager.selectedProvince.Population * 100).ToString("F2") + " %";
+            txtAffiliates.text = _provinceManager.selectedProvince.affiliates.ToString();
+            txtDetermination.text = _provinceManager.selectedProvince.determination.ToString() + " %";
         }
 
         if (_timeManager.currentTimeScaleIndex == 0) {
@@ -67,10 +68,5 @@ public class debug_ParametersTest_UI : MonoBehaviour
         minute = minute * 60 / 100;
         var hour = (int)_timeData.hour;
         return string.Format("{0:D2} : {1:D2}", hour, minute);
-    }
-
-    public void SelectProvince(ProvinceInfo province) {
-        selectedProvince = province;
-    }
-    
+    }    
 }

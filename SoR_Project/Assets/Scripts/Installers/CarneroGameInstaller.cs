@@ -8,6 +8,8 @@ public class CarneroGameInstaller : MonoBehaviour
     // SERVICES
     public TimeManager timeManager;
     public GameManager gameManager;
+    public ProvinceManager provinceManager;
+    
     private void Awake() {
         OnAllInstalled += gameManager.StartGame;
         InstallGameScene(); 
@@ -21,6 +23,7 @@ public class CarneroGameInstaller : MonoBehaviour
         ServiceLocator.Reset();
         ServiceLocator.Register<TimeManager>(timeManager);
         ServiceLocator.Register<IGameManager>(gameManager);
+        ServiceLocator.Register<ProvinceManager>(provinceManager);
         OnAllInstalled?.Invoke();
     }
 }
