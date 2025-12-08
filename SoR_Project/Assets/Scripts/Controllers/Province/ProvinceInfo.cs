@@ -11,7 +11,8 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     private TimeManager _timeManager;
     private ProvinceManager _provinceManager;
     private MeshRenderer _meshRenderer;
-    public SO_Province soProvince;
+   [SerializeField] private SO_Province soProvince;
+    private ProvinceData _currentData;
 
     
     // SO -> TO INFO
@@ -58,11 +59,19 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         _timeManager = ServiceLocator.Get<TimeManager>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager.OnDayPassedEvent+=debugShowInfo;
+
+        _currentData = _provinceManager.GetProvinceState(soProvince._provinceId);
+        if(_currentData != null) {
+            // ApplyData
+        }
     }
 
     void debugShowInfo() {
-        _currentPopularity += 1024;
-        _currentAffiliates += 512;
+        if(_currentData == null) return;
+        _currentData.popularity += 1024;
+        _currentData.affiliates += 512;
+        // _currentPopularity += 1024;
+        // _currentAffiliates += 512;
     }
 
 	public void LeftClickInteract() {
