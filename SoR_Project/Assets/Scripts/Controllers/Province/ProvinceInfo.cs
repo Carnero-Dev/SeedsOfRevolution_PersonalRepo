@@ -24,18 +24,26 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     public string ProvinceType => provinceType;
     
     // PARAMETERS
-    public float popularity {
-        get {return _currentPopularity =  Mathf.Clamp(value: _currentPopularity, 0, population);}
-        set { _currentPopularity = Mathf.Clamp(value, 0, population);}}
-    public float affiliates {
-        get {return _currentAffiliates = Math.Clamp(value: _currentAffiliates, 0, population);} 
-        set { _currentAffiliates = Mathf.Clamp(value, 0, population);}}
-    [SerializeField, DynamicRange(0, "population"), Tooltip("Clampeado a los habitantes")] 
-    private  float _currentPopularity;
-    [SerializeField, DynamicRange(0, "population"), Tooltip("Clampeado a los habitantes")] 
-    private  float _currentAffiliates;
+    // public float popularity {
+    //     get {return _currentPopularity =  Mathf.Clamp(value: _currentPopularity, 0, population);}
+    //     set { _currentPopularity = Mathf.Clamp(value, 0, population);}}
+    // public float affiliates {
+    //     get {return _currentAffiliates = Math.Clamp(value: _currentAffiliates, 0, population);} 
+    //     set { _currentAffiliates = Mathf.Clamp(value, 0, population);}}
+    // [SerializeField, DynamicRange(0, "population"), Tooltip("Clampeado a los habitantes")] 
+    // private  float _currentPopularity;
+    // [SerializeField, DynamicRange(0, "population"), Tooltip("Clampeado a los habitantes")] 
+    // private  float _currentAffiliates;
     [Range (0, 100)] public float determination;
 
+    public float popularity {
+        get {return Mathf.Clamp(_currentData.popularity, 0, soProvince._population) ;}
+        set { _currentData.popularity = value; }
+    }
+    public float affiliates {
+        get {return Mathf.Clamp( _currentData.affiliates, 0, soProvince._population) ;} 
+        set { _currentData.affiliates = value; }
+    }
 
     private void OnValidate() {
         _meshRenderer = GetComponent<MeshRenderer>();
@@ -68,8 +76,8 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
 
     void debugShowInfo() {
         if(_currentData == null) return;
-        _currentData.popularity += 1024;
-        _currentData.affiliates += 512;
+        popularity += 1024;
+        affiliates += 512;
         // _currentPopularity += 1024;
         // _currentAffiliates += 512;
     }
