@@ -7,21 +7,17 @@ public class TestInteractable : MonoBehaviour, IInteractable
     public bool leftClickHold;
     public bool hover;
 
-    public void LeftClickInteract()
-    {
+    public void LeftClickInteract() {
         if(leftClick) ui.SetAction("Left click");
     }
 
-    public void OnHover()
-    {
+    public void OnHover() {
         if(hover) ui.SetAction("Hover");
     }
-
-    public void OnLeftClickHold()
-    {
-        if(leftClickHold){
-            ui.SetAction("Left Click Hold");
-            Debug.Log("INTERACTUA");
-        }
+    public void OnDeselect() {
+        ui.SetAction("Deselected");
+    }
+    public void OnUnhover() {
+        if(hover) ui.SetAction("Unhovered");
     }
 }

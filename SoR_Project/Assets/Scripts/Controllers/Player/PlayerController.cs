@@ -11,8 +11,9 @@ public class PlayerController : MonoBehaviour {
 
     [Header("INPUT SETTINGS")]
 
-    [SerializeField, Tooltip("Tiempo que debe pasar desde que el jugador hace click para que se ejecute el Hold")]
-    private float _holdTimeThreshold = 0.2f;
+    //! DEPRECATED LEFT HOLD
+    // [SerializeField, Tooltip("Tiempo que debe pasar desde que el jugador hace click para que se ejecute el Hold")]
+    // private float _holdTimeThreshold = 0.2f;
 
     [Header("MOVEMENT SETTINGS")]
 
@@ -62,8 +63,9 @@ public class PlayerController : MonoBehaviour {
 
     private Rigidbody _rb;
     private bool _rightClickHold; 
-    private bool _leftClickHold;
-    private float _holdTimer;
+    //! DEPRECATED LEFT HOLD
+    // private bool _leftClickHold;
+    // private float _holdTimer;
     private float _targetHeight;
     private float _scrollInput;
     private Vector3 _groundHitPoint;
@@ -152,7 +154,8 @@ public class PlayerController : MonoBehaviour {
 
     void Update() {
         HoverRay();
-        LeftCLickHoldTimer();
+        // CheckLeftHoldForDrag();
+        // LeftCLickHoldTimer();
         CalculateZoomHeight();
         CheckGroundDistance();
         Zoom();
@@ -229,18 +232,38 @@ public class PlayerController : MonoBehaviour {
 
         playerCamera.transform.rotation = Quaternion.Lerp(playerCamera.transform.rotation, targetRotation, Time.fixedDeltaTime * _rotationSmoothness);
     }
+    //! DEPRECATED LEFT HOLD
+    // private void CheckLeftHoldForDrag()
+    // {
+    //     // 1. Si no estamos presionando el clic izquierdo o si ya estamos arrastrando, salir.
+    //     if (!_leftClickHold || _isDragging) return;
+        
+    //     // 2. Comprobamos si el clic izquierdo se ha mantenido lo suficiente.
+    //     _holdTimer += Time.deltaTime;
+
+    //     if (_holdTimer >= _holdTimeThreshold)
+    //     {
+    //         // 3. Activamos el Drag
+    //         _isDragging = true;
+    //         // Capturamos la posición inicial del mouse para el movimiento
+    //         _mouseInitialPosition = Input.mousePosition; 
+            
+    //     }
+    // }
 
     private void MouseMovement() {
-        if (!_rightClickHold) return;
+        if (!_rightClickHold && !_isDragging) return;
 
         Vector3 currentMousePosition = Input.mousePosition;
-        float mouseDragDistance = Vector3.Distance(_mouseInitialPosition, currentMousePosition);
 
-        if (mouseDragDistance > _mouseDragThreshold) {
-            _isDragging = true;
+        if (_rightClickHold)
+        {
+             float mouseDragDistance = Vector3.Distance(_mouseInitialPosition, currentMousePosition);
+             if (mouseDragDistance > _mouseDragThreshold) {
+                 _isDragging = true;
+             }
+             if (!_isDragging) return;
         }
-
-        if (!_isDragging) return;
 
         Vector3 deltaMouse = _mouseInitialPosition - currentMousePosition;
         Vector3 movement = new Vector3(deltaMouse.x, 0, deltaMouse.y) * _dragMoveSpeed * Time.fixedDeltaTime;
@@ -259,19 +282,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     #region Interaction
-    private void InteractRay() {
-        if (_isDragging) return;
-
-        IInteractable interactable = GetInteractableUnderMouse();
-        if (interactable != null) {
-            _interactedItem = interactable;
-
-        }
-    }
 
     private void HoverRay() {
         if (_isDragging) {
-            _hoveredInteractable = null;
+            if (_hoveredInteractable != null) {
+                _hoveredInteractable.OnUnhover();
+                _hoveredInteractable = null;
+             }
             return;
         }
 
@@ -287,24 +304,26 @@ public class PlayerController : MonoBehaviour {
             if (interactable != null) {
                 _hoveredInteractable = interactable;
                 
-                if (previousHover != interactable)
-                {
+                if (previousHover != interactable) {
                     _hoveredInteractable.OnHover();
                 }
             }
         }
-        // Nota: Considera implementar un OnUnhover aquí si (previousHover != null && _hoveredInteractable == null)
-    }
-
-    private void LeftCLickHoldTimer() {
-        if (_isDragging || !_leftClickHold) return;
-
-        _holdTimer += Time.deltaTime;
-
-        if (_holdTimer >= _holdTimeThreshold && _interactedItem != null) {
-            _interactedItem.OnLeftClickHold();
+        if (previousHover != null && previousHover != _hoveredInteractable) {
+            previousHover.OnUnhover();
         }
     }
+    //! DEPRECATED LEFT HOLD
+    // private void LeftCLickHoldTimer() {
+    //     if (_isDragging || !_leftClickHold) return;
+
+    //     //_holdTimer += Time.deltaTime;
+    //     if (_holdTimer >= _holdTimeThreshold) return;
+
+    //    if (_interactedItem != null) {
+    //         _interactedItem.OnLeftClickHold();
+    //     }
+    // }
 
     #endregion
 
@@ -329,38 +348,36 @@ public class PlayerController : MonoBehaviour {
 
     private void HandlePerformLeftClick() {
         Debug.Log("Left Click START");
-        _leftClickHold = true;
-        _holdTimer = 0;
+        // _leftClickHold = true;
+        // _holdTimer = 0;
         
-        if (_isDragging) return;
+        if (_rightClickHold) return;
 
         IInteractable hitInteractable = GetInteractableUnderMouse();
-            
+        if (_selectedInteractable != null && _selectedInteractable != hitInteractable)
+        {
+            _selectedInteractable.OnDeselect(); 
+            _selectedInteractable = null;
+        }
         if (hitInteractable != null) {
             hitInteractable.LeftClickInteract(); 
             
-            _interactedItem = hitInteractable; 
+            _interactedItem = hitInteractable;             
             _selectedInteractable = hitInteractable; 
-            
-            Debug.Log("Objeto Seleccionado: " + ((MonoBehaviour)hitInteractable).gameObject.name);
         }
         else {
-            // Golpeó el terreno (o nada). Deselecciona.
-            if (_selectedInteractable != null) {
-                Debug.Log("Deseleccionado: " + ((MonoBehaviour)_selectedInteractable).gameObject.name);
-                _selectedInteractable = null;
-            }
             _interactedItem = null;
         }
     }
 
     private void HandleCancelLeftClick() {
-        if (_holdTimer < _holdTimeThreshold) {
-        }
+        if (_isDragging) {
+             _isDragging = false;
+        }         
         
-        _leftClickHold = false;
-        _holdTimer = 0;
-        _interactedItem = null;
+        // _leftClickHold = false;
+        // _holdTimer = 0;
+        _interactedItem = null; 
     }
 
     private void HandlePerformRightClick() { 
