@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aab0db377d3f584ba4690bfb8188d8a, type: 3}
   m_Name: UBR
   m_EditorClassIdentifier: 
-  _provinceId: UBR
-  _name: Ubroque
-  _population: 3
-  _stability: 65
-  _provinceType: Default
+  provinceId: UBR
+  provinceName: Ubroque
+  provincePopulation: 3
+  provinceStability: 40
+  provinceType: Industrial

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aab0db377d3f584ba4690bfb8188d8a, type: 3}
   m_Name: MAD
   m_EditorClassIdentifier: 
-  _provinceId: MAD
-  _name: Mamona
-  _population: 4584530
-  _stability: 100
-  _provinceType: Default
+  provinceId: MAD
+  provinceName: Madiburgo
+  provincePopulation: 4584530
+  provinceStability: 100
+  provinceType: Capital

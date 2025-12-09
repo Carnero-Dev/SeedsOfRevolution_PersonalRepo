@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aab0db377d3f584ba4690bfb8188d8a, type: 3}
   m_Name: MAL
   m_EditorClassIdentifier: 
-  _provinceId: MAL
-  _name: "M\xE1laka"
-  _population: 845166
-  _stability: 80
-  _provinceType: Default
+  provinceId: MAL
+  provinceName: "M\xE1laka"
+  provincePopulation: 845166
+  provinceStability: 80
+  provinceType: Turistic

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aab0db377d3f584ba4690bfb8188d8a, type: 3}
   m_Name: NUM
   m_EditorClassIdentifier: 
-  _provinceId: NUM
-  _name: Numandia
-  _population: 554348
-  _stability: 85
-  _provinceType: Default
+  provinceId: NUM
+  provinceName: Numandia
+  provincePopulation: 554348
+  provinceStability: 75
+  provinceType: Industrial

@@ -24,7 +24,7 @@ public class ParameterController : MonoBehaviour {
 
 		// Calcular población total del mapa
 		foreach(var province in _provinceManager.currentMapTemplate.provinces) {
-			totalPopulation += province._population;
+			totalPopulation += province.provincePopulation;
 		}
 	}
 

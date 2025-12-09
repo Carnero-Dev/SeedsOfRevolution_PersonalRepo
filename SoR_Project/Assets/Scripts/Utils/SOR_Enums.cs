@@ -9,7 +9,7 @@ public class SOR_Enums
      [Serializable] public enum ProvinceType {
         Default,
         Industrial,
-        Turístico,
+        Turistic,
         Capital
     }
      public static ProvinceType provinceType;

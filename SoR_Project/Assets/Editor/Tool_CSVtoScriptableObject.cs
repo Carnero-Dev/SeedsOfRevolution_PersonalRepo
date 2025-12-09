@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 public class Tool_CSVtoScriptableObject : EditorWindow
 {
@@ -12,6 +13,7 @@ public class Tool_CSVtoScriptableObject : EditorWindow
     private string[,] csvData;
     private Type selectedType;
     private List<Type> scriptableObjectTypes;
+    private int idColumnIndex = 0;
 
     [MenuItem("Tools/CSV to ScriptableObjects")]
     public static void ShowWindow() {
@@ -20,10 +22,6 @@ public class Tool_CSVtoScriptableObject : EditorWindow
 
     private void OnEnable() {
         //* Obtiene todos los tipos que heredan de ScriptableObject
-        // scriptableObjectTypes = AppDomain.CurrentDomain.GetAssemblies()
-        //     .SelectMany(assembly => assembly.GetTypes())
-        //     .Where(type => type.IsSubclassOf(typeof(ScriptableObject)) && type.Name.StartsWith("SO_"))
-        //     .ToList();
         string[] excludedTypes = { "Readme" };
         scriptableObjectTypes = AppDomain.CurrentDomain.GetAssemblies()
             .Where(assembly => assembly.GetName().Name == "Assembly-CSharp")
@@ -61,6 +59,21 @@ public class Tool_CSVtoScriptableObject : EditorWindow
             EditorGUILayout.LabelField("File Selected: ", filePath);
         }
 
+        // INTERFAZ PARA SELECCIONAR LA COLUMNA ID ÚNICA
+        // Muestra los nombres de las columnas (headers) para elegir cuál es la ID
+        if (!string.IsNullOrEmpty(filePath)) {
+            EditorGUILayout.LabelField("File Selected: ", filePath);  
+            if (csvData != null && csvData.GetLength(0) > 0) {
+                string[] headers = Enumerable.Range(0, csvData.GetLength(1))
+                                            .Select(c => csvData[0, c].Trim())
+                                            .ToArray();
+                
+                GUILayout.Space(10);
+                GUILayout.Label("Select ID Column (Asset Name / Unique Key):", EditorStyles.boldLabel);
+                idColumnIndex = EditorGUILayout.Popup(idColumnIndex, headers);
+            }
+        }
+
         //* Carpeta de salida
         outputFolder = EditorGUILayout.TextField("Output Folder: ", outputFolder);
         
@@ -82,7 +95,8 @@ public class Tool_CSVtoScriptableObject : EditorWindow
 
         //* Botón para generar ScriptableObjects
         if (csvData !=null && GUILayout.Button("Generate ScriptableObject")) {
-            GenerateScriptableObjects(csvData, $"{outputFolder}/{selectedType.Name.Substring(3)}s", selectedType);
+            string finalFolder = $"{outputFolder}/{selectedType.Name.Substring(3)}s"; 
+            GenerateScriptableObjects(csvData, finalFolder, selectedType, idColumnIndex);
         }
     }
 
@@ -112,29 +126,127 @@ public class Tool_CSVtoScriptableObject : EditorWindow
 /// </summary>
 /// <param name="data"></param>
 /// <param name="folder"></param>
-    private void GenerateScriptableObjects(string[,] data, string folder, Type type) {
+    private void GenerateScriptableObjects(string[,] data, string folder, Type type, int idIndex) {
         if (!Directory.Exists(folder)) {
             Directory.CreateDirectory(folder);
         }
-        for (int r = 1; r < data.GetLength(0); r++) { // Comienza en 1 para saltar encabezados
-            string assetName = data[r, 0];
+
+        if (data.GetLength(0) < 2) {
+            Debug.LogError("CSV vacío o sin encabezados");
+            return;
+        }
+
+        string[] headers = Enumerable.Range(0, data.GetLength(1))
+                            .Select(c => data[0, c].Trim())
+                            .ToArray();
+
+        var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance)              
+                    .ToDictionary(f => f.Name, f => f);
+
+        var fieldColumnMap = new Dictionary<System.Reflection.FieldInfo, int>();
+        
+        for (int i = 0; i < headers.Length; i++) {
+            string headerName = headers[i];
+            if (fields.ContainsKey(headerName)) {
+                fieldColumnMap.Add(fields[headerName], i); 
+            }
+        }
+       if (!Directory.Exists(folder)) { Directory.CreateDirectory(folder); }
+
+        for (int r = 1; r < data.GetLength(0); r++) { 
+            string assetName = data[r, idIndex]; 
             ScriptableObject newData = UpdateOrCreateScriptableObject(assetName, folder, type);
 
-            var fields = type.GetFields();
-            for (int c = 0; c < fields.Length && c < data.GetLength(1); c++) {
+            foreach (var pair in fieldColumnMap) {
+                System.Reflection.FieldInfo field = pair.Key;
+                int columnIndex = pair.Value;
+                string rawValue = data[r, columnIndex];
+
                 try {
-                    object value = Convert.ChangeType(data[r, c], fields[c].FieldType);
-                    fields[c].SetValue(newData, value);
+                    object convertedValue = ParseValue(rawValue, field.FieldType);
+                    field.SetValue(newData, convertedValue);
                 } catch (Exception e) {
-                    Debug.LogWarning($"Cant assign the value: {data[r, c]} to the field {fields[c].Name}: {e.Message}");
+                    Debug.LogWarning($"[Error en {assetName}.{field.Name}] No se puede asignar '{rawValue}' al tipo {field.FieldType}: {e.Message}");
                 }
             }
-            EditorUtility.SetDirty(newData); // Lo marcamos como modificado
-
-        }
+        
+        EditorUtility.SetDirty(newData);
+    }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log("ScriptableObjects generated and updated succesfuly");
     }
-    
+    /// <summary>
+    /// Parsea el valor de la celda del CSV y lo convierte al tipo indicado 
+    /// </summary>
+    private object ParseValue(string rawValue, Type targetType) {
+        if (string.IsNullOrEmpty(rawValue)) {
+            // Devuelve el valor por defecto para el tipo si la celda está vacía
+            return targetType.IsValueType ? Activator.CreateInstance(targetType) : null;
+        }
+        // MANEJO ESPECÍFICO DE ENUMS
+        if (targetType.IsEnum) {
+            try {                
+                string cleanValue = rawValue.Trim();
+                return Enum.Parse(targetType, cleanValue, ignoreCase: true);
+
+            } catch (Exception) {
+                // Si la conversión falla, registra un error y devuelve el valor por defecto (el primer elemento del enum, generalmente 0)
+                Debug.LogError($"Fallo al parsear '{rawValue}' a Enum {targetType.Name}. Revise acentos o nombres.");
+                return Activator.CreateInstance(targetType); 
+            }
+        }
+        
+        // Manejo de Tipos Simples (Strings, int, float, bool, etc.)
+        if (targetType.IsPrimitive || targetType == typeof(string)) {
+            return Convert.ChangeType(rawValue, targetType);
+        }
+        
+        // ----------------------------------------------------
+        // Manejo de Tipos Colección (Arrays o List<T>)
+        // Usamos el punto y coma (;) como separador interno en la celda CSV, por convención.
+        if (targetType.IsArray) {
+            Type elementType = targetType.GetElementType();
+            string[] elements = rawValue.Split(';');
+
+            Array array = Array.CreateInstance(elementType, elements.Length);
+            
+            for (int i = 0; i < elements.Length; i++) {
+                array.SetValue(ParseValue(elements[i].Trim(), elementType), i);
+            }
+            return array;
+        }
+        
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>)) {
+            Type elementType = targetType.GetGenericArguments()[0];
+            string[] elements = rawValue.Split(';');
+            
+            var list = Activator.CreateInstance(targetType);
+            var addMethod = targetType.GetMethod("Add");
+            
+            foreach (string element in elements) {
+                object parsedElement = ParseValue(element.Trim(), elementType);
+                addMethod.Invoke(list, new object[] { parsedElement });
+            }
+            return list;
+        }
+        // ----------------------------------------------------
+        // Manejo de Referencias a ScriptableObject (Busca el SO por nombre)
+        if (targetType.IsSubclassOf(typeof(ScriptableObject))) {
+            // rawValue debería ser el nombre del SO (ej: "SO_Evento_Inicio")
+            string assetName = rawValue.Trim();
+            // Buscar el asset en todo el proyecto
+            string[] guids = AssetDatabase.FindAssets($"{assetName} t:{targetType.Name}");
+            
+            if (guids.Length > 0) {
+                string path = AssetDatabase.GUIDToAssetPath(guids[0]);
+                return AssetDatabase.LoadAssetAtPath(path, targetType);
+            }
+            Debug.LogWarning($"Referencia a SO no encontrada: '{assetName}' de tipo {targetType.Name}");
+            return null; 
+        }
+        
+        // Caso por defecto (Aqui se añaden nuevos casos)
+        return Convert.ChangeType(rawValue, targetType);
+    }
 }

@@ -45,8 +45,8 @@ public class ProvinceManager : MonoBehaviour {
 	
 	private ProvinceData CreateInitialProvince(SO_Province soProvince) {
 		return new ProvinceData {
-			provinceID = soProvince._provinceId,
-			stability = soProvince._stability,
+			provinceID = soProvince.provinceId,
+			stability = soProvince.provinceStability,
 		};
 	}
 
