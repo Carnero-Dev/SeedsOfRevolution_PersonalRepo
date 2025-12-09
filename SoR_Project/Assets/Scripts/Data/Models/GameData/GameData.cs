@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework.Internal.Builders;
 
 [Serializable]
 public class GameData : IData {
@@ -6,4 +7,5 @@ public class GameData : IData {
     public RunData run = new();
     public TimeManagerData timeManager = new();
     public ProvinceData[] provinces = Array.Empty<ProvinceData>();
+    public ParametersData parameters = new();
 }
