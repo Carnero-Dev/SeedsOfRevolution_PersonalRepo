@@ -29,8 +29,8 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     }
 
     public float popularity {
-        get {return Mathf.Clamp(_currentData.popularity, 0, soProvince._population) ;}
-        set { _currentData.popularity = Mathf.Clamp(value, 0, soProvince._population); }
+        get {return Mathf.Clamp(_currentData.popularity, 0, soProvince.provincePopulation) ;}
+        set { _currentData.popularity = Mathf.Clamp(value, 0, soProvince.provincePopulation); }
     }
     public float aligned {
         get {return Mathf.Clamp( _currentData.aligned, 0, _currentData.popularity) ;} 
@@ -44,9 +44,9 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     private void OnValidate() {
         _meshRenderer = GetComponent<MeshRenderer>();
         if (soProvince != null) {
-            provinceName = soProvince._name;
-            population = soProvince._population;
-            provinceType = soProvince._provinceType;
+            provinceName = soProvince.provinceName;
+            population = soProvince.provincePopulation;
+            provinceType = soProvince.provinceType;
         } else {
             provinceName = "(Unamed)";
             population = 1;
@@ -64,7 +64,7 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager.OnDayPassedEvent+=debugShowInfo;
 
-        _currentData = _provinceManager.GetProvinceState(soProvince._provinceId);
+        _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
     }
 
     void debugShowInfo() {

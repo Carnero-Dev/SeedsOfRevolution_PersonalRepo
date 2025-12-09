@@ -4,9 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "[provinceId]", menuName = "SOR/Province")]
 public class SO_Province : ScriptableObject
 {
-    [ShowOnly] public string _provinceId;
-    [ShowOnly] public string _name;
-    [ShowOnly] public int _population;   
-    public int _stability;   
-    [ShowOnly] public string _provinceType = SOR_Enums.provinceType.ToString();
+    [ShowOnly] public string provinceId;
+    [ShowOnly] public string provinceName;
+    [ShowOnly] public int provincePopulation;   
+    public int provinceStability;   
+    [ShowOnly] public string provinceType = SOR_Enums.provinceType.ToString();
 }
