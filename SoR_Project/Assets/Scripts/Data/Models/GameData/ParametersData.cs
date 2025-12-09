@@ -1,8 +1,10 @@
 public class ParametersData {
+	// Parámetros globales del jugador
 	public float influence;
 	public float fame;
 	public float determination;
-	public float popularity;
-	public float aligned;
-	public float affiliates;
+	// Parámetros globales provinciales
+	public float totalPopularity;
+	public float totalAligned;
+	public float totalAffiliates;
 }

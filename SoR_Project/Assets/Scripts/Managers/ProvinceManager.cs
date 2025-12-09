@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class ProvinceManager : MonoBehaviour {
 	private GameData data => GameDataService.Current;
 	public ProvinceInfo selectedProvince;
 	public SO_MapTemplate currentMapTemplate;
+	// El cache para el acceso en tiempo de ejecución
+	private Dictionary<string, ProvinceData> _stateCache;
 
 	void Awake() {
 		Init(currentMapTemplate);
@@ -16,6 +19,14 @@ public class ProvinceManager : MonoBehaviour {
 			return;
 		} 
 		selectedProvince = province;
+	}
+
+	public IEnumerable<ProvinceData> GetAllProvincesData() {
+		if (_stateCache == null) {
+			Debug.LogError("La caché de provincias no ha sido cargada. ¿Se llamó a Init o LoadStateCache?");
+			return Enumerable.Empty<ProvinceData>();
+		}
+		return _stateCache.Values;
 	}
 
 	public void Init(SO_MapTemplate mapTemplate) {
@@ -44,8 +55,6 @@ public class ProvinceManager : MonoBehaviour {
 		};
 	}
 
-	// El cache para el acceso en tiempo de ejecución
-	private Dictionary<string, ProvinceData> _stateCache;
 
 	public void LoadStateCache() {
 		_stateCache = new Dictionary<string, ProvinceData>();
