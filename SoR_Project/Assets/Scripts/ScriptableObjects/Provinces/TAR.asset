@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aab0db377d3f584ba4690bfb8188d8a, type: 3}
   m_Name: TAR
   m_EditorClassIdentifier: 
-  _provinceId: TAR
-  _name: "T\xE1rraco"
-  _population: 1752064
-  _stability: 60
-  _provinceType: Default
+  provinceId: TAR
+  provinceName: "T\xE1rraco"
+  provincePopulation: 1752064
+  provinceStability: 65
+  provinceType: Turistic
