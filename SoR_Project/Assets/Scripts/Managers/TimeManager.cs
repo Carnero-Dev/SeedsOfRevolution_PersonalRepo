@@ -78,42 +78,35 @@ public class TimeManager : MonoBehaviour {
     }
     #endregion
     #region Time Controller
-    public void AccelerateTime() {        
-        for (int i = 0; i < _timesScales.Length -1; i++) {
-            if (_currentTimeScaleIndex == i) {
-                _currentTimeScaleIndex++;
-                _TIMESCALE = _timesScales[_currentTimeScaleIndex];
-                break;
-            }            
-       }
+    private void ChangeTimeScale(int newIndex) {
+        _currentTimeScaleIndex = newIndex;
+        _TIMESCALE = _timesScales[_currentTimeScaleIndex];
     }
+    public void AccelerateTime() {
+        if (_currentTimeScaleIndex < _timesScales.Length - 1) {
+            ChangeTimeScale(_currentTimeScaleIndex + 1);
+        }
+    }
+
     public void DecreaseTime() {
-       for (int i = 1; i < _timesScales.Length; i++) {
-            if (_currentTimeScaleIndex == i) {
-                _currentTimeScaleIndex--;
-                _TIMESCALE = _timesScales[_currentTimeScaleIndex];
-                break;
-            }
-       }
+        if (_currentTimeScaleIndex > 0) {
+            ChangeTimeScale(_currentTimeScaleIndex - 1);
+        }
     }
-    public void PauseReanudeTime(){
+
+
+    public void PauseReanudeTime() {
         if (_currentTimeScaleIndex != 0) {
             _lastTimeScaleIndex = _currentTimeScaleIndex;
-            _currentTimeScaleIndex = 0;
+            ChangeTimeScale(0);
         } else {
-            _currentTimeScaleIndex = _lastTimeScaleIndex;
+            ChangeTimeScale(_lastTimeScaleIndex);
         }
-        _TIMESCALE = _timesScales[_currentTimeScaleIndex];
-    }  
+    }
 
-    public void SetTimeScale(int index)
-    {
+    public void SetTimeScale(int index) {
         int targetIndex = Mathf.Clamp(index, 1, _timesScales.Length - 1);
-        
-        _currentTimeScaleIndex = targetIndex;
-        
-        _TIMESCALE = _timesScales[_currentTimeScaleIndex];
-        
+        ChangeTimeScale(targetIndex);
     }
 
     #endregion

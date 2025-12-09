@@ -22,23 +22,18 @@ public class ProvinceManager : MonoBehaviour {
 	}
 
 	public IEnumerable<ProvinceData> GetAllProvincesData() {
-		if (_stateCache == null) {
-			Debug.LogError("La caché de provincias no ha sido cargada. ¿Se llamó a Init o LoadStateCache?");
-			return Enumerable.Empty<ProvinceData>();
-		}
+		EnsureCacheLoaded();
 		return _stateCache.Values;
 	}
 
 	public void Init(SO_MapTemplate mapTemplate) {
 		if (data.provinces.Length > 0) {
-			// Si ya hay datos, asume que es una partida cargada.
 			Debug.Log("Datos de provincia ya inicializados (Partida Cargada).");
 			LoadStateCache();
 			return;
 		}
 
 		var provinceList = new List<ProvinceData>();
-
 		foreach (var province in mapTemplate.provinces) {
 			var newProvince = CreateInitialProvince(province);
 			provinceList.Add(newProvince);
@@ -50,34 +45,33 @@ public class ProvinceManager : MonoBehaviour {
 	
 	private ProvinceData CreateInitialProvince(SO_Province soProvince) {
 		return new ProvinceData {
-		provinceID = soProvince._provinceId,
-		stability = soProvince._stability,
+			provinceID = soProvince._provinceId,
+			stability = soProvince._stability,
 		};
 	}
 
-
 	public void LoadStateCache() {
 		_stateCache = new Dictionary<string, ProvinceData>();
-
 		foreach (var province in data.provinces) {
 			if (!_stateCache.TryAdd(province.provinceID, province)) {
-                 Debug.LogWarning($"ID de provincia duplicado encontrado: {province.provinceID}");
+                Debug.LogWarning($"ID de provincia duplicado encontrado: {province.provinceID}");
             }
 		}
 		Debug.Log($"Caché de estados de provincia cargada: {_stateCache.Count} entradas.");
 	}
 
-	// Método de acceso que usará el resto del juego
 	public ProvinceData GetProvinceState(string provinceId) {
-		// Aseguramos que la caché esté cargada antes de buscar
-        if (_stateCache == null) {
-            Debug.LogError("La caché de provincias no ha sido cargada. ¿Se llamó a Init o LoadStateCache?");
-            return null;
-        }
+		EnsureCacheLoaded();
 		if (_stateCache.TryGetValue(provinceId, out var state)) {
 			return state;
 		}
 		Debug.LogError($"Estado de provincia con ID {provinceId} no encontrado en la caché.");
 		return null;
+	}
+	
+	private void EnsureCacheLoaded() {
+		if (_stateCache == null) {
+			Debug.LogError("La caché de provincias no ha sido cargada. ¿Se llamó a Init o LoadStateCache?");
+		}
 	}
 }

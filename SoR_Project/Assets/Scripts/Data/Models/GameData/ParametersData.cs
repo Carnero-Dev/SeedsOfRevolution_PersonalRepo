@@ -3,8 +3,4 @@ public class ParametersData {
 	public float influence;
 	public float fame = 100f;
 	public float determination = 100f;
-	// Parámetros globales provinciales
-	public float totalPopularity;
-	public float totalAligned;
-	public float totalAffiliates;
 }
