@@ -15,4 +15,5 @@ MonoBehaviour:
   _provinceId: MAD
   _name: Mamona
   _population: 4584530
-  _provinceType2: Capital
+  _stability: 100
+  _provinceType: Default

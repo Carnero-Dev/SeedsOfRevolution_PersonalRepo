@@ -15,4 +15,5 @@ MonoBehaviour:
   _provinceId: MAL
   _name: "M\xE1laka"
   _population: 845166
-  _provinceType2: "Tur\xEDstico"
+  _stability: 80
+  _provinceType: Default

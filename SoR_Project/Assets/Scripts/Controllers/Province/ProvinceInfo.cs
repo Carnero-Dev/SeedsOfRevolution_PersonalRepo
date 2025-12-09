@@ -11,7 +11,8 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     private TimeManager _timeManager;
     private ProvinceManager _provinceManager;
     private MeshRenderer _meshRenderer;
-    public SO_Province soProvince;
+   [SerializeField] private SO_Province soProvince;
+    private ProvinceData _currentData;
 
     
     // SO -> TO INFO
@@ -21,20 +22,24 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     public string ProvinceName => provinceName;
     public int Population => population;
     public string ProvinceType => provinceType;
-    
-    // PARAMETERS
-    public float popularity {
-        get {return _currentPopularity =  Mathf.Clamp(value: _currentPopularity, 0, population);}
-        set { _currentPopularity = Mathf.Clamp(value, 0, population);}}
-    public float affiliates {
-        get {return _currentAffiliates = Math.Clamp(value: _currentAffiliates, 0, population);} 
-        set { _currentAffiliates = Mathf.Clamp(value, 0, population);}}
-    [SerializeField, DynamicRange(0, "population"), Tooltip("Clampeado a los habitantes")] 
-    private  float _currentPopularity;
-    [SerializeField, DynamicRange(0, "population"), Tooltip("Clampeado a los habitantes")] 
-    private  float _currentAffiliates;
-    [Range (0, 100)] public float determination;
 
+    public float stability {
+        get { return Mathf.Clamp(_currentData.stability, -100, 100) ;}
+        set {_currentData.stability = Mathf.Clamp(value, -100, 100); }
+    }
+
+    public float popularity {
+        get {return Mathf.Clamp(_currentData.popularity, 0, soProvince._population) ;}
+        set { _currentData.popularity = Mathf.Clamp(value, 0, soProvince._population); }
+    }
+    public float aligned {
+        get {return Mathf.Clamp( _currentData.aligned, 0, _currentData.popularity) ;} 
+        set { _currentData.aligned = Mathf.Clamp(value, 0, _currentData.popularity); }
+    }
+    public float affiliates {
+        get {return Mathf.Clamp( _currentData.affiliates, 0, _currentData.aligned) ;} 
+        set { _currentData.affiliates = Mathf.Clamp(value, 0, _currentData.aligned); }
+    }
 
     private void OnValidate() {
         _meshRenderer = GetComponent<MeshRenderer>();
@@ -58,11 +63,15 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         _timeManager = ServiceLocator.Get<TimeManager>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager.OnDayPassedEvent+=debugShowInfo;
+
+        _currentData = _provinceManager.GetProvinceState(soProvince._provinceId);
     }
 
     void debugShowInfo() {
-        _currentPopularity += 1024;
-        _currentAffiliates += 512;
+        if(_currentData == null) return;
+        popularity += 1024;
+        aligned += 512;
+        affiliates += 256;
     }
 
 	public void LeftClickInteract() {
