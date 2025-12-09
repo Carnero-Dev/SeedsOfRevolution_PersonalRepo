@@ -10,10 +10,10 @@ public class ParameterController : MonoBehaviour {
 	public float influence { get {return Mathf.Clamp(_currentData.influence, 0, 99999); } set{_currentData.influence = Mathf.Clamp(value, 0, 99999);} }
 	public float fame { get {return Mathf.Clamp(_currentData.fame, -100, 100); } set{ _currentData.fame =Mathf.Clamp(value, -100, 100);} }
 	public float determination { get {return Mathf.Clamp(_currentData.determination, 0, 100); } set{_currentData.determination = Mathf.Clamp(value, 0, 100);} }
-	// Parámetros globales provinciales (SOLO LECTURA COMPUTADA)
-	public float totalPopularity => _currentData.totalPopularity;
-	public float totalAligned => _currentData.totalAligned;
-	public float totalAffiliates => _currentData.totalAffiliates;
+	// Parámetros provinciales globales (Solo Lectura, no persistente)
+	public float totalPopularity { get; private set;}
+	public float totalAligned { get; private set;}
+	public float totalAffiliates { get; private set;}
 	public float totalPopulation {get; private set;} // Solo lectura, propositos visuales
 	
 	void Start() {
@@ -38,28 +38,26 @@ public class ParameterController : MonoBehaviour {
 	}
 
 	private void ComputeProvincialTotals() {
-		float totalPop = 0;
-		float totalAlign = 0;
-		float totalAffil = 0;
+		float totalPopularity = 0;
+		float totalAligned = 0;
+		float totalAffiliates = 0;
 		var allProvincesData = _provinceManager.GetAllProvincesData();
 		
 		if (allProvincesData == null) return;
 		
-		foreach(var province in allProvincesData) {
-			totalPop += province.popularity;
-			totalAlign += province.aligned;
-			totalAffil += province.affiliates;
+		foreach (var province in allProvincesData) {
+			totalPopularity += province.popularity;
+			totalAligned += province.aligned;
+			totalAffiliates += province.affiliates;
 		}
 
-
-		_currentData.totalPopularity = totalPop;
-		_currentData.totalAligned = totalAlign;
-		_currentData.totalAffiliates = totalAffil;
-
+		this.totalPopularity = totalPopularity;
+		this.totalAligned = totalAligned;
+		this.totalAffiliates = totalAffiliates;
 	}
 
 	private void UpdateInfluence() {
-		float baseInfluence = _currentData.totalAffiliates / 500f;
+		float baseInfluence = totalAffiliates / 500f;
 		//? Aplicar modificadores
 		_currentData.influence = baseInfluence;
 	}

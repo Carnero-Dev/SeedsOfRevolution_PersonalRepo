@@ -47,15 +47,15 @@ public class debug_ParametersTest_UI : MonoBehaviour
         decreasesButton.onClick.AddListener(_timeManager.DecreaseTime);
 	}
 
-	void Update()
-    {
-        SetHourFormat();
-        txtDate.text = SetHourFormat() + " / " 
+	void Update() {
+        string hourFormat = SetHourFormat();
+        txtDate.text = hourFormat + " / " 
             + _timeData.day.ToString("D2") + " / " 
             + _timeData.month.ToString("D2") + " / " 
             + _timeData.year.ToString("D4");
         txtVelocity.text = "X" + _timeManager._currentTimeScaleIndex;
-        if(_provinceManager.selectedProvince != null) {
+        
+        if (_provinceManager.selectedProvince != null) {
             txtName.text = _provinceManager.selectedProvince.ProvinceName;
             txtPopulation.text = _provinceManager.selectedProvince.Population.ToString();
             txtPopularity.text = (_provinceManager.selectedProvince.popularity / _provinceManager.selectedProvince.Population * 100).ToString("F2") + " %";
@@ -63,21 +63,21 @@ public class debug_ParametersTest_UI : MonoBehaviour
             txtAligned.text = _provinceManager.selectedProvince.aligned.ToString();
             txtStability.text = _provinceManager.selectedProvince.stability.ToString();
         }
+        
         txtInfluence.text = _parameterController.influence.ToString("F2");
-        txtTotalPopularity.text = (_parameterController.totalPopularity / _parameterController.totalPopulation * 100).ToString("F2") + " %"; //_parameterController.popularity.ToString("F2");
+        txtTotalPopularity.text = (_parameterController.totalPopularity / _parameterController.totalPopulation * 100).ToString("F2") + " %";
         txtTotalAffiliates.text = _parameterController.totalAffiliates.ToString();
         txtTotalAligned.text = _parameterController.totalAligned.ToString();
         txtFame.text = _parameterController.fame.ToString();
         txtDetermination.text = _parameterController.determination.ToString();
 
-        if (_timeManager._currentTimeScaleIndex == 0) {
-            pauseButton.gameObject.SetActive(true);
-            reanudeButton.gameObject.SetActive(false);
-        } else {
-            pauseButton.gameObject.SetActive(false);
-            reanudeButton.gameObject.SetActive(true);
-        }
+        UpdateButtonVisibility();
+    }
 
+    private void UpdateButtonVisibility() {
+        bool isPaused = _timeManager._currentTimeScaleIndex == 0;
+        pauseButton.gameObject.SetActive(isPaused);
+        reanudeButton.gameObject.SetActive(!isPaused);
     }
 
     string SetHourFormat() {
