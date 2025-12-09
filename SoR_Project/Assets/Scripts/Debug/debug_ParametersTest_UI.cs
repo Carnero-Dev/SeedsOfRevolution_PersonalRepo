@@ -10,10 +10,11 @@ using Unity.VisualScripting;
 /// </summary>
 public class debug_ParametersTest_UI : MonoBehaviour
 {    
-    [Header("Time Manager")]
     TimeManager _timeManager;
     ProvinceManager _provinceManager;
+    ParameterController _parameterController;
     private TimeManagerData _timeData => GameDataService.Current.timeManager;
+    [Header("Time Manager")]
     [SerializeField] TextMeshProUGUI txtDate;
     [SerializeField] TextMeshProUGUI txtVelocity;
     [SerializeField] Button pauseButton;
@@ -27,10 +28,18 @@ public class debug_ParametersTest_UI : MonoBehaviour
     [SerializeField] TextMeshProUGUI txtAffiliates;
     [SerializeField] TextMeshProUGUI txtAligned;
     [SerializeField] TextMeshProUGUI txtStability;
+    [Header("Parameters Info")]
+    [SerializeField] TextMeshProUGUI txtInfluence;
+    [SerializeField] TextMeshProUGUI txtTotalPopularity;
+    [SerializeField] TextMeshProUGUI txtTotalAffiliates;
+    [SerializeField] TextMeshProUGUI txtTotalAligned;
+    [SerializeField] TextMeshProUGUI txtFame;
+    [SerializeField] TextMeshProUGUI txtDetermination;
 
 	void Start() {
 		_timeManager = ServiceLocator.Get<TimeManager>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
+        _parameterController = ServiceLocator.Get<ParameterController>();
 
         pauseButton.onClick.AddListener(_timeManager.PauseReanudeTime);
         reanudeButton.onClick.AddListener(_timeManager.PauseReanudeTime);
@@ -54,6 +63,12 @@ public class debug_ParametersTest_UI : MonoBehaviour
             txtAligned.text = _provinceManager.selectedProvince.aligned.ToString();
             txtStability.text = _provinceManager.selectedProvince.stability.ToString();
         }
+        txtInfluence.text = _parameterController.influence.ToString("F2");
+        txtTotalPopularity.text = (_parameterController.totalPopularity / _parameterController.totalPopulation * 100).ToString("F2") + " %"; //_parameterController.popularity.ToString("F2");
+        txtTotalAffiliates.text = _parameterController.totalAffiliates.ToString();
+        txtTotalAligned.text = _parameterController.totalAligned.ToString();
+        txtFame.text = _parameterController.fame.ToString();
+        txtDetermination.text = _parameterController.determination.ToString();
 
         if (_timeManager._currentTimeScaleIndex == 0) {
             pauseButton.gameObject.SetActive(true);

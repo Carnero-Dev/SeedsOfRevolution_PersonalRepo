@@ -10,15 +10,21 @@ public class ParameterController : MonoBehaviour {
 	public float fame { get {return _currentData.fame; } set{_currentData.fame = value;} }
 	public float determination { get {return _currentData.determination; } set{_currentData.determination = value;} }
 	// Parámetros globales provinciales (SOLO LECTURA COMPUTADA)
-	public float popularity => _currentData.totalPopularity;
-	public float aligned => _currentData.totalAligned;
-	public float affiliates => _currentData.totalAffiliates;
+	public float totalPopularity => _currentData.totalPopularity;
+	public float totalAligned => _currentData.totalAligned;
+	public float totalAffiliates => _currentData.totalAffiliates;
+	public float totalPopulation {get; private set;} // Solo lectura, propositos visuales
 	
 	void Start() {
 		_timeManager = ServiceLocator.Get<TimeManager>();
 		_provinceManager = ServiceLocator.Get<ProvinceManager>();
 
 		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
+
+		// Calcular población total del mapa
+		foreach(var province in _provinceManager.currentMapTemplate.provinces) {
+			totalPopulation += province._population;
+		}
 	}
 
 	void OnDisable() {
@@ -44,9 +50,11 @@ public class ParameterController : MonoBehaviour {
 			totalAffil += province.affiliates;
 		}
 
+
 		_currentData.totalPopularity = totalPop;
 		_currentData.totalAligned = totalAlign;
 		_currentData.totalAffiliates = totalAffil;
+
 	}
 
 	private void UpdateInfluence() {
