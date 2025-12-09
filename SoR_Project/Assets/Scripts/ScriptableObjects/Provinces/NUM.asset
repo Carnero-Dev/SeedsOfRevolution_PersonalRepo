@@ -15,4 +15,5 @@ MonoBehaviour:
   _provinceId: NUM
   _name: Numandia
   _population: 554348
-  _provinceType2: Industrial
+  _stability: 85
+  _provinceType: Default

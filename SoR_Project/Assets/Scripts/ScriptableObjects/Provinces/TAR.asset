@@ -15,4 +15,5 @@ MonoBehaviour:
   _provinceId: TAR
   _name: "T\xE1rraco"
   _population: 1752064
-  _provinceType2: Industrial
+  _stability: 60
+  _provinceType: Default

@@ -32,9 +32,13 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         get {return Mathf.Clamp(_currentData.popularity, 0, soProvince._population) ;}
         set { _currentData.popularity = Mathf.Clamp(value, 0, soProvince._population); }
     }
+    public float aligned {
+        get {return Mathf.Clamp( _currentData.aligned, 0, _currentData.popularity) ;} 
+        set { _currentData.aligned = Mathf.Clamp(value, 0, _currentData.popularity); }
+    }
     public float affiliates {
-        get {return Mathf.Clamp( _currentData.affiliates, 0, soProvince._population) ;} 
-        set { _currentData.affiliates = Mathf.Clamp(value, 0, soProvince._population); }
+        get {return Mathf.Clamp( _currentData.affiliates, 0, _currentData.aligned) ;} 
+        set { _currentData.affiliates = Mathf.Clamp(value, 0, _currentData.aligned); }
     }
 
     private void OnValidate() {
@@ -43,12 +47,10 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
             provinceName = soProvince._name;
             population = soProvince._population;
             provinceType = soProvince._provinceType;
-          //  stability = soProvince._stability;
         } else {
             provinceName = "(Unamed)";
             population = 1;
             provinceType = "Default";
-           // stability = 100;
         }
     }    
 
@@ -63,15 +65,13 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         _timeManager.OnDayPassedEvent+=debugShowInfo;
 
         _currentData = _provinceManager.GetProvinceState(soProvince._provinceId);
-        if(_currentData != null) {
-            // ApplyData
-        }
     }
 
     void debugShowInfo() {
         if(_currentData == null) return;
         popularity += 1024;
-        affiliates += 512;
+        aligned += 512;
+        affiliates += 256;
     }
 
 	public void LeftClickInteract() {

@@ -25,6 +25,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
     [SerializeField] TextMeshProUGUI txtPopulation;
     [SerializeField] TextMeshProUGUI txtPopularity;
     [SerializeField] TextMeshProUGUI txtAffiliates;
+    [SerializeField] TextMeshProUGUI txtAligned;
     [SerializeField] TextMeshProUGUI txtStability;
 
 	void Start() {
@@ -50,6 +51,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
             txtPopulation.text = _provinceManager.selectedProvince.Population.ToString();
             txtPopularity.text = (_provinceManager.selectedProvince.popularity / _provinceManager.selectedProvince.Population * 100).ToString("F2") + " %";
             txtAffiliates.text = _provinceManager.selectedProvince.affiliates.ToString();
+            txtAligned.text = _provinceManager.selectedProvince.aligned.ToString();
             txtStability.text = _provinceManager.selectedProvince.stability.ToString();
         }
 

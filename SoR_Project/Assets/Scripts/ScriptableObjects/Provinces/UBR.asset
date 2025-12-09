@@ -15,4 +15,5 @@ MonoBehaviour:
   _provinceId: UBR
   _name: Ubroque
   _population: 3
-  _provinceType2: "Tur\xEDstico"
+  _stability: 65
+  _provinceType: Default
