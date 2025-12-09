@@ -89,7 +89,7 @@ public class TimeManager : MonoBehaviour {
     }
 
     public void DecreaseTime() {
-        if (_currentTimeScaleIndex > 1) {
+        if (_currentTimeScaleIndex > 0) {
             ChangeTimeScale(_currentTimeScaleIndex - 1);
         }
     }
