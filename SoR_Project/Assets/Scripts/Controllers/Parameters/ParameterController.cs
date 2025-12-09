@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ParameterController : MonoBehaviour {
@@ -6,9 +7,9 @@ public class ParameterController : MonoBehaviour {
 	private TimeManager _timeManager;
 
 	// Parámetros globales del jugador
-	public float influence { get {return _currentData.influence; } set{_currentData.influence = value;} }
-	public float fame { get {return _currentData.fame; } set{_currentData.fame = value;} }
-	public float determination { get {return _currentData.determination; } set{_currentData.determination = value;} }
+	public float influence { get {return Mathf.Clamp(_currentData.influence, 0, 99999); } set{_currentData.influence = Mathf.Clamp(value, 0, 99999);} }
+	public float fame { get {return Mathf.Clamp(_currentData.fame, -100, 100); } set{ _currentData.fame =Mathf.Clamp(value, -100, 100);} }
+	public float determination { get {return Mathf.Clamp(_currentData.determination, 0, 100); } set{_currentData.determination = Mathf.Clamp(value, 0, 100);} }
 	// Parámetros globales provinciales (SOLO LECTURA COMPUTADA)
 	public float totalPopularity => _currentData.totalPopularity;
 	public float totalAligned => _currentData.totalAligned;

@@ -2780,6 +2780,10 @@ PrefabInstance:
       propertyPath: provinceManager
       value: 
       objectReference: {fileID: 1672593591}
+    - target: {fileID: 8289598590173436204, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
+      propertyPath: parameterController
+      value: 
+      objectReference: {fileID: 2071187151}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
