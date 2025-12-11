@@ -11,7 +11,7 @@ public class TimeManager : MonoBehaviour {
     [Tooltip("Cada segundo en la vida real es X horas en el juego")]
         private int _TIMESCALE = 20; // Controla la velocidad del mundo con respecto a las fechas
     private int [] _timesScales = new int [4]; // Establece las velocidades del juego (EN ORDEN INCLUYENDO PAUSA)
-    public int _currentTimeScaleIndex {get; private set;} = 1;  // Establece cual es la velocidad actual
+    private int _currentTimeScaleIndex = 1;  // Establece cual es la velocidad actual
     private int _lastTimeScaleIndex = 1;  // Establece cual es la velocidad actual
 
     // Actions
@@ -108,6 +108,7 @@ public class TimeManager : MonoBehaviour {
         int targetIndex = Mathf.Clamp(index, 1, _timesScales.Length - 1);
         ChangeTimeScale(targetIndex);
     }
+    public int GetCurrentTimeScale() => _currentTimeScaleIndex;
 
     #endregion
 }
