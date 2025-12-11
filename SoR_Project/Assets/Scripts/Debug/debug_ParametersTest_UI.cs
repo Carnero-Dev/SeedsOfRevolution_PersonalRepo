@@ -13,7 +13,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
     TimeManager _timeManager;
     ProvinceManager _provinceManager;
     ParameterController _parameterController;
-    private TimeManagerData _timeData => GameDataService.Current.timeData;
+    private TimeManagerData _timeData => GameDataService.Current.gameTime;
     [Header("Time Manager")]
     [SerializeField] TextMeshProUGUI txtDate;
     [SerializeField] TextMeshProUGUI txtVelocity;

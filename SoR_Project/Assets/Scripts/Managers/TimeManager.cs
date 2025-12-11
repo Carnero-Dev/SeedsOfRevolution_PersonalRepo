@@ -6,7 +6,7 @@ using System;
 /// Author: Carlos Carnero Cabrera
 /// </summary>
 public class TimeManager : MonoBehaviour {
-    private TimeManagerData _data => GameDataService.Current.timeData;
+    private TimeManagerData _data => GameDataService.Current.gameTime;
     [SerializeField] 
     [Tooltip("Cada segundo en la vida real es X horas en el juego")]
         private int _TIMESCALE = 300; // Controla la velocidad del mundo con respecto a las fechas

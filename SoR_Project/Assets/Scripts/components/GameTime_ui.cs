@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class GameTime_ui : MonoBehaviour {
     private TimeManager _timeManager;
-    private TimeManagerData _timeData => GameDataService.Current.timeData;
+    private TimeManagerData _timeData => GameDataService.Current.gameTime;
     [SerializeField] private TextMeshProUGUI _hourText;
     [SerializeField] private TextMeshProUGUI _dayMonthText;
     [SerializeField] private TextMeshProUGUI _yearText;

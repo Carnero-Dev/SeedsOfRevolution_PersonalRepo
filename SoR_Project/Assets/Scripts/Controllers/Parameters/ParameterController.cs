@@ -15,6 +15,8 @@ public class ParameterController : MonoBehaviour {
 	public float totalAligned { get; private set;}
 	public float totalAffiliates { get; private set;}
 	public float totalPopulation {get; private set;} // Solo lectura, propositos visuales
+
+	public Action OnParametersUpdated;
 	
 	void Start() {
 		_timeManager = ServiceLocator.Get<TimeManager>();
@@ -35,6 +37,8 @@ public class ParameterController : MonoBehaviour {
 	public void UpdateGlobalParameters() {
 		ComputeProvincialTotals();
 		UpdateInfluence();
+
+		OnParametersUpdated?.Invoke();
 	}
 
 	private void ComputeProvincialTotals() {
