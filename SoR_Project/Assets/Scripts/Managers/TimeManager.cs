@@ -9,7 +9,7 @@ public class TimeManager : MonoBehaviour {
     private TimeManagerData _data => GameDataService.Current.timeData;
     [SerializeField] 
     [Tooltip("Cada segundo en la vida real es X horas en el juego")]
-        private int _TIMESCALE = 20; // Controla la velocidad del mundo con respecto a las fechas
+        private int _TIMESCALE = 300; // Controla la velocidad del mundo con respecto a las fechas
     private int [] _timesScales = new int [4]; // Establece las velocidades del juego (EN ORDEN INCLUYENDO PAUSA)
     private int _currentTimeScaleIndex = 1;  // Establece cual es la velocidad actual
     private int _lastTimeScaleIndex = 1;  // Establece cual es la velocidad actual
@@ -19,6 +19,10 @@ public class TimeManager : MonoBehaviour {
     public Action OnDayPassedEvent;
     public Action OnMonthPassedEvent;
     public Action OnYearPassedEvent;
+
+    public Action OnGameTimePaused;
+    public Action OnGameTimeReanudated;
+    public Action OnGameTimeScaleChanged;
 
     void Start() {
         PauseReanudeTime();
@@ -37,14 +41,18 @@ public class TimeManager : MonoBehaviour {
 
     #region Calculate Time
     void CalculateTime() {
-        _data.hour += Time.deltaTime * _TIMESCALE;
-        if(_data.hour % 60 == 0) OnHourPassedEvent?.Invoke();       
         // Comprueba si ha pasado 24 horas para pasar de dia y resetear el contador  
-        if(_data.hour >= 1339f || _data.hour < 0) {
-            _data.hour = 0;
-            OnDayPassedEvent?.Invoke();
-            _data.day = CheckMonth() ? 1 : _data.day + 1; // Checkea si ha pasado de mes para resetear el dia        
-        }
+        _data.minute += Time.deltaTime * _TIMESCALE;
+        if(_data.minute >= 59) { 
+            if(_data.hour >= 23 || _data.hour < 0) {
+                _data.minute = 0;
+                _data.hour = 0;
+                OnHourPassedEvent?.Invoke();
+                _data.day = CheckMonth() ? 1 : _data.day + 1; // Checkea si ha pasado de mes para resetear el dia        
+                OnDayPassedEvent?.Invoke();
+            } else
+            _data.hour++; _data.minute = 0; OnHourPassedEvent?.Invoke(); 
+        }   
     }
 
     bool CheckMonth(){
@@ -83,6 +91,7 @@ public class TimeManager : MonoBehaviour {
     private void ChangeTimeScale(int newIndex) {
         _currentTimeScaleIndex = newIndex;
         _TIMESCALE = _timesScales[_currentTimeScaleIndex];
+        OnGameTimeScaleChanged?.Invoke();
     }
     public void AccelerateTime() {
         if (_currentTimeScaleIndex < _timesScales.Length - 1) {
@@ -101,8 +110,10 @@ public class TimeManager : MonoBehaviour {
         if (_currentTimeScaleIndex != 0) {
             _lastTimeScaleIndex = _currentTimeScaleIndex;
             ChangeTimeScale(0);
+            OnGameTimePaused?.Invoke();
         } else {
             ChangeTimeScale(_lastTimeScaleIndex);
+            OnGameTimeReanudated?.Invoke();
         }
     }
 

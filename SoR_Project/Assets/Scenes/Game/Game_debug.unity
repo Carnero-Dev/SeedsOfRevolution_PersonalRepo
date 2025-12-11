@@ -319,6 +319,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4880859160584622843, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: _resumeTimeButton
+      value: 
+      objectReference: {fileID: 1044476334}
     - target: {fileID: 5405435145055383712, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -486,6 +490,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2293730746795650231, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
+      propertyPath: _TIMESCALE
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 8183116214513539195, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
       propertyPath: m_Name
       value: GAMEPLAY_INIT
@@ -504,6 +512,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3920952016822073647, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
   m_PrefabInstance: {fileID: 24170259}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1044476334 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5455056608245307839, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+  m_PrefabInstance: {fileID: 24170259}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1405566229
 GameObject:
   m_ObjectHideFlags: 0
