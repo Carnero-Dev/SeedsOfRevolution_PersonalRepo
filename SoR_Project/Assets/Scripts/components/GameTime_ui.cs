@@ -4,21 +4,23 @@ using UnityEngine.UI;
 
 public class GameTime_ui : MonoBehaviour {
     private TimeManager _timeManager;
-    private TimeManagerData _timeData;
+    private TimeManagerData _timeData => GameDataService.Current.timeData;
     [SerializeField] private TextMeshProUGUI _hourText;
     [SerializeField] private TextMeshProUGUI _dayMonthText;
     [SerializeField] private TextMeshProUGUI _yearText;
     [SerializeField] private TextMeshProUGUI _timeScaleText;
     [SerializeField] private Button _accelerateTimeButton;
     [SerializeField] private Button _decreaseTimeButton;
-    [SerializeField] private Button _pauseResumeTimeButton;
+    [SerializeField] private Button _pauseTimeButton;
+    [SerializeField] private Button _ResumeTimeButton;
 
     private void Start() {
         _timeManager = ServiceLocator.Get<TimeManager>();
 
         _accelerateTimeButton.onClick.AddListener(_timeManager.AccelerateTime);
         _decreaseTimeButton.onClick.AddListener(_timeManager.DecreaseTime);
-        _pauseResumeTimeButton.onClick.AddListener(_timeManager.PauseReanudeTime);
+        _pauseTimeButton.onClick.AddListener(_timeManager.PauseReanudeTime);
+        _ResumeTimeButton.onClick.AddListener(_timeManager.PauseReanudeTime);
     }
 
     private void Update() {
