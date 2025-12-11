@@ -12,15 +12,15 @@ public class GameTime_ui : MonoBehaviour {
     [SerializeField] private Button _accelerateTimeButton;
     [SerializeField] private Button _decreaseTimeButton;
     [SerializeField] private Button _pauseTimeButton;
-    [SerializeField] private Button _ResumeTimeButton;
+    [SerializeField] private Button _resumeTimeButton;
 
     private void Start() {
         _timeManager = ServiceLocator.Get<TimeManager>();
 
         _accelerateTimeButton.onClick.AddListener(_timeManager.AccelerateTime);
         _decreaseTimeButton.onClick.AddListener(_timeManager.DecreaseTime);
-        _pauseTimeButton.onClick.AddListener(_timeManager.PauseReanudeTime);
-        _ResumeTimeButton.onClick.AddListener(_timeManager.PauseReanudeTime);
+        _pauseTimeButton.onClick.AddListener(UpdateButtonVisibility);
+        _resumeTimeButton.onClick.AddListener(UpdateButtonVisibility);
     }
 
     private void Update() {
@@ -28,12 +28,14 @@ public class GameTime_ui : MonoBehaviour {
         _dayMonthText.text = _timeData.day.ToString("00") + " de " + GetMonthName(_timeData.month);
         _yearText.text = _timeData.year.ToString("0000");
         _timeScaleText.text = "x" + _timeManager.GetCurrentTimeScale().ToString();
-    }
+    } 
 
-    private string SetHourFormat() {
-        var hour = (int)_timeData.hour;
-        return string.Format("{0:D2} : 00", hour);
-    }    
+    private void UpdateButtonVisibility() {
+        _timeManager.PauseReanudeTime();
+        bool isPaused = _timeManager.GetCurrentTimeScale() == 0;
+        _pauseTimeButton.gameObject.SetActive(isPaused);
+        _resumeTimeButton.gameObject.SetActive(!isPaused);
+    }
 
     private string GetMonthName(int month) => month switch {
         1 => "Enero",

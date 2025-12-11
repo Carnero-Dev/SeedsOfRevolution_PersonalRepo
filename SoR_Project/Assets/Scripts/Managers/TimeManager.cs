@@ -15,6 +15,7 @@ public class TimeManager : MonoBehaviour {
     private int _lastTimeScaleIndex = 1;  // Establece cual es la velocidad actual
 
     // Actions
+    public Action OnHourPassedEvent;
     public Action OnDayPassedEvent;
     public Action OnMonthPassedEvent;
     public Action OnYearPassedEvent;
@@ -36,9 +37,10 @@ public class TimeManager : MonoBehaviour {
 
     #region Calculate Time
     void CalculateTime() {
-        _data.hour += Time.deltaTime * _TIMESCALE;         
+        _data.hour += Time.deltaTime * _TIMESCALE;
+        if(_data.hour % 60 == 0) OnHourPassedEvent?.Invoke();       
         // Comprueba si ha pasado 24 horas para pasar de dia y resetear el contador  
-        if(_data.hour >= 23.99f || _data.hour < 0) {
+        if(_data.hour >= 1339f || _data.hour < 0) {
             _data.hour = 0;
             OnDayPassedEvent?.Invoke();
             _data.day = CheckMonth() ? 1 : _data.day + 1; // Checkea si ha pasado de mes para resetear el dia        
