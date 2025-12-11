@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class GameParameters_ui : MonoBehaviour {
+public class GameGlobalParameters_ui : MonoBehaviour {
 	private ParameterController _parameterController;
 	private ParametersData _parametersData => GameDataService.Current.parameters;
 	[SerializeField] private TextMeshProUGUI _influenceText;
