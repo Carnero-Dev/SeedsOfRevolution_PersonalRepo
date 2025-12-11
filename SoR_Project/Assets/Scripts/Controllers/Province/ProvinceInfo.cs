@@ -56,6 +56,7 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
 
     void OnDisable() {
         _timeManager.OnDayPassedEvent-=debugShowInfo;
+         _provinceManager.OnProvincesCacheLoaded -= InitProvinceData;
     }
 
     void Start() {
@@ -63,10 +64,9 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         _timeManager = ServiceLocator.Get<TimeManager>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager.OnDayPassedEvent+=debugShowInfo;
-
-        _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
+        _provinceManager.OnProvincesCacheLoaded += InitProvinceData;
     }
-
+    private void InitProvinceData() => _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
     void debugShowInfo() {
         if(_currentData == null) return;
         popularity += 1024;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class ProvinceManager : MonoBehaviour {
 	private GameData data => GameDataService.Current;
@@ -8,6 +9,7 @@ public class ProvinceManager : MonoBehaviour {
 	public SO_MapTemplate currentMapTemplate;
 	// El cache para el acceso en tiempo de ejecución
 	private Dictionary<string, ProvinceData> _stateCache;
+	public Action OnProvincesCacheLoaded;
 
 	void Start() {
 		Init(currentMapTemplate);
@@ -57,6 +59,7 @@ public class ProvinceManager : MonoBehaviour {
                 Debug.LogWarning($"ID de provincia duplicado encontrado: {province.provinceID}");
             }
 		}
+		OnProvincesCacheLoaded?.Invoke();
 		Debug.Log($"Caché de estados de provincia cargada: {_stateCache.Count} entradas.");
 	}
 
