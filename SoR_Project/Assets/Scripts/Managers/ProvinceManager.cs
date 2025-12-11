@@ -9,7 +9,7 @@ public class ProvinceManager : MonoBehaviour {
 	// El cache para el acceso en tiempo de ejecución
 	private Dictionary<string, ProvinceData> _stateCache;
 
-	void Awake() {
+	void Start() {
 		Init(currentMapTemplate);
 	}
 

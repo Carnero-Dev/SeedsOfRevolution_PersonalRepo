@@ -241,9 +241,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soProvince: {fileID: 11400000, guid: 49859aff8bf6fab4dbf7d4e4efd5afca, type: 2}
-  provinceName: Mamona
+  provinceName: Madiburgo
   population: 4584530
-  provinceType: Default
+  provinceType: Capital
 --- !u!1 &89365797
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,7 +1009,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1672593591}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProvinceManager, Assembly-CSharp
         m_MethodName: SelectProvince
         m_Mode: 2
@@ -1183,7 +1183,18 @@ MonoBehaviour:
   soProvince: {fileID: 11400000, guid: 0bcd3ce4ddca5c14c804fe386442509e, type: 2}
   provinceName: "T\xE1rraco"
   population: 1752064
-  provinceType: Default
+  provinceType: Turistic
+--- !u!114 &383209908 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8954171521376432274, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
+  m_PrefabInstance: {fileID: 817733981}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 315927b7e25d7c94490f74c48bf13c0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!21 &384054346
 Material:
   serializedVersion: 8
@@ -1324,11 +1335,6 @@ Material:
     - _SpecColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!4 &396418533 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 604528630974602674, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
-  m_PrefabInstance: {fileID: 817733981}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &412675526
 GameObject:
   m_ObjectHideFlags: 0
@@ -1627,7 +1633,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1672593591}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProvinceManager, Assembly-CSharp
         m_MethodName: SelectProvince
         m_Mode: 2
@@ -1971,7 +1977,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1672593591}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProvinceManager, Assembly-CSharp
         m_MethodName: SelectProvince
         m_Mode: 2
@@ -2104,7 +2110,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1672593591}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProvinceManager, Assembly-CSharp
         m_MethodName: SelectProvince
         m_Mode: 2
@@ -2779,17 +2785,10 @@ PrefabInstance:
     - target: {fileID: 8289598590173436204, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
       propertyPath: provinceManager
       value: 
-      objectReference: {fileID: 1672593591}
-    - target: {fileID: 8289598590173436204, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
-      propertyPath: parameterController
-      value: 
-      objectReference: {fileID: 2071187151}
+      objectReference: {fileID: 383209908}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 604528630974602674, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2071187150}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d650c5bfb1738144bb5db229a3cce98d, type: 3}
 --- !u!1 &823002257
@@ -3188,7 +3187,7 @@ MonoBehaviour:
   soProvince: {fileID: 11400000, guid: 51b1ecf1a47e55241b5994ffa02ccec0, type: 2}
   provinceName: Numandia
   population: 554348
-  provinceType: Default
+  provinceType: Industrial
 --- !u!1 &882685127
 GameObject:
   m_ObjectHideFlags: 0
@@ -5442,7 +5441,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1672593591}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ProvinceManager, Assembly-CSharp
         m_MethodName: SelectProvince
         m_Mode: 2
@@ -6118,7 +6117,7 @@ MonoBehaviour:
   soProvince: {fileID: 11400000, guid: 2d59a3835433cf948b246731ecd43a7c, type: 2}
   provinceName: "M\xE1laka"
   population: 845166
-  provinceType: Default
+  provinceType: Turistic
 --- !u!1 &1599902737
 GameObject:
   m_ObjectHideFlags: 0
@@ -6264,7 +6263,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1672593590}
-  - component: {fileID: 1672593591}
   m_Layer: 0
   m_Name: PROVINCES
   m_TagString: Untagged
@@ -6292,20 +6290,6 @@ Transform:
   - {fileID: 2127848061}
   m_Father: {fileID: 968716020}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1672593591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1672593589}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 315927b7e25d7c94490f74c48bf13c0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedProvince: {fileID: 0}
-  currentMapTemplate: {fileID: 11400000, guid: 4417dcd4de968724f84a61e74792ff21, type: 2}
 --- !u!1 &1707104631
 GameObject:
   m_ObjectHideFlags: 0
@@ -8212,50 +8196,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000061035, y: -102.849}
   m_SizeDelta: {x: 1920, y: 301.699}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &2071187149
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2071187150}
-  - component: {fileID: 2071187151}
-  m_Layer: 0
-  m_Name: PARAMETER_CONTROLLER
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2071187150
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2071187149}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 396418533}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2071187151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2071187149}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 545dcbeec361f7c459387ae42c3578ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2078473771
 GameObject:
   m_ObjectHideFlags: 0
@@ -8869,7 +8809,7 @@ MonoBehaviour:
   soProvince: {fileID: 11400000, guid: 9de4b5233baa5f34ea7594edd7678ed4, type: 2}
   provinceName: Ubroque
   population: 3
-  provinceType: Default
+  provinceType: Industrial
 --- !u!1 &2136927839
 GameObject:
   m_ObjectHideFlags: 0
