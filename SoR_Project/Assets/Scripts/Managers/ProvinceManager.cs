@@ -10,6 +10,7 @@ public class ProvinceManager : MonoBehaviour {
 	// El cache para el acceso en tiempo de ejecución
 	private Dictionary<string, ProvinceData> _stateCache;
 	public Action OnProvincesCacheLoaded;
+	public Action<bool> OnProvinceSelected;
 
 	void Start() {
 		Init(currentMapTemplate);
@@ -18,9 +19,11 @@ public class ProvinceManager : MonoBehaviour {
 	public void SelectProvince(ProvinceInfo province) {
 		if(province == null) {
 			selectedProvince = null;
+			OnProvinceSelected?.Invoke(false);
 			return;
 		} 
 		selectedProvince = province;
+		OnProvinceSelected?.Invoke(true);
 	}
 
 	public IEnumerable<ProvinceData> GetAllProvincesData() {
