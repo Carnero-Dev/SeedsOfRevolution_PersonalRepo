@@ -13,9 +13,11 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 
 	private void Start() {
 		_parameterController = ServiceLocator.Get<ParameterController>();
+	}
 
-		_parameterController.OnParametersUpdated += UpdateUI;
+	private void Update() {
 		UpdateUI();
+
 	}
 
 	private void UpdateUI() {
