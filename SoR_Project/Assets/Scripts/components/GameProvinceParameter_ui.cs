@@ -41,10 +41,10 @@ public class GameProvinceParameter_ui : MonoBehaviour {
         provinceNameText.text = _provinceManager.selectedProvince.ProvinceName;
             provinceFlagImage.sprite = Resources.Load<Sprite>("ProvinceFlags/default/" + _provinceManager.selectedProvince.GetProvinceId() +"_flag");
         provinceStabilityText.text = "Estabilidad: " + _provinceManager.selectedProvince.stability.ToString("F2") + "%";
-        provincePopulationText.text = "Habitantes: " + _provinceManager.selectedProvince.Population.ToString();
-        provincePopularityText.text = _provinceManager.selectedProvince.popularity.ToString();
-        provinceAlignedText.text = _provinceManager.selectedProvince.aligned.ToString();
-        provinceAffiliatesText.text = _provinceManager.selectedProvince.affiliates.ToString();
+        provincePopulationText.text = "Habitantes: " + _provinceManager.selectedProvince.Population.ToString("N0");
+        provincePopularityText.text = _provinceManager.selectedProvince.popularity.ToString("N0");
+        provinceAlignedText.text = _provinceManager.selectedProvince.aligned.ToString("N0");
+        provinceAffiliatesText.text = _provinceManager.selectedProvince.affiliates.ToString("N0");
     }
 
     private void ProvinceInfoVisibility(bool show) {

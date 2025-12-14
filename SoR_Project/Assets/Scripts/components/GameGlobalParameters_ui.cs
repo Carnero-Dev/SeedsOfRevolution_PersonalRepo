@@ -21,10 +21,10 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 	}
 
 	private void UpdateUI() {
-		_influenceText.text = _parametersData.influence.ToString("F2");
+		_influenceText.text = _parametersData.influence.ToString("N0");
 		_totalPopularityText.text = (_parameterController.totalPopularity / _parameterController.totalPopulation * 100).ToString("F2") + " %";
-		_totalAlignedText.text = _parameterController.totalAligned.ToString("F2");
-		_totalAffiliatesText.text = _parameterController.totalAffiliates.ToString("F2");
+		_totalAlignedText.text = _parameterController.totalAligned.ToString("N0");
+		_totalAffiliatesText.text = _parameterController.totalAffiliates.ToString("N0");
 		_fameText.text = _parametersData.fame.ToString("F2") + "%";
 		_determinationText.text = _parametersData.determination.ToString("F2") + "%";
 	}
