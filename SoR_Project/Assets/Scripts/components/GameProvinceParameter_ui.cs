@@ -22,6 +22,10 @@ public class GameProvinceParameter_ui : MonoBehaviour {
         _timeManager = ServiceLocator.Get<TimeManager>();
         
         _provinceManager.OnProvinceSelected += ProvinceInfoVisibility; 
+
+        // Ruta en carpeta REsource de la bandera que queremos mostrar
+
+        ProvinceInfoVisibility(false);
     }
 
     private void Update() {
@@ -35,7 +39,7 @@ public class GameProvinceParameter_ui : MonoBehaviour {
 	private void UpdateUi() {
         if(_provinceManager.selectedProvince == null) return;
         provinceNameText.text = _provinceManager.selectedProvince.ProvinceName;
-        //provinceFlagImage.sprite = _provinceManager.selectedProvince.flagImage;
+            provinceFlagImage.sprite = Resources.Load<Sprite>("ProvinceFlags/default/" + _provinceManager.selectedProvince.GetProvinceId() +"_flag");
         provinceStabilityText.text = "Estabilidad: " + _provinceManager.selectedProvince.stability.ToString("F2") + "%";
         provincePopulationText.text = "Habitantes: " + _provinceManager.selectedProvince.Population.ToString();
         provincePopularityText.text = _provinceManager.selectedProvince.popularity.ToString();

@@ -104,4 +104,5 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
 	}
 
     public bool IsInitialized() => _currentData != null;
+    public string GetProvinceId() => soProvince.provinceId;
 }
