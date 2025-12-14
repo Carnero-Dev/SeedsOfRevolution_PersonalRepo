@@ -15,12 +15,15 @@ public class ParameterController : MonoBehaviour {
 	public float totalAligned { get; private set;}
 	public float totalAffiliates { get; private set;}
 	public float totalPopulation {get; private set;} // Solo lectura, propositos visuales
+
+	public Action OnParametersUpdated;
 	
 	void Start() {
 		_timeManager = ServiceLocator.Get<TimeManager>();
 		_provinceManager = ServiceLocator.Get<ProvinceManager>();
 
 		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
+		_provinceManager.OnProvincesCacheLoaded += UpdateGlobalParameters;
 
 		// Calcular población total del mapa
 		foreach(var province in _provinceManager.currentMapTemplate.provinces) {
@@ -30,11 +33,14 @@ public class ParameterController : MonoBehaviour {
 
 	void OnDisable() {
 		_timeManager.OnDayPassedEvent -= UpdateGlobalParameters;
+		_provinceManager.OnProvincesCacheLoaded -= UpdateGlobalParameters;
 	}
 
 	public void UpdateGlobalParameters() {
 		ComputeProvincialTotals();
 		UpdateInfluence();
+
+		OnParametersUpdated?.Invoke();
 	}
 
 	private void ComputeProvincialTotals() {

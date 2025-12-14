@@ -56,6 +56,7 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
 
     void OnDisable() {
         _timeManager.OnDayPassedEvent-=debugShowInfo;
+         _provinceManager.OnProvincesCacheLoaded -= InitProvinceData;
     }
 
     void Start() {
@@ -63,10 +64,17 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         _timeManager = ServiceLocator.Get<TimeManager>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager.OnDayPassedEvent+=debugShowInfo;
+       // _provinceManager.OnProvincesCacheLoaded += InitProvinceData;
 
+        // 1. Intentar obtener el estado inmediatamente (si el caché ya está cargado)
         _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
+        
+        // 2. Si el caché aún no está listo (devuelve null), suscríbete para inicializarlo tarde
+        if (_currentData == null) {
+            _provinceManager.OnProvincesCacheLoaded += InitProvinceData;
+        }
     }
-
+    private void InitProvinceData() => _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
     void debugShowInfo() {
         if(_currentData == null) return;
         popularity += 1024;
@@ -94,4 +102,7 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         _meshRenderer.material.color = Color.white;
 		
 	}
+
+    public bool IsInitialized() => _currentData != null;
+    public string GetProvinceId() => soProvince.provinceId;
 }

@@ -13,7 +13,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
     TimeManager _timeManager;
     ProvinceManager _provinceManager;
     ParameterController _parameterController;
-    private TimeManagerData _timeData => GameDataService.Current.timeManager;
+    private TimeManagerData _timeData => GameDataService.Current.gameTime;
     [Header("Time Manager")]
     [SerializeField] TextMeshProUGUI txtDate;
     [SerializeField] TextMeshProUGUI txtVelocity;
@@ -53,7 +53,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
             + _timeData.day.ToString("D2") + " / " 
             + _timeData.month.ToString("D2") + " / " 
             + _timeData.year.ToString("D4");
-        txtVelocity.text = "X" + _timeManager._currentTimeScaleIndex;
+        txtVelocity.text = "X" + _timeManager.GetCurrentTimeScale();
         
         if (_provinceManager.selectedProvince != null) {
             txtName.text = _provinceManager.selectedProvince.ProvinceName;
@@ -75,7 +75,7 @@ public class debug_ParametersTest_UI : MonoBehaviour
     }
 
     private void UpdateButtonVisibility() {
-        bool isPaused = _timeManager._currentTimeScaleIndex == 0;
+        bool isPaused = _timeManager.GetCurrentTimeScale() == 0;
         pauseButton.gameObject.SetActive(isPaused);
         reanudeButton.gameObject.SetActive(!isPaused);
     }
