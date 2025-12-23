@@ -51,3 +51,7 @@ Nuestro objetivo principal será lograr la revolución y tomar todas las provinc
 
 - FMod ¿?
 - DOTween
+
+## ⚖️ Licencia y Copyright
+Este proyecto es de **código cerrado**. El acceso público es exclusivamente para fines de **portafolio profesional**. 
+© 2025 Carlos Carnero Cabrera.
