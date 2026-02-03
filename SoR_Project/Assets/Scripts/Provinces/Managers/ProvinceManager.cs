@@ -12,9 +12,9 @@ public class ProvinceManager : MonoBehaviour {
 	public Action OnProvincesCacheLoaded;
 	public Action<bool> OnProvinceSelected;
 
-	void Start() {
-		Init(currentMapTemplate);
-	}
+	// void Start() {
+	// 	Init(currentMapTemplate);
+	// }
 
 	public void SelectProvince(ProvinceInfo province) {
 		if(province == null) {

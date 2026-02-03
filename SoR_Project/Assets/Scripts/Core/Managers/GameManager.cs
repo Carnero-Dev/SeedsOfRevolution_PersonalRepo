@@ -3,10 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, IGameManager
 {
-    private void OnEnable() {
+
+	private void OnEnable() {
         SaveSystem.OnGameLoaded += HandleGameLoaded;
         SaveSystem.OnGameSaved += HandleGameSaved;        
-        SaveSystem.OnGameDataCleared += HandleDataCleared;
+        SaveSystem.OnGameDataCleared += HandleDataCleared; 
     }
 
     private void OnDisable() {

@@ -10,6 +10,7 @@ public class CarneroGameInstaller : MonoBehaviour
     public GameManager gameManager;
     public ProvinceManager provinceManager;
     public ParameterController parameterController;
+    public GameInitializer gameInitializer;
     
     private void Awake() {
         OnAllInstalled += gameManager.StartGame;
@@ -26,6 +27,8 @@ public class CarneroGameInstaller : MonoBehaviour
         ServiceLocator.Register<IGameManager>(gameManager);
         ServiceLocator.Register<ProvinceManager>(provinceManager);
         ServiceLocator.Register<ParameterController>(parameterController);
+        ServiceLocator.Register<GameInitializer>(gameInitializer);
+
         OnAllInstalled?.Invoke();
     }
 }
