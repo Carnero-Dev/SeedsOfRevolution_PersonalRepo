@@ -6,13 +6,12 @@ using Unity.VisualScripting;
 
 public class ProvinceManager : MonoBehaviour {
 	private GameData data => GameDataService.Current;
-	public List<ProvinceInfo> provincesList = new List<ProvinceInfo>();
 	public ProvinceInfo selectedProvince;
 	[HideInInspector]public SO_MapTemplate currentMapTemplate;
 	// El cache para el acceso en tiempo de ejecución
-	private Dictionary<string, ProvinceData> _stateCache;
 	private Dictionary<string, string> _colorToProvinceId;
-	public Action OnProvincesCacheLoaded;
+	private Dictionary<string, ProvinceInfo> _gameProvinces;
+	public Action OnProvincesDataLoaded;
 	public Action<bool> OnProvinceSelected;
 
 	public void SelectProvinceByColor(string color) {
@@ -26,9 +25,9 @@ public class ProvinceManager : MonoBehaviour {
 		OnProvinceSelected?.Invoke(true);
 	}
 
-	public IEnumerable<ProvinceData> GetAllProvincesData() {
+	public IEnumerable<ProvinceInfo> GetAllGameProvinces() {
 		EnsureCacheLoaded();
-		return _stateCache.Values;
+		return _gameProvinces.Values;
 	}
 
 	public void Init(SO_MapTemplate mapTemplate) {
@@ -68,44 +67,37 @@ public class ProvinceManager : MonoBehaviour {
 	}
 
 	public void LoadStateCache() {
-		_stateCache = new Dictionary<string, ProvinceData>();
+		_gameProvinces = new Dictionary<string, ProvinceInfo>();
 		GameObject provinceContainer = new GameObject("Provinces");
-		foreach (var province in data.provinces) {
-			if (!_stateCache.TryAdd(province.provinceID, province)) {
-                Debug.LogWarning($"ID de provincia duplicado encontrado: {province.provinceID}");
-            }
-		}
 		foreach ( var provinceSo in currentMapTemplate.provinces) {
 			GameObject pObj = new GameObject($"Province_{provinceSo.provinceId}");
         	pObj.transform.SetParent(provinceContainer.transform);
 			pObj.AddComponent<ProvinceInfo>().InitProvinceData(provinceSo);
-			provincesList.Add(pObj.GetComponent<ProvinceInfo>());
+			_gameProvinces.Add(provinceSo.provinceId, pObj.GetComponent<ProvinceInfo>());
+		}
+		foreach (var province in data.provinces) {
+			if(!_gameProvinces.TryGetValue(province.provinceID, out var info)) {
+				Debug.LogWarning($"Provincia con ID {province.provinceID} no encontrada en la caché.");
+				continue;
+			}
+			info.InsertData(province);
 		}
 		
-		OnProvincesCacheLoaded?.Invoke();
-		Debug.Log($"Caché de estados de provincia cargada: {_stateCache.Count} entradas.");
+		OnProvincesDataLoaded?.Invoke();
+		Debug.Log($"Caché de estados de provincia cargada: {_gameProvinces.Count} entradas.");
 	}
 
-	public ProvinceData GetProvinceState(string provinceId) {
+	public ProvinceInfo GetProvinceInfo(string provinceId) {
 		EnsureCacheLoaded();
-		if (_stateCache.TryGetValue(provinceId, out var state)) {
+		if (_gameProvinces.TryGetValue(provinceId, out var state)) {
 			return state;
 		}
 		Debug.LogError($"Estado de provincia con ID {provinceId} no encontrado en la caché.");
 		return null;
 	}
-
-	private ProvinceInfo GetProvinceInfo(string provinceId) {
-		foreach (var province in provincesList) {
-			if (province.GetProvinceId() == provinceId) {
-				return province;
-			}
-		}
-		return null;
-	}
 	
 	private void EnsureCacheLoaded() {
-		if (_stateCache == null) {
+		if (_gameProvinces == null) {
 			Debug.LogError("La caché de provincias no ha sido cargada. ¿Se llamó a Init o LoadStateCache?");
 		}
 	}

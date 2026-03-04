@@ -45,22 +45,21 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         _timeManager.OnDayPassedEvent-=debugShowInfo;
     }
 
+    
+
     public void InitProvinceData(SO_Province soProvince) {
         this.soProvince = soProvince;
-        // _meshRenderer.material.color = Color.white;
         _timeManager = ServiceLocator.Get<TimeManager>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager.OnDayPassedEvent+=debugShowInfo;
-       // _provinceManager.OnProvincesCacheLoaded += InitProvinceData;
 
-        // 1. Intentar obtener el estado inmediatamente (si el caché ya está cargado)
-        _currentData = _provinceManager.GetProvinceState(GetProvinceId());
         if (soProvince != null) {
             provinceName = soProvince.provinceName;
             population = soProvince.provincePopulation;
             provinceType = soProvince.provinceType;
         }
     }
+    public void InsertData(ProvinceData data) => _currentData = data;
 
     void debugShowInfo() {
         if(_currentData == null) return;
