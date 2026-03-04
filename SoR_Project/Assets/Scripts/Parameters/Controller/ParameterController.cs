@@ -23,17 +23,17 @@ public class ParameterController : MonoBehaviour {
 		_provinceManager = ServiceLocator.Get<ProvinceManager>();
 
 		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
-		_provinceManager.OnProvincesCacheLoaded += UpdateGlobalParameters;
+		_provinceManager.OnProvincesDataLoaded += UpdateGlobalParameters;
 
 		// Calcular población total del mapa
-		foreach(var province in _provinceManager.currentMapTemplate.provinces) {
+		foreach(var province in _provinceManager.GetMapTemplate().provinces) {
 			totalPopulation += province.provincePopulation;
 		}
 	}
 
 	void OnDisable() {
 		_timeManager.OnDayPassedEvent -= UpdateGlobalParameters;
-		_provinceManager.OnProvincesCacheLoaded -= UpdateGlobalParameters;
+		_provinceManager.OnProvincesDataLoaded -= UpdateGlobalParameters;
 	}
 
 	public void UpdateGlobalParameters() {
@@ -47,7 +47,7 @@ public class ParameterController : MonoBehaviour {
 		float totalPopularity = 0;
 		float totalAligned = 0;
 		float totalAffiliates = 0;
-		var allProvincesData = _provinceManager.GetAllProvincesData();
+		var allProvincesData = _provinceManager.GetAllGameProvinces();
 		
 		if (allProvincesData == null) return;
 		

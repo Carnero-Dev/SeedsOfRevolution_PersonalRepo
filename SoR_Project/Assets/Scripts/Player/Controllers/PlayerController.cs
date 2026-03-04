@@ -205,19 +205,20 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private IInteractable GetInteractableUnderMouse() {
+    private IInteractable GetInteractableUnderMouse(out RaycastHit hitInfo) {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, _interactionDistance, _interactionLayer)){
+            hitInfo = hit;
             return hit.collider.gameObject.GetComponent<IInteractable>();
         }
 
-        if (Physics.Raycast(ray, out hit, _interactionDistance, _terrainLayerMask))
-        {
+        if (Physics.Raycast(ray, out hit, _interactionDistance, _terrainLayerMask)) {
+            hitInfo = hit;
             return null; 
         }
-
+        hitInfo = hit;
         return null;
     }
 
@@ -309,7 +310,7 @@ public class PlayerController : MonoBehaviour {
                 _hoveredInteractable = interactable;
                 
                 if (previousHover != interactable) {
-                    _hoveredInteractable.OnHover();
+                    _hoveredInteractable.OnHover(hit);
                 }
             }
         }
@@ -357,14 +358,14 @@ public class PlayerController : MonoBehaviour {
         
         if (_rightClickHold) return;
 
-        IInteractable hitInteractable = GetInteractableUnderMouse();
+        IInteractable hitInteractable = GetInteractableUnderMouse(out RaycastHit hitInfo);
         if (_selectedInteractable != null && _selectedInteractable != hitInteractable)
         {
             _selectedInteractable.OnDeselect(); 
             _selectedInteractable = null;
         }
         if (hitInteractable != null) {
-            hitInteractable.LeftClickInteract(); 
+            hitInteractable.LeftClickInteract(hitInfo); 
             
             _interactedItem = hitInteractable;             
             _selectedInteractable = hitInteractable; 

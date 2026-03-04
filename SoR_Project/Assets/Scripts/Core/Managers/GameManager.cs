@@ -3,10 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, IGameManager
 {
-    private void OnEnable() {
+    private GameInitializer _gameInitializer;
+
+	private void OnEnable() {
         SaveSystem.OnGameLoaded += HandleGameLoaded;
         SaveSystem.OnGameSaved += HandleGameSaved;        
-        SaveSystem.OnGameDataCleared += HandleDataCleared;
+        SaveSystem.OnGameDataCleared += HandleDataCleared; 
     }
 
     private void OnDisable() {
@@ -32,6 +34,7 @@ public class GameManager : MonoBehaviour, IGameManager
 	public void StartGame() {
 		if (SaveSystem.IsFileExist<GameData>()) OnLoadGame();
         else OnNewGame(SeedRandom.GetDebugState()); 
+        ServiceLocator.Get<GameInitializer>().Initialize();
         Debug.Log("Starting Game");
 	}
 	private void OnLoadGame() {

@@ -7,11 +7,11 @@ public class TestInteractable : MonoBehaviour, IInteractable
     public bool leftClickHold;
     public bool hover;
 
-    public void LeftClickInteract() {
+    public void LeftClickInteract(RaycastHit hitinfo) {
         if(leftClick) ui.SetAction("Left click");
     }
 
-    public void OnHover() {
+    public void OnHover(RaycastHit hitinfo) {
         if(hover) ui.SetAction("Hover");
     }
     public void OnDeselect() {

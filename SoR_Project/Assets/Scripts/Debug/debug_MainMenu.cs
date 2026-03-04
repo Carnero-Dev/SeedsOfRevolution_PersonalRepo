@@ -41,10 +41,10 @@ public class debug_MainMenu : MonoBehaviour
     void NewGame(bool debugEnabled) {
         SaveSystem.Clear<GameData>();
         SeedRandom.SetDebugMode(debugEnabled);
-        SceneManager.LoadScene("SaveSystem_Test");
+        SceneManager.LoadScene("Game_debug");
     }
     void Continue() {
-        SceneManager.LoadScene("SaveSystem_Test");
+        SceneManager.LoadScene("Game_debug");
     }
     void Exit() {
         Application.Quit();

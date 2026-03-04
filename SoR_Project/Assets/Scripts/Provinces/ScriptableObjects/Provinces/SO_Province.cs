@@ -9,4 +9,5 @@ public class SO_Province : ScriptableObject
     [ShowOnly] public int provincePopulation;   
     public int provinceStability;   
     [ShowOnly] public string provinceType = SOR_Enums.provinceType.ToString();
+    public string provinceColorHex;
 }

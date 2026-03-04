@@ -5,14 +5,12 @@ using UnityEngine;
 /// Script que se encarga de gestionar la información de la provincia y devolver sus valores
 /// Author: Carlos Carnero Cabrera
 /// </summary>
-public class ProvinceInfo : MonoBehaviour, IInteractable
+public class ProvinceInfo : MonoBehaviour
 {
     // REFERENCES
     private TimeManager _timeManager;
-    private ProvinceManager _provinceManager;
-    private MeshRenderer _meshRenderer;
-   [SerializeField] private SO_Province soProvince;
     private ProvinceData _currentData;
+   [SerializeField] private SO_Province soProvince;
 
     
     // SO -> TO INFO
@@ -39,42 +37,26 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     public float affiliates {
         get {return Mathf.Clamp( _currentData.affiliates, 0, _currentData.aligned) ;} 
         set { _currentData.affiliates = Mathf.Clamp(value, 0, _currentData.aligned); }
+    }  
+
+    void OnDisable() {
+        _timeManager.OnDayPassedEvent-=debugShowInfo;
     }
 
-    private void OnValidate() {
-        _meshRenderer = GetComponent<MeshRenderer>();
+    public void InitProvinceData(SO_Province soProvince) {
+        this.soProvince = soProvince;
+        _timeManager = ServiceLocator.Get<TimeManager>();
+        _timeManager.OnDayPassedEvent+=debugShowInfo;
+
         if (soProvince != null) {
             provinceName = soProvince.provinceName;
             population = soProvince.provincePopulation;
             provinceType = soProvince.provinceType;
-        } else {
-            provinceName = "(Unamed)";
-            population = 1;
-            provinceType = "Default";
-        }
-    }    
-
-    void OnDisable() {
-        _timeManager.OnDayPassedEvent-=debugShowInfo;
-         _provinceManager.OnProvincesCacheLoaded -= InitProvinceData;
-    }
-
-    void Start() {
-        _meshRenderer.material.color = Color.white;
-        _timeManager = ServiceLocator.Get<TimeManager>();
-        _provinceManager = ServiceLocator.Get<ProvinceManager>();
-        _timeManager.OnDayPassedEvent+=debugShowInfo;
-       // _provinceManager.OnProvincesCacheLoaded += InitProvinceData;
-
-        // 1. Intentar obtener el estado inmediatamente (si el caché ya está cargado)
-        _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
-        
-        // 2. Si el caché aún no está listo (devuelve null), suscríbete para inicializarlo tarde
-        if (_currentData == null) {
-            _provinceManager.OnProvincesCacheLoaded += InitProvinceData;
         }
     }
-    private void InitProvinceData() => _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
+    public void InsertData(ProvinceData data) => _currentData = data;
+    public string GetProvinceId() => soProvince.provinceId;
+
     void debugShowInfo() {
         if(_currentData == null) return;
         popularity += 1024;
@@ -82,27 +64,4 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         affiliates += 256;
     }
 
-	public void LeftClickInteract() {
-        _provinceManager.SelectProvince(this);
-        _meshRenderer.material.color = Color.green;
-	}
-
-	public void OnHover() {
-        if(_provinceManager.selectedProvince == this) return;
-		_meshRenderer.material.color = Color.blue;
-	}
-
-	public void OnDeselect() {
-		_provinceManager.SelectProvince(null);
-        _meshRenderer.material.color = Color.white;
-	}
-
-	public void OnUnhover() {   
-        if(_provinceManager.selectedProvince == this) return;
-        _meshRenderer.material.color = Color.white;
-		
-	}
-
-    public bool IsInitialized() => _currentData != null;
-    public string GetProvinceId() => soProvince.provinceId;
 }

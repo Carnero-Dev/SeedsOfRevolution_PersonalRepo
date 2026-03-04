@@ -4,5 +4,6 @@ using UnityEngine;
 public class SO_MapTemplate : ScriptableObject {
 	public string mapID;
 	public string mapName;
+	public Texture2D colorMap;
 	public SO_Province[] provinces;
 }
