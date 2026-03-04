@@ -5,7 +5,7 @@ public class MapDynamicInitializer : MonoBehaviour {
     [SerializeField] public SO_MapTemplate currentMap;
     [SerializeField] private Material mapMaterialBase; // Material URP Unlit/Lit
 
-    public void Initialize() {
+    public void Initialize(out SO_MapTemplate mapTemplate) {
         // 1. Crear el objeto visual del mapa
         GameObject mapObj = new GameObject("Runtime_Map_Grid");
         MeshFilter filter = mapObj.AddComponent<MeshFilter>();
@@ -25,7 +25,8 @@ public class MapDynamicInitializer : MonoBehaviour {
         // 5. Añadir el Handler de Interacción
         mapObj.layer = LayerMask.NameToLayer("Interactable");
         var handler = mapObj.AddComponent<MapInteractionHandler>();
-        handler.Setup(currentMap.colorMap);
+        handler.Init(currentMap.colorMap);
+        mapTemplate = currentMap;
     }
 
     private Mesh CreatePlaneMesh(int w, int h) {

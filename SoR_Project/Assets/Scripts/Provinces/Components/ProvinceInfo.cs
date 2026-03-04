@@ -9,10 +9,8 @@ public class ProvinceInfo : MonoBehaviour
 {
     // REFERENCES
     private TimeManager _timeManager;
-    private ProvinceManager _provinceManager;
-   // private MeshRenderer _meshRenderer;
-   [SerializeField] private SO_Province soProvince;
     private ProvinceData _currentData;
+   [SerializeField] private SO_Province soProvince;
 
     
     // SO -> TO INFO
@@ -45,12 +43,9 @@ public class ProvinceInfo : MonoBehaviour
         _timeManager.OnDayPassedEvent-=debugShowInfo;
     }
 
-    
-
     public void InitProvinceData(SO_Province soProvince) {
         this.soProvince = soProvince;
         _timeManager = ServiceLocator.Get<TimeManager>();
-        _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager.OnDayPassedEvent+=debugShowInfo;
 
         if (soProvince != null) {
@@ -60,6 +55,7 @@ public class ProvinceInfo : MonoBehaviour
         }
     }
     public void InsertData(ProvinceData data) => _currentData = data;
+    public string GetProvinceId() => soProvince.provinceId;
 
     void debugShowInfo() {
         if(_currentData == null) return;
@@ -67,6 +63,5 @@ public class ProvinceInfo : MonoBehaviour
         aligned += 512;
         affiliates += 256;
     }
-    
-    public string GetProvinceId() => soProvince.provinceId;
+
 }

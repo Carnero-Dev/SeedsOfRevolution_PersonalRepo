@@ -6,7 +6,7 @@ using System;
 public class ProvinceManager : MonoBehaviour {
 	private GameData data => GameDataService.Current;
 	public ProvinceInfo selectedProvince;
-	[HideInInspector]public SO_MapTemplate currentMapTemplate;
+	private SO_MapTemplate currentMapTemplate;
 	// El cache para el acceso en tiempo de ejecución
 	private Dictionary<string, string> _colorToProvinceId;
 	private Dictionary<string, ProvinceInfo> _gameProvinces;
@@ -52,14 +52,17 @@ public class ProvinceManager : MonoBehaviour {
 	}
 
 	public void LoadStateCache() {
-		// INSTANTIATE PROVINCE INFO OBJECTS
 		_gameProvinces = new Dictionary<string, ProvinceInfo>();
+		_colorToProvinceId = new Dictionary<string, string>();
+
 		GameObject provinceContainer = new GameObject("Provinces");
-		foreach ( var provinceSo in currentMapTemplate.provinces) {
-			GameObject pObj = new GameObject($"Province_{provinceSo.provinceId}");
+		foreach ( var p in currentMapTemplate.provinces) {
+			GameObject pObj = new GameObject($"Province_{p.provinceId}");
         	pObj.transform.SetParent(provinceContainer.transform);
-			pObj.AddComponent<ProvinceInfo>().InitProvinceData(provinceSo);
-			_gameProvinces.Add(provinceSo.provinceId, pObj.GetComponent<ProvinceInfo>());
+			pObj.AddComponent<ProvinceInfo>().InitProvinceData(p);
+			
+			_gameProvinces.Add(p.provinceId, pObj.GetComponent<ProvinceInfo>()); // Province Info Objects
+            _colorToProvinceId.TryAdd(p.provinceColorHex, p.provinceId); // Province color
 		}
 		// PROVINCES DATA TO PROVINCE INFO
 		foreach (var province in data.provinces) {
@@ -69,11 +72,6 @@ public class ProvinceManager : MonoBehaviour {
 			}
 			info.InsertData(province);
 		}
-		// PROVINCES COLOR
-		_colorToProvinceId = new Dictionary<string, string>();
-        foreach (var p in currentMapTemplate.provinces) {
-             _colorToProvinceId.TryAdd(p.provinceColorHex, p.provinceId);
-        }
 		OnProvincesDataLoaded?.Invoke();
 		Debug.Log($"Caché de estados de provincia cargada: {_gameProvinces.Count} entradas.");
 	}
@@ -105,4 +103,6 @@ public class ProvinceManager : MonoBehaviour {
 		Debug.LogError($"Estado de provincia con ID {provinceId} no encontrado en la caché.");
 		return null;
 	}
+
+	public SO_MapTemplate GetMapTemplate() => currentMapTemplate;
 }

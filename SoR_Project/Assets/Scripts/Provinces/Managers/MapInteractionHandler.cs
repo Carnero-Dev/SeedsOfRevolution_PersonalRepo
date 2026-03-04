@@ -5,7 +5,7 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
     public Texture2D colorMap;
     private ProvinceManager _provinceManager;
 
-    public void Setup(Texture2D texture) {
+    public void Init(Texture2D texture) {
         colorMap = texture;
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
 
