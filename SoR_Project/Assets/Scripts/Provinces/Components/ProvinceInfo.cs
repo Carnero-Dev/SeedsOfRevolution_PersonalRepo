@@ -10,7 +10,7 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     // REFERENCES
     private TimeManager _timeManager;
     private ProvinceManager _provinceManager;
-    private MeshRenderer _meshRenderer;
+   // private MeshRenderer _meshRenderer;
    [SerializeField] private SO_Province soProvince;
     private ProvinceData _currentData;
 
@@ -39,42 +39,29 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     public float affiliates {
         get {return Mathf.Clamp( _currentData.affiliates, 0, _currentData.aligned) ;} 
         set { _currentData.affiliates = Mathf.Clamp(value, 0, _currentData.aligned); }
-    }
-
-    private void OnValidate() {
-        _meshRenderer = GetComponent<MeshRenderer>();
-        if (soProvince != null) {
-            provinceName = soProvince.provinceName;
-            population = soProvince.provincePopulation;
-            provinceType = soProvince.provinceType;
-        } else {
-            provinceName = "(Unamed)";
-            population = 1;
-            provinceType = "Default";
-        }
-    }    
+    }  
 
     void OnDisable() {
         _timeManager.OnDayPassedEvent-=debugShowInfo;
-         _provinceManager.OnProvincesCacheLoaded -= InitProvinceData;
     }
 
-    void Start() {
-        _meshRenderer.material.color = Color.white;
+    public void InitProvinceData(SO_Province soProvince) {
+        this.soProvince = soProvince;
+        // _meshRenderer.material.color = Color.white;
         _timeManager = ServiceLocator.Get<TimeManager>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager.OnDayPassedEvent+=debugShowInfo;
        // _provinceManager.OnProvincesCacheLoaded += InitProvinceData;
 
         // 1. Intentar obtener el estado inmediatamente (si el caché ya está cargado)
-        _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
-        
-        // 2. Si el caché aún no está listo (devuelve null), suscríbete para inicializarlo tarde
-        if (_currentData == null) {
-            _provinceManager.OnProvincesCacheLoaded += InitProvinceData;
+        _currentData = _provinceManager.GetProvinceState(GetProvinceId());
+        if (soProvince != null) {
+            provinceName = soProvince.provinceName;
+            population = soProvince.provincePopulation;
+            provinceType = soProvince.provinceType;
         }
     }
-    private void InitProvinceData() => _currentData = _provinceManager.GetProvinceState(soProvince.provinceId);
+
     void debugShowInfo() {
         if(_currentData == null) return;
         popularity += 1024;
@@ -83,23 +70,23 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
     }
 
 	public void LeftClickInteract() {
-        _provinceManager.SelectProvince(this);
-        _meshRenderer.material.color = Color.green;
+        //_provinceManager.SelectProvinceByColor(this);
+        // _meshRenderer.material.color = Color.green;
 	}
 
 	public void OnHover() {
-        if(_provinceManager.selectedProvince == this) return;
-		_meshRenderer.material.color = Color.blue;
+        //if(_provinceManager.selectedProvince == this) return;
+		// _meshRenderer.material.color = Color.blue;
 	}
 
 	public void OnDeselect() {
-		_provinceManager.SelectProvince(null);
-        _meshRenderer.material.color = Color.white;
+		//_provinceManager.SelectProvinceByColor(null);
+        // _meshRenderer.material.color = Color.white;
 	}
 
 	public void OnUnhover() {   
-        if(_provinceManager.selectedProvince == this) return;
-        _meshRenderer.material.color = Color.white;
+        //if(_provinceManager.selectedProvince == this) return;
+        // _meshRenderer.material.color = Color.white;
 		
 	}
 

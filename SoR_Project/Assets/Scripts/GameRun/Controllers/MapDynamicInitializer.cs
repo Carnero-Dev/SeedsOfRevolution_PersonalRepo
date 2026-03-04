@@ -28,6 +28,7 @@ public class MapDynamicInitializer : MonoBehaviour {
         MapProvinces();
         
         // 5. Añadir el Handler de Interacción
+        mapObj.layer = LayerMask.NameToLayer("Interactable");
         var handler = mapObj.AddComponent<MapInteractionHandler>();
         handler.Setup(currentMap.colorMap, _colorToProvinceId);
     }

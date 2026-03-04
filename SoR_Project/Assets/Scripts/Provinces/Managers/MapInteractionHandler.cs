@@ -25,12 +25,7 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
             // Convertir Color a Hex para buscar en tu diccionario de provincias
             string colorHex = ColorUtility.ToHtmlStringRGB(clickedColor);
 
-            var provinceData = _provinceManager.GetProvinceByColor(colorHex);
-            if (provinceData != null) {
-                Debug.Log("Provincia encontrada: " + provinceData.provinceID);
-            } else {
-                Debug.Log("No se encontró ninguna provincia para el color: " + colorHex);
-            }
+            _provinceManager.SelectProvinceByColor(colorHex);
         }
     }
 
@@ -41,16 +36,16 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
 
 	public void OnHover()
 	{
-		throw new System.NotImplementedException();
+
 	}
 
 	public void OnDeselect()
 	{
-		throw new System.NotImplementedException();
+
 	}
 
 	public void OnUnhover()
 	{
-		throw new System.NotImplementedException();
+
 	}
 }
