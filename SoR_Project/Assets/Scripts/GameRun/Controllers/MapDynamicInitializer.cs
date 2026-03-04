@@ -5,8 +5,6 @@ public class MapDynamicInitializer : MonoBehaviour {
     [SerializeField] public SO_MapTemplate currentMap;
     [SerializeField] private Material mapMaterialBase; // Material URP Unlit/Lit
 
-    private Dictionary<string, string> _colorToProvinceId = new Dictionary<string, string>();
-
     public void Initialize() {
         // 1. Crear el objeto visual del mapa
         GameObject mapObj = new GameObject("Runtime_Map_Grid");
@@ -23,21 +21,11 @@ public class MapDynamicInitializer : MonoBehaviour {
 
         // 3. Configurar Colisionador para Clics
         mapObj.AddComponent<MeshCollider>();
-
-        // 4. Mapear Lógica
-        MapProvinces();
         
         // 5. Añadir el Handler de Interacción
         mapObj.layer = LayerMask.NameToLayer("Interactable");
         var handler = mapObj.AddComponent<MapInteractionHandler>();
-        handler.Setup(currentMap.colorMap, _colorToProvinceId);
-    }
-
-    private void MapProvinces() {
-        _colorToProvinceId.Clear();
-        foreach (var p in currentMap.provinces) {
-             _colorToProvinceId.TryAdd(p.provinceColorHex, p.provinceId);
-        }
+        handler.Setup(currentMap.colorMap);
     }
 
     private Mesh CreatePlaneMesh(int w, int h) {

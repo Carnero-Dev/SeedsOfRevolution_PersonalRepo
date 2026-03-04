@@ -5,10 +5,9 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
     public Texture2D colorMap;
     private ProvinceManager _provinceManager;
 
-    public void Setup(Texture2D texture, System.Collections.Generic.Dictionary<string, string> colorToProvinceId) {
+    public void Setup(Texture2D texture) {
         colorMap = texture;
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
-        _provinceManager.SetProvinceColor(colorToProvinceId);
 
     }
 
@@ -22,10 +21,7 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
 
             Color clickedColor = colorMap.GetPixel((int)pixelUV.x, (int)pixelUV.y);
             
-            // Convertir Color a Hex para buscar en tu diccionario de provincias
-            string colorHex = ColorUtility.ToHtmlStringRGB(clickedColor);
-
-            _provinceManager.SelectProvinceByColor(colorHex);
+            _provinceManager.SelectProvinceByColor(clickedColor);
         }
     }
 

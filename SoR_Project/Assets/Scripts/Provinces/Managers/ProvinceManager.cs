@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using Unity.VisualScripting;
 
 public class ProvinceManager : MonoBehaviour {
 	private GameData data => GameDataService.Current;
@@ -14,21 +13,7 @@ public class ProvinceManager : MonoBehaviour {
 	public Action OnProvincesDataLoaded;
 	public Action<bool> OnProvinceSelected;
 
-	public void SelectProvinceByColor(string color) {
-		ProvinceInfo province = GetProvinceByColor(color);
-		if(province == null) {
-			selectedProvince = null;
-			OnProvinceSelected?.Invoke(false);
-			return;
-		} 
-		selectedProvince = province;
-		OnProvinceSelected?.Invoke(true);
-	}
 
-	public IEnumerable<ProvinceInfo> GetAllGameProvinces() {
-		EnsureCacheLoaded();
-		return _gameProvinces.Values;
-	}
 
 	public void Init(SO_MapTemplate mapTemplate) {
 		currentMapTemplate = mapTemplate;
@@ -48,15 +33,9 @@ public class ProvinceManager : MonoBehaviour {
 		LoadStateCache();	
 	}
 
-	public void SetProvinceColor(Dictionary<string, string> colorToProvinceId) {
-		_colorToProvinceId = colorToProvinceId;
-	}
-
-	public ProvinceInfo GetProvinceByColor(string color) {
-		if (_colorToProvinceId != null && _colorToProvinceId.TryGetValue(color, out string provinceId)) {
-			return GetProvinceInfo(provinceId);
-		}
-		return null;
+	public IEnumerable<ProvinceInfo> GetAllGameProvinces() {
+		EnsureCacheLoaded();
+		return _gameProvinces.Values;
 	}
 	
 	private ProvinceData CreateInitialProvince(SO_Province soProvince) {
@@ -66,7 +45,14 @@ public class ProvinceManager : MonoBehaviour {
 		};
 	}
 
+	private void EnsureCacheLoaded() {
+		if (_gameProvinces == null) {
+			Debug.LogError("La caché de provincias no ha sido cargada. ¿Se llamó a Init o LoadStateCache?");
+		}
+	}
+
 	public void LoadStateCache() {
+		// INSTANTIATE PROVINCE INFO OBJECTS
 		_gameProvinces = new Dictionary<string, ProvinceInfo>();
 		GameObject provinceContainer = new GameObject("Provinces");
 		foreach ( var provinceSo in currentMapTemplate.provinces) {
@@ -75,6 +61,7 @@ public class ProvinceManager : MonoBehaviour {
 			pObj.AddComponent<ProvinceInfo>().InitProvinceData(provinceSo);
 			_gameProvinces.Add(provinceSo.provinceId, pObj.GetComponent<ProvinceInfo>());
 		}
+		// PROVINCES DATA TO PROVINCE INFO
 		foreach (var province in data.provinces) {
 			if(!_gameProvinces.TryGetValue(province.provinceID, out var info)) {
 				Debug.LogWarning($"Provincia con ID {province.provinceID} no encontrada en la caché.");
@@ -82,23 +69,36 @@ public class ProvinceManager : MonoBehaviour {
 			}
 			info.InsertData(province);
 		}
-		
+		// PROVINCES COLOR
+		_colorToProvinceId = new Dictionary<string, string>();
+        foreach (var p in currentMapTemplate.provinces) {
+             _colorToProvinceId.TryAdd(p.provinceColorHex, p.provinceId);
+        }
 		OnProvincesDataLoaded?.Invoke();
 		Debug.Log($"Caché de estados de provincia cargada: {_gameProvinces.Count} entradas.");
 	}
 
-	public ProvinceInfo GetProvinceInfo(string provinceId) {
+	public void SelectProvinceByColor(Color color) {
+		string colorHex = ColorUtility.ToHtmlStringRGB(color);
+		ProvinceInfo province = null;
+		if (_colorToProvinceId != null && _colorToProvinceId.TryGetValue(colorHex, out string provinceId)) {
+			province = GetProvinceById(provinceId);
+		}
+		if(province == null) {
+			selectedProvince = null;
+			OnProvinceSelected?.Invoke(false);
+			return;
+		} 
+		selectedProvince = province;
+		OnProvinceSelected?.Invoke(true);
+	}
+
+	public ProvinceInfo GetProvinceById(string provinceId) {
 		EnsureCacheLoaded();
 		if (_gameProvinces.TryGetValue(provinceId, out var state)) {
 			return state;
 		}
 		Debug.LogError($"Estado de provincia con ID {provinceId} no encontrado en la caché.");
 		return null;
-	}
-	
-	private void EnsureCacheLoaded() {
-		if (_gameProvinces == null) {
-			Debug.LogError("La caché de provincias no ha sido cargada. ¿Se llamó a Init o LoadStateCache?");
-		}
 	}
 }

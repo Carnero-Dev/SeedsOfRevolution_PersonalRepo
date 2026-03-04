@@ -5,7 +5,7 @@ using UnityEngine;
 /// Script que se encarga de gestionar la información de la provincia y devolver sus valores
 /// Author: Carlos Carnero Cabrera
 /// </summary>
-public class ProvinceInfo : MonoBehaviour, IInteractable
+public class ProvinceInfo : MonoBehaviour
 {
     // REFERENCES
     private TimeManager _timeManager;
@@ -88,7 +88,5 @@ public class ProvinceInfo : MonoBehaviour, IInteractable
         // _meshRenderer.material.color = Color.white;
 		
 	}
-
-    public bool IsInitialized() => _currentData != null;
     public string GetProvinceId() => soProvince.provinceId;
 }
