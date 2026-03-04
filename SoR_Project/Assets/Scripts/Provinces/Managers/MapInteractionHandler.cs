@@ -11,10 +11,7 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
 
     }
 
-    void DetectProvince() {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit)) {
-            // Convertir el punto de impacto en coordenadas de textura (UV)
+    void DetectProvince(RaycastHit hit) {
             Vector2 pixelUV = hit.textureCoord;
             pixelUV.x *= colorMap.width;
             pixelUV.y *= colorMap.height;
@@ -22,26 +19,21 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
             Color clickedColor = colorMap.GetPixel((int)pixelUV.x, (int)pixelUV.y);
             
             _provinceManager.SelectProvinceByColor(clickedColor);
-        }
     }
 
-	public void LeftClickInteract()
-	{
-		DetectProvince();
+	public void LeftClickInteract(RaycastHit hitinfo) {
+		DetectProvince(hitinfo);
 	}
 
-	public void OnHover()
-	{
-
+	public void OnHover(RaycastHit hitinfo) {
+        //if(_provinceManager.selectedProvince == this) return;
 	}
 
-	public void OnDeselect()
-	{
-
+	public void OnDeselect() {
+		_provinceManager.DeselectProvince();
 	}
 
-	public void OnUnhover()
-	{
-
+	public void OnUnhover() {   
+        //if(_provinceManager.selectedProvince == this) return;
 	}
 }

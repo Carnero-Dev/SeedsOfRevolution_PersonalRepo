@@ -67,26 +67,6 @@ public class ProvinceInfo : MonoBehaviour
         aligned += 512;
         affiliates += 256;
     }
-
-	public void LeftClickInteract() {
-        //_provinceManager.SelectProvinceByColor(this);
-        // _meshRenderer.material.color = Color.green;
-	}
-
-	public void OnHover() {
-        //if(_provinceManager.selectedProvince == this) return;
-		// _meshRenderer.material.color = Color.blue;
-	}
-
-	public void OnDeselect() {
-		//_provinceManager.SelectProvinceByColor(null);
-        // _meshRenderer.material.color = Color.white;
-	}
-
-	public void OnUnhover() {   
-        //if(_provinceManager.selectedProvince == this) return;
-        // _meshRenderer.material.color = Color.white;
-		
-	}
+    
     public string GetProvinceId() => soProvince.provinceId;
 }

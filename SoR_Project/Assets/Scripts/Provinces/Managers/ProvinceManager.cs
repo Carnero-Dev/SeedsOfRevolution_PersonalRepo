@@ -85,12 +85,16 @@ public class ProvinceManager : MonoBehaviour {
 			province = GetProvinceById(provinceId);
 		}
 		if(province == null) {
-			selectedProvince = null;
-			OnProvinceSelected?.Invoke(false);
+			DeselectProvince();
 			return;
 		} 
 		selectedProvince = province;
 		OnProvinceSelected?.Invoke(true);
+	}
+
+	public void DeselectProvince() {
+		selectedProvince = null;
+		OnProvinceSelected?.Invoke(false);
 	}
 
 	public ProvinceInfo GetProvinceById(string provinceId) {
