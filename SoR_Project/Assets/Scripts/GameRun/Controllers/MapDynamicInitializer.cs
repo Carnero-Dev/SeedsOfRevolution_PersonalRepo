@@ -5,7 +5,7 @@ public class MapDynamicInitializer : MonoBehaviour {
     [SerializeField] public SO_MapTemplate currentMap;
     [SerializeField] private Material mapMaterialBase; // Material URP Unlit/Lit
 
-    private Dictionary<Color, string> _colorToProvinceId = new Dictionary<Color, string>();
+    private Dictionary<string, string> _colorToProvinceId = new Dictionary<string, string>();
 
     public void Initialize() {
         // 1. Crear el objeto visual del mapa
@@ -35,9 +35,7 @@ public class MapDynamicInitializer : MonoBehaviour {
     private void MapProvinces() {
         _colorToProvinceId.Clear();
         foreach (var p in currentMap.provinces) {
-            if (ColorUtility.TryParseHtmlString(p.provinceColorHex, out Color c)) {
-                _colorToProvinceId.TryAdd(c, p.provinceId);
-            }
+             _colorToProvinceId.TryAdd(p.provinceColorHex, p.provinceId);
         }
     }
 

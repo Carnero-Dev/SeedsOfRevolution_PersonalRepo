@@ -17,3 +17,4 @@ MonoBehaviour:
   provincePopulation: 554348
   provinceStability: 75
   provinceType: Industrial
+  provinceColorHex: '#4287f5'

@@ -7,11 +7,9 @@ public class GameInitializer : MonoBehaviour
     private ProvinceManager _provinceManager;
 
     public event Action OnGameInitialized;
-	void Start() {
-		Initialize();
-	}
 
 	public void Initialize() {
+        Debug.Log("Initializing Game...");
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         mapDynamicInitializer.Initialize();
         _provinceManager.Init(mapDynamicInitializer.currentMap);

@@ -6,15 +6,12 @@ using System;
 public class ProvinceManager : MonoBehaviour {
 	private GameData data => GameDataService.Current;
 	public ProvinceInfo selectedProvince;
-	public SO_MapTemplate currentMapTemplate;
+	[HideInInspector]public SO_MapTemplate currentMapTemplate;
 	// El cache para el acceso en tiempo de ejecución
 	private Dictionary<string, ProvinceData> _stateCache;
+	private Dictionary<string, string> _colorToProvinceId;
 	public Action OnProvincesCacheLoaded;
 	public Action<bool> OnProvinceSelected;
-
-	// void Start() {
-	// 	Init(currentMapTemplate);
-	// }
 
 	public void SelectProvince(ProvinceInfo province) {
 		if(province == null) {
@@ -32,6 +29,7 @@ public class ProvinceManager : MonoBehaviour {
 	}
 
 	public void Init(SO_MapTemplate mapTemplate) {
+		currentMapTemplate = mapTemplate;
 		if (data.provinces.Length > 0) {
 			Debug.Log("Datos de provincia ya inicializados (Partida Cargada).");
 			LoadStateCache();
@@ -46,6 +44,17 @@ public class ProvinceManager : MonoBehaviour {
 		data.provinces = provinceList.ToArray();
 		Debug.Log($"{data.provinces.Length} Provincias inicializadas para nueva partida.");
 		LoadStateCache();	
+	}
+
+	public void SetProvinceColor(Dictionary<string, string> colorToProvinceId) {
+		_colorToProvinceId = colorToProvinceId;
+	}
+
+	public ProvinceData GetProvinceByColor(string color) {
+		if (_colorToProvinceId != null && _colorToProvinceId.TryGetValue(color, out string provinceId)) {
+			return GetProvinceState(provinceId);
+		}
+		return null;
 	}
 	
 	private ProvinceData CreateInitialProvince(SO_Province soProvince) {
