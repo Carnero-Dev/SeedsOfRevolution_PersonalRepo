@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class GameInitializer : MonoBehaviour
 {
-    public MapDynamicInitializer mapDynamicInitializer;
     private ProvinceManager _provinceManager;
+    [SerializeField] public SO_MapTemplate currentMap;
 
     public event Action OnGameInitialized;
 
 	public void Initialize() {
         Debug.Log("Initializing Game...");
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
-        mapDynamicInitializer.Initialize(out SO_MapTemplate mapTemplate);
-        _provinceManager.Init(mapTemplate);
+        MapDynamicInitializer.Initialize(currentMap);
+        _provinceManager.Init(currentMap);
         OnGameInitialized?.Invoke();
     }
 }

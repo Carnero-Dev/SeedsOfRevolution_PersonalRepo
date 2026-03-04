@@ -1,22 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class MapDynamicInitializer : MonoBehaviour {
-    [SerializeField] public SO_MapTemplate currentMap;
-    [SerializeField] private Material mapMaterialBase; // Material URP Unlit/Lit
+public static class MapDynamicInitializer {
 
-    public void Initialize(out SO_MapTemplate mapTemplate) {
+    public static void Initialize(SO_MapTemplate mapTemplate) {
         // 1. Crear el objeto visual del mapa
         GameObject mapObj = new GameObject("Runtime_Map_Grid");
         MeshFilter filter = mapObj.AddComponent<MeshFilter>();
         MeshRenderer renderer = mapObj.AddComponent<MeshRenderer>();
         
         // Creamos una malla plana simple ajustada al aspecto de la imagen
-        filter.mesh = CreatePlaneMesh(currentMap.colorMap.width, currentMap.colorMap.height);
+        filter.mesh = CreatePlaneMesh(mapTemplate.colorMap.width, mapTemplate.colorMap.height);
         
         // 2. Configurar Material
         Material instanceMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-        instanceMat.mainTexture = currentMap.colorMap;
+        instanceMat.mainTexture = mapTemplate.colorMap;
         renderer.material = instanceMat;
 
         // 3. Configurar Colisionador para Clics
@@ -25,11 +23,10 @@ public class MapDynamicInitializer : MonoBehaviour {
         // 5. Añadir el Handler de Interacción
         mapObj.layer = LayerMask.NameToLayer("Interactable");
         var handler = mapObj.AddComponent<MapInteractionHandler>();
-        handler.Init(currentMap.colorMap);
-        mapTemplate = currentMap;
+        handler.Init(mapTemplate.colorMap);
     }
 
-    private Mesh CreatePlaneMesh(int w, int h) {
+    private static Mesh CreatePlaneMesh(int w, int h) {
         Mesh m = new Mesh();
         float aspect = (float)w / h;
         // Genera vértices de un plano centrado
