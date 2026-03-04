@@ -13,8 +13,8 @@ public static class MapDynamicInitializer {
         filter.mesh = CreatePlaneMesh(mapTemplate.colorMap.width, mapTemplate.colorMap.height);
         
         // 2. Configurar Material
-        Material instanceMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-        instanceMat.mainTexture = mapTemplate.colorMap;
+        Material instanceMat = new Material(Shader.Find("Shader Graphs/SG_DrawMapFrontier"));
+        instanceMat.SetTexture("mapColorText", mapTemplate.colorMap);
         renderer.material = instanceMat;
 
         // 3. Configurar Colisionador para Clics
