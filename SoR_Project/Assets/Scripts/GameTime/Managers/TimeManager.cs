@@ -105,7 +105,16 @@ public class TimeManager : MonoBehaviour {
             ChangeTimeScale(_currentTimeScaleIndex - 1);
         }
     }
-
+    public void PauseReanudeTime(bool pause) {
+        if (pause) {
+            ChangeTimeScale(_lastTimeScaleIndex);
+            OnGameTimeReanudated?.Invoke();
+        } else {
+            _lastTimeScaleIndex = _currentTimeScaleIndex;
+            ChangeTimeScale(0);
+            OnGameTimePaused?.Invoke();
+        }
+    }
 
     public void PauseReanudeTime() {
         if (_currentTimeScaleIndex != 0) {
