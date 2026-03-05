@@ -76,7 +76,7 @@ public class ProvinceManager : MonoBehaviour {
 		Debug.Log($"Caché de estados de provincia cargada: {_gameProvinces.Count} entradas.");
 	}
 
-	public void SelectProvinceByColor(Color color) {
+	public bool SelectProvinceByColor(Color color) {
 		string colorHex = ColorUtility.ToHtmlStringRGB(color).ToLower();
 		ProvinceInfo province = null;
 		if (_colorToProvinceId != null && _colorToProvinceId.TryGetValue(colorHex, out string provinceId)) {
@@ -84,10 +84,11 @@ public class ProvinceManager : MonoBehaviour {
 		}
 		if(province == null) {
 			DeselectProvince();
-			return;
+			return false;
 		} 
 		selectedProvince = province;
 		OnProvinceSelected?.Invoke(true);
+		return true;
 	}
 
 	public void DeselectProvince() {
