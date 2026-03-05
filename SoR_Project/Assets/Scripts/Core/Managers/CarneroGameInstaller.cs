@@ -13,10 +13,10 @@ public class CarneroGameInstaller : MonoBehaviour
     
     private void Awake() {
         InstallGameScene(); 
-        gameManager.StartGame();
     }
 
     private void Start() {
+        gameManager.StartGame();
     }
 
 	public void InstallGameScene() {

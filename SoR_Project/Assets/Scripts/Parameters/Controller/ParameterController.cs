@@ -25,16 +25,16 @@ public class ParameterController : MonoBehaviour {
 		_gameInitializer = ServiceLocator.Get<GameInitializer>();
 
 		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
-		if(_gameInitializer.IsInitialized) UpdateGlobalParameters();
+		_gameInitializer.OnGameInitialized += () => UpdateGlobalParameters();
+		// if(_gameInitializer.IsInitialized) UpdateGlobalParameters();
 
-		// Calcular población total del mapa
-		foreach(var province in _provinceManager.GetMapTemplate().provinces) {
-			totalPopulation += province.provincePopulation;
-		}
+		_gameInitializer.OnGameInitialized += () => ComputeTotalPopulation();
 	}
 
 	void OnDisable() {
 		_timeManager.OnDayPassedEvent -= UpdateGlobalParameters;
+		_gameInitializer.OnGameInitialized -= () => UpdateGlobalParameters();
+		_gameInitializer.OnGameInitialized -= () => ComputeTotalPopulation();
 	}
 
 	public void UpdateGlobalParameters() {
@@ -42,6 +42,12 @@ public class ParameterController : MonoBehaviour {
 		UpdateInfluence();
 
 		OnParametersUpdated?.Invoke();
+	}
+
+	private void ComputeTotalPopulation() {
+		foreach(var province in _provinceManager.GetMapTemplate().provinces) {
+			totalPopulation += province.provincePopulation;
+		}
 	}
 
 	private void ComputeProvincialTotals() {
