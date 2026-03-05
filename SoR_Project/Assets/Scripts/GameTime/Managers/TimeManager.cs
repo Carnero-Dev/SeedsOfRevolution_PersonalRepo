@@ -31,13 +31,14 @@ public class TimeManager : MonoBehaviour {
     void Update() {
         CalculateTime();
     }
-    
-    void OnValidate() {
+
+	void Awake()
+	{		
         _timesScales[0] = 0;
         _timesScales[1] = _TIMESCALE;
         _timesScales[2] = _TIMESCALE * 2;
         _timesScales[3] = _TIMESCALE * 3;
-    }
+	}
 
     #region Calculate Time
     void CalculateTime() {
