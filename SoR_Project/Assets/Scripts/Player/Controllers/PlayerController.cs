@@ -1,14 +1,13 @@
 using System;
 using UnityEngine;
 
-// TODO: suavizar movimiento con wasd y dejarlo como opción para poder activarlo y desactivarlo
-
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour {
     [Header("REFERENCES")]
     public InputListener input;
     public Camera playerCamera;
     private TimeManager _timeManager;
+    public dev_InfoHud infoHud; // HORIENTADO A TESTEOS
 
     [Header("INPUT SETTINGS")]
 
@@ -403,8 +402,16 @@ public class PlayerController : MonoBehaviour {
     private void HandleStopResumeTime() { _timeManager.PauseReanudeTime(); }
     private void HandleIncrementTime() { _timeManager.AccelerateTime(); }
     private void HandleDecrementTime() { _timeManager.DecreaseTime(); }
-    private void HandlePauseGame() { Debug.Log("Pause Game"); }
-    private void HandleResumeGame() { Debug.Log("Resume Game"); }
+    private void HandlePauseGame() { 
+        // debug
+        infoHud.PauseOrResumeMenu(true);
+        input.ChangeGameMode(SOR_Enums.GameModes.UI);
+    }
+    private void HandleResumeGame() { 
+        //debug
+        infoHud.PauseOrResumeMenu(false); 
+        input.ChangeGameMode(SOR_Enums.GameModes.Game);
+    }
     private void HandleSetTimeScale(int index) { _timeManager.SetTimeScale(index); }
 
     #endregion

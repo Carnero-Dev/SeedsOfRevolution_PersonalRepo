@@ -5,10 +5,6 @@ using UnityEngine.InputSystem;
 [CreateAssetMenu(fileName = "InputListener", menuName = "SOR/Input/InputListener")]
 public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, PlayerInput.IUIMenuActions {
 
-    public enum GameModes {
-        Game, UI
-    }
-
     #region EVENTS
 
     /// <summary>Se invoca cuando el jugador se mueve</summary>
@@ -55,7 +51,7 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
             _playerInput.Player.SetCallbacks(this);
             _playerInput.UIMenu.SetCallbacks(this);
 
-            ChangeGameMode(GameModes.Game);
+            ChangeGameMode(SOR_Enums.GameModes.Game);
         }
     }
 
@@ -63,13 +59,13 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
         _playerInput.Player.Disable();
     }
 
-    public void ChangeGameMode(GameModes gMod) {
+    public void ChangeGameMode(SOR_Enums.GameModes gMod) {
         switch (gMod) {
-            case GameModes.Game:
+            case SOR_Enums.GameModes.Game:
                 _playerInput.Player.Enable();
                 _playerInput.UIMenu.Disable();
                 break;
-            case GameModes.UI:
+            case SOR_Enums.GameModes.UI:
                 _playerInput.Player.Disable();
                 _playerInput.UIMenu.Enable();
                 break;
@@ -135,7 +131,7 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
     public void OnPauseGame(InputAction.CallbackContext context) {
         if (IsPhasePerformed(context)) {
             OnPauseEvent?.Invoke();
-            ChangeGameMode(GameModes.UI);
+            ChangeGameMode(SOR_Enums.GameModes.UI);
         }
     }
 
@@ -163,7 +159,7 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
     public void OnResumeGame(InputAction.CallbackContext context) {
         if (IsPhasePerformed(context)) {
             OnResumeEvent?.Invoke();
-            ChangeGameMode(GameModes.Game);
+            ChangeGameMode(SOR_Enums.GameModes.Game);
         }
     }
 

@@ -1,5 +1,8 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class dev_InfoHud : MonoBehaviour
@@ -26,19 +29,25 @@ public class dev_InfoHud : MonoBehaviour
        _gameInitializer.OnGameInitialized += InitializeData;
 
        controlsButton.onClick.AddListener(() => {
-           ControlLayerRef.SetActive(true);
-           PauseMenuRef.SetActive(false);
-           _timeManager.PauseReanudeTime(true);
        });
        closeControlsButton.onClick.AddListener(() => {
            ControlLayerRef.SetActive(false);
            _timeManager.PauseReanudeTime(false);
        });
-        reanudeButton.onClick.AddListener(() => {
-              PauseMenuRef.SetActive(false);
-              _timeManager.PauseReanudeTime(false);
+        reanudeButton.onClick.AddListener(() =>  SimulateKeyP());
+        saveButton.onClick.AddListener(() => {
+            SimulateKeyP();
+            SaveSystem.Save(GameDataService.Current);
         });
-
+        loadButton.onClick.AddListener(() => {
+            SimulateKeyP();
+            SceneManager.LoadScene("Game_debug");
+        });
+        mainMenuButton.onClick.AddListener(() => {
+            SimulateKeyP();
+            SceneManager.LoadScene("debug_MainMenu");
+        });
+        exitButton.onClick.AddListener(() => Application.Quit());
     }
 
     private void InitializeData() {
@@ -50,7 +59,22 @@ public class dev_InfoHud : MonoBehaviour
 
     void OnDisable() {
         _gameInitializer.OnGameInitialized -= InitializeData;
+        
     }
 
+    public void PauseOrResumeMenu(bool pause) {
+        PauseMenuRef.SetActive(pause);
+        if (pause) Time.timeScale = 0;
+        else Time.timeScale = 1;
+    }
 
+    public void SimulateKeyP() {
+        var keyboard = Keyboard.current;
+        if (keyboard == null) return;
+
+        using (StateEvent.From(keyboard, out var eventPtr)) {
+            keyboard.pKey.WriteValueIntoEvent(1f, eventPtr);
+            InputSystem.QueueEvent(eventPtr);
+        }
+    }
 }

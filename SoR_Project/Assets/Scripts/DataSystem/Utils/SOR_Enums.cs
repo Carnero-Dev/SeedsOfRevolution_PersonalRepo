@@ -13,5 +13,9 @@ public class SOR_Enums
         Capital
     }
      public static ProvinceType provinceType;
+
+     public enum GameModes {
+        Game, UI
+     }
      #endregion
 }
