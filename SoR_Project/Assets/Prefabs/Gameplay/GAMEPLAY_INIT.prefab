@@ -89,7 +89,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedProvince: {fileID: 0}
-  currentMapTemplate: {fileID: 11400000, guid: 4417dcd4de968724f84a61e74792ff21, type: 2}
 --- !u!1 &6928218890704328388
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00b67e5e55021f0498b3aa2e271044d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _TIMESCALE: 20
+  _TIMESCALE: 300
 --- !u!1 &8183116214513539195
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,6 +212,7 @@ Transform:
   - {fileID: 8931042895012541616}
   - {fileID: 3589318876234781560}
   - {fileID: 7779585262974848941}
+  - {fileID: 5885556269781214378}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8289598590173436204
@@ -229,5 +229,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeManager: {fileID: 2293730746795650231}
   gameManager: {fileID: 5216157045578440652}
-  provinceManager: {fileID: 0}
+  provinceManager: {fileID: 8954171521376432274}
   parameterController: {fileID: 4651821949878480224}
+  gameInitializer: {fileID: 585198117454130581}
+--- !u!1 &8997950733125031791
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5885556269781214378}
+  - component: {fileID: 585198117454130581}
+  m_Layer: 0
+  m_Name: GAME_INITIALIZER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5885556269781214378
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8997950733125031791}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 604528630974602674}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &585198117454130581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8997950733125031791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efa609741953cfb478b1cffb2fdb9504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentMap: {fileID: 11400000, guid: 4417dcd4de968724f84a61e74792ff21, type: 2}

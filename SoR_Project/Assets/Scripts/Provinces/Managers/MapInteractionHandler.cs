@@ -3,10 +3,12 @@ using UnityEngine.UI;
 
 public class MapInteractionHandler : MonoBehaviour, IInteractable {
     public Texture2D colorMap;
+    public Material politicalMapMaterial;
     private ProvinceManager _provinceManager;
 
-    public void Init(Texture2D texture) {
+    public void Init(Texture2D texture, Material material) {
         colorMap = texture;
+        politicalMapMaterial = material;
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
 
     }
@@ -18,7 +20,16 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
 
             Color clickedColor = colorMap.GetPixel((int)pixelUV.x, (int)pixelUV.y);
             
-            _provinceManager.SelectProvinceByColor(clickedColor);
+            HighlightProvince(clickedColor, _provinceManager.SelectProvinceByColor(clickedColor));
+    }
+    void HighlightProvince(Color clickedColor, bool isSelected) {
+        if (isSelected) {
+            politicalMapMaterial.SetColor("_selectedColor", clickedColor);
+            politicalMapMaterial.SetInt("_isSelected", 1);
+        } else {
+            politicalMapMaterial.SetColor("_selectedColor", Color.clear);
+            politicalMapMaterial.SetInt("_isSelected", 0);
+        }
     }
 
 	public void LeftClickInteract(RaycastHit hitinfo) {
@@ -31,6 +42,7 @@ public class MapInteractionHandler : MonoBehaviour, IInteractable {
 
 	public void OnDeselect() {
 		_provinceManager.DeselectProvince();
+                HighlightProvince(Color.clear, false);
 	}
 
 	public void OnUnhover() {   

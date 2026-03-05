@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9aab0db377d3f584ba4690bfb8188d8a, type: 3}
-  m_Name: UBR
+  m_Name: ARG
   m_EditorClassIdentifier: 
-  provinceId: UBR
-  provinceName: Ubroque
-  provincePopulation: 3
-  provinceStability: 40
+  provinceId: ARG
+  provinceName: "Arag\xF3n"
+  provincePopulation: 1381842
+  provinceStability: 85
   provinceType: Industrial
-  provinceColorHex: GH8754
+  provinceColorHex: e23517

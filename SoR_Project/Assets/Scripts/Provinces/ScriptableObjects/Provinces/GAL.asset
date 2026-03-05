@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9aab0db377d3f584ba4690bfb8188d8a, type: 3}
-  m_Name: MAL
+  m_Name: GAL
   m_EditorClassIdentifier: 
-  provinceId: MAL
-  provinceName: "M\xE1laka"
-  provincePopulation: 845166
-  provinceStability: 80
-  provinceType: Turistic
-  provinceColorHex: E0DD6D
+  provinceId: GAL
+  provinceName: Galicia
+  provincePopulation: 2728315
+  provinceStability: 85
+  provinceType: Industrial
+  provinceColorHex: 0085bd

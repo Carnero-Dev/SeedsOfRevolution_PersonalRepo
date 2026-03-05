@@ -8,13 +8,14 @@ public static class MapDynamicInitializer {
         GameObject mapObj = new GameObject("Runtime_Map_Grid");
         MeshFilter filter = mapObj.AddComponent<MeshFilter>();
         MeshRenderer renderer = mapObj.AddComponent<MeshRenderer>();
+        mapObj.transform.localScale = new Vector3(10, 10, 10);
         
         // Creamos una malla plana simple ajustada al aspecto de la imagen
         filter.mesh = CreatePlaneMesh(mapTemplate.colorMap.width, mapTemplate.colorMap.height);
         
         // 2. Configurar Material
-        Material instanceMat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-        instanceMat.mainTexture = mapTemplate.colorMap;
+        Material instanceMat = new Material(Shader.Find("Shader Graphs/PoliticalMapLayer"));
+        instanceMat.SetTexture("_mapColorTex", mapTemplate.colorMap);
         renderer.material = instanceMat;
 
         // 3. Configurar Colisionador para Clics
@@ -23,7 +24,7 @@ public static class MapDynamicInitializer {
         // 5. Añadir el Handler de Interacción
         mapObj.layer = LayerMask.NameToLayer("Interactable");
         var handler = mapObj.AddComponent<MapInteractionHandler>();
-        handler.Init(mapTemplate.colorMap);
+        handler.Init(mapTemplate.colorMap, instanceMat);
     }
 
     private static Mesh CreatePlaneMesh(int w, int h) {

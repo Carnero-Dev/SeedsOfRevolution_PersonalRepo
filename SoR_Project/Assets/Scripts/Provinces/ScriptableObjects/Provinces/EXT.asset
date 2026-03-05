@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9aab0db377d3f584ba4690bfb8188d8a, type: 3}
-  m_Name: MAD
+  m_Name: EXT
   m_EditorClassIdentifier: 
-  provinceId: MAD
-  provinceName: Madrid
-  provincePopulation: 7170906
-  provinceStability: 100
-  provinceType: Capital
-  provinceColorHex: 51812e
+  provinceId: EXT
+  provinceName: Extremadura
+  provincePopulation: 1055197
+  provinceStability: 70
+  provinceType: Industrial
+  provinceColorHex: eb7e34
