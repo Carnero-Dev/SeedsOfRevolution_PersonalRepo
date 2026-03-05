@@ -3,6 +3,7 @@ using TMPro;
 
 public class GameGlobalParameters_ui : MonoBehaviour {
 	private ParameterController _parameterController;
+	private GameInitializer _gameInitializer;
 	private ParametersData _parametersData => GameDataService.Current.parameters;
 	[SerializeField] private TextMeshProUGUI _influenceText;
 	[SerializeField] private TextMeshProUGUI _totalPopularityText;
@@ -17,7 +18,6 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 
 	private void Update() {
 		UpdateUI();
-
 	}
 
 	private void UpdateUI() {

@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class CarneroGameInstaller : MonoBehaviour
 {
-    public event Action OnAllInstalled;
 
     // SERVICES
     public TimeManager timeManager;
@@ -13,13 +12,12 @@ public class CarneroGameInstaller : MonoBehaviour
     public GameInitializer gameInitializer;
     
     private void Awake() {
-        OnAllInstalled += gameManager.StartGame;
         InstallGameScene(); 
+        gameManager.StartGame();
     }
 
-    void OnDisable() {
-        OnAllInstalled -= gameManager.StartGame;
-	}
+    private void Start() {
+    }
 
 	public void InstallGameScene() {
         ServiceLocator.Reset();
@@ -28,7 +26,5 @@ public class CarneroGameInstaller : MonoBehaviour
         ServiceLocator.Register<ProvinceManager>(provinceManager);
         ServiceLocator.Register<ParameterController>(parameterController);
         ServiceLocator.Register<GameInitializer>(gameInitializer);
-
-        OnAllInstalled?.Invoke();
     }
 }
