@@ -8,6 +8,7 @@ public static class MapDynamicInitializer {
         GameObject mapObj = new GameObject("Runtime_Map_Grid");
         MeshFilter filter = mapObj.AddComponent<MeshFilter>();
         MeshRenderer renderer = mapObj.AddComponent<MeshRenderer>();
+        mapObj.transform.localScale = new Vector3(10, 10, 10);
         
         // Creamos una malla plana simple ajustada al aspecto de la imagen
         filter.mesh = CreatePlaneMesh(mapTemplate.colorMap.width, mapTemplate.colorMap.height);

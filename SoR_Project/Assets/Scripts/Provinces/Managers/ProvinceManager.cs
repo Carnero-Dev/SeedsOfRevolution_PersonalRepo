@@ -62,7 +62,7 @@ public class ProvinceManager : MonoBehaviour {
 			pObj.AddComponent<ProvinceInfo>().InitProvinceData(p);
 			
 			_gameProvinces.Add(p.provinceId, pObj.GetComponent<ProvinceInfo>()); // Province Info Objects
-            _colorToProvinceId.TryAdd(p.provinceColorHex, p.provinceId); // Province color
+            _colorToProvinceId.TryAdd(p.provinceColorHex.ToLower(), p.provinceId); // Province color
 		}
 		// PROVINCES DATA TO PROVINCE INFO
 		foreach (var province in data.provinces) {
@@ -77,7 +77,7 @@ public class ProvinceManager : MonoBehaviour {
 	}
 
 	public void SelectProvinceByColor(Color color) {
-		string colorHex = ColorUtility.ToHtmlStringRGB(color);
+		string colorHex = ColorUtility.ToHtmlStringRGB(color).ToLower();
 		ProvinceInfo province = null;
 		if (_colorToProvinceId != null && _colorToProvinceId.TryGetValue(colorHex, out string provinceId)) {
 			province = GetProvinceById(provinceId);
