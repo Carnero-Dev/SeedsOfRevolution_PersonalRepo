@@ -31,13 +31,14 @@ public class TimeManager : MonoBehaviour {
     void Update() {
         CalculateTime();
     }
-    
-    void OnValidate() {
+
+	void Awake()
+	{		
         _timesScales[0] = 0;
         _timesScales[1] = _TIMESCALE;
         _timesScales[2] = _TIMESCALE * 2;
         _timesScales[3] = _TIMESCALE * 3;
-    }
+	}
 
     #region Calculate Time
     void CalculateTime() {
@@ -104,7 +105,16 @@ public class TimeManager : MonoBehaviour {
             ChangeTimeScale(_currentTimeScaleIndex - 1);
         }
     }
-
+    public void PauseReanudeTime(bool pause) {
+        if (pause) {
+            ChangeTimeScale(_lastTimeScaleIndex);
+            OnGameTimeReanudated?.Invoke();
+        } else {
+            _lastTimeScaleIndex = _currentTimeScaleIndex;
+            ChangeTimeScale(0);
+            OnGameTimePaused?.Invoke();
+        }
+    }
 
     public void PauseReanudeTime() {
         if (_currentTimeScaleIndex != 0) {

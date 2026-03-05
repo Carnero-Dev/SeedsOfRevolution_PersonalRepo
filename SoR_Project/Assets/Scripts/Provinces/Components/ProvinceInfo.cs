@@ -59,9 +59,9 @@ public class ProvinceInfo : MonoBehaviour
 
     void debugShowInfo() {
         if(_currentData == null) return;
-        popularity += 1024;
-        aligned += 512;
-        affiliates += 256;
+        popularity += SeedRandom.RangeInt(SeedCategory.TEST, 100, 1000);
+        aligned += SeedRandom.RangeInt(SeedCategory.TEST, -10, 500);
+        affiliates += SeedRandom.RangeInt(SeedCategory.TEST, -10, 200);
     }
 
 }

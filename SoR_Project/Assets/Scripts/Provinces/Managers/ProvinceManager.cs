@@ -5,7 +5,7 @@ using System;
 
 public class ProvinceManager : MonoBehaviour {
 	private GameData data => GameDataService.Current;
-	public ProvinceInfo selectedProvince;
+	public ProvinceInfo selectedProvince { get; private set; }
 	private SO_MapTemplate currentMapTemplate;
 	// El cache para el acceso en tiempo de ejecución
 	private Dictionary<string, string> _colorToProvinceId;

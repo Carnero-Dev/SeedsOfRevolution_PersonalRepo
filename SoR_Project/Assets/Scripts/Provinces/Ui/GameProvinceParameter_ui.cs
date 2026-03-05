@@ -39,7 +39,7 @@ public class GameProvinceParameter_ui : MonoBehaviour {
 	private void UpdateUi() {
         if(_provinceManager.selectedProvince == null) return;
         provinceNameText.text = _provinceManager.selectedProvince.ProvinceName;
-            provinceFlagImage.sprite = Resources.Load<Sprite>("ProvinceFlags/default/" + _provinceManager.selectedProvince.GetProvinceId() +"_flag");
+            provinceFlagImage.sprite = Resources.Load<Sprite>("ProvinceFlags/default/" + "flag_"+_provinceManager.selectedProvince.GetProvinceId());
         provinceStabilityText.text = "Estabilidad: " + _provinceManager.selectedProvince.stability.ToString("F2") + "%";
         provincePopulationText.text = "Habitantes: " + _provinceManager.selectedProvince.Population.ToString("N0");
         provincePopularityText.text = _provinceManager.selectedProvince.popularity.ToString("N0");

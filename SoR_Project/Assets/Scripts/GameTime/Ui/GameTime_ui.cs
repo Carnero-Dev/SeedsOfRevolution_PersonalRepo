@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class GameTime_ui : MonoBehaviour {
     private TimeManager _timeManager;
+    private GameInitializer _gameInitializer;
     private TimeManagerData _timeData => GameDataService.Current.gameTime;
     [SerializeField] private TextMeshProUGUI _hourText;
     [SerializeField] private TextMeshProUGUI _dayMonthText;
@@ -16,6 +17,7 @@ public class GameTime_ui : MonoBehaviour {
 
     private void Start() {
         _timeManager = ServiceLocator.Get<TimeManager>();
+        _gameInitializer = ServiceLocator.Get<GameInitializer>();
 
         // Buttons
         _accelerateTimeButton.onClick.AddListener(_timeManager.AccelerateTime);
@@ -24,8 +26,11 @@ public class GameTime_ui : MonoBehaviour {
         _resumeTimeButton.onClick.AddListener(HandlePauseReanudeTime);
 
         // Init
-        UpdateHourText();
-        UpdateDateText();
+        _gameInitializer.OnGameInitialized += () => {
+            UpdateHourText();
+            UpdateDateText();
+            UpdateScaleText();
+        };
 
         // Events
         _timeManager.OnHourPassedEvent += UpdateHourText;
@@ -37,6 +42,11 @@ public class GameTime_ui : MonoBehaviour {
 		_timeManager.OnHourPassedEvent -= UpdateHourText;
         _timeManager.OnDayPassedEvent -= UpdateDateText;
         _timeManager.OnGameTimeScaleChanged -= UpdateScaleText;
+        _gameInitializer.OnGameInitialized -= () => {
+            UpdateHourText();
+            UpdateDateText();
+            UpdateScaleText();
+        };
 	}
 
 	private void UpdateDateText() {
