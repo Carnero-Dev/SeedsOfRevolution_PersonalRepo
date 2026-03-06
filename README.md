@@ -12,7 +12,6 @@ Busco tener un porfolio sólido y documentado
 
 ## Explicación de áreas del repositorio
 * ### /doc
-
 Alverga toda la documentación implícita tanto del juego, como métodos de trabajo en los que me he apoyado y he querido dejar en el repositorio por comodidad, testimonio y orden
 * ### /SoR_Project
 Proyecto Unity del videojuego
@@ -21,6 +20,7 @@ Documentación rápida donde establezco pautas y buenas prácticas que aplicar d
 
 ## Hotkeys para documentación interna
 - 🔗 [GP_GitUssage](https://github.com/JukiloGame/SeedsOfRevolution_PersonalRepo/blob/main/doc/GoodPractices/GP_GitUssage.md)
+- 🔗 [Version Reports](https://github.com/Carnero-Dev/SeedsOfRevolution_PersonalRepo/tree/develop/doc/Version_Reports)
 
 ## Descripción breve del proyecto
 Se trata de un juego de estrategia donde tomaremos el papel de una organización política, secta o activistas de un movimiento ideológico, cuyo objetivo principal, será expandir nuestras ideas al mayor número de ciudadanos posibles y conseguir adeptos para lograr controlar el país.
@@ -34,18 +34,14 @@ Nosotros seremos los que construirán la historia de aquí en adelante, dependie
 Tendremos un comienzo humilde, estando limitado a ciertas acciones y recursos muy básicos. Con el tiempo aumentaremos la variedad de estos elementos y podremos formar estrategias más complejas.
 Nuestro objetivo principal será lograr la revolución y tomar todas las provincias del país de la forma más eficiente posible.
 
-
-## Antes de este repositorio || Primer commit con proyecto base
-
-
 ## Información de contacto personal
-- Linkln
-- Itchio
-- Gmail
-- CV
+- [Linkedin](https://www.linkedin.com/in/carlos-carnero-cabrera-0301341a7/)
+- [Itchio](https://jukilogame.itch.io)
+- [Gmail](carnero.dev@gmail.com)
+- [Web Personal](https://carnero-dev.github.io/carnero-cv/)
 
 ## Créditos y contactos de colaboradores directos
-- Gonzalo Blanch
+- [Gonzalo Blanch](https://github.com/Goblanch) -> PlayerController + Input V0.0.1
 
 ### Créditos a Assets de terceros
 
