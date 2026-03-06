@@ -29,21 +29,24 @@ public class dev_InfoHud : MonoBehaviour
        _gameInitializer.OnGameInitialized += InitializeData;
 
        controlsButton.onClick.AddListener(() => {
+           ControlLayerRef.SetActive(true);
        });
        closeControlsButton.onClick.AddListener(() => {
            ControlLayerRef.SetActive(false);
-           _timeManager.PauseReanudeTime(false);
        });
         reanudeButton.onClick.AddListener(() =>  SimulateKeyP());
         saveButton.onClick.AddListener(() => {
+            Time.timeScale = 1;
             SimulateKeyP();
             SaveSystem.Save(GameDataService.Current);
         });
         loadButton.onClick.AddListener(() => {
+            Time.timeScale = 1;
             SimulateKeyP();
             SceneManager.LoadScene("Game_debug");
         });
         mainMenuButton.onClick.AddListener(() => {
+            Time.timeScale = 1;
             SimulateKeyP();
             SceneManager.LoadScene("debug_MainMenu");
         });

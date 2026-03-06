@@ -25,6 +25,8 @@ public class GameTime_ui : MonoBehaviour {
         _pauseTimeButton.onClick.AddListener(HandlePauseReanudeTime);
         _resumeTimeButton.onClick.AddListener(HandlePauseReanudeTime);
 
+        
+
         // Init
         _gameInitializer.OnGameInitialized += () => {
             UpdateHourText();
