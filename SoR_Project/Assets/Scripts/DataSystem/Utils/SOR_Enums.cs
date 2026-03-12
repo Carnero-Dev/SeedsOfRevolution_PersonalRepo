@@ -17,5 +17,15 @@ public class SOR_Enums
      public enum GameModes {
         Game, UI
      }
+
+     public enum Parameters {
+         Infuelnce,
+         Popularity,
+         Affiliates,
+         Aligned,
+         Fame,
+         Determination,
+         Stability
+     }
      #endregion
 }

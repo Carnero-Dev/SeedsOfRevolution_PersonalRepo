@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85769bd909372a64b972ab465d1b135c, type: 3}
+  m_Name: DEC_EVENT_ID_PAY_DEBT
+  m_EditorClassIdentifier: 
+  eventId: EVENT_ID
+  decisionId: DEC_EVENT_ID_PAY_DEBT
+  decisionTitle: Pagar Deudas
+  decisionDescription: "No nos queda otra, habr\xE1 que rescatar a la banca"
+  modifiersArray:
+  - decisionId: DEC_EVENT_ID_PAY_DEBT
+    provincesToModify:
+    - AND
+    parametersToModify:
+    - parameter: 0
+      value: -15
+      isPercentege: 0
+    - parameter: 6
+      value: 0.05
+      isPercentege: 0
+    DurationDays: 20
+    customId: DEC_ECO_CRASH_PAY_DEBT_MOD_0
+  - decisionId: DEC_EVENT_ID_PAY_DEBT
+    provincesToModify: []
+    parametersToModify:
+    - parameter: 5
+      value: -10
+      isPercentege: 1
+    DurationDays: 0
+    customId: DEC_ECO_CRASH_PAY_DEBT_MOD_0
