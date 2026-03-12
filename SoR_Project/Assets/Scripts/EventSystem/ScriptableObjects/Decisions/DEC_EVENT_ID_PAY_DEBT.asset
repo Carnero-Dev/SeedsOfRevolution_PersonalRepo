@@ -27,7 +27,7 @@ MonoBehaviour:
     - parameter: 6
       value: 0.05
       isPercentege: 0
-    DurationDays: 20
+    durationDays: 0
     customId: DEC_ECO_CRASH_PAY_DEBT_MOD_0
   - decisionId: DEC_EVENT_ID_PAY_DEBT
     provincesToModify: []
@@ -35,5 +35,5 @@ MonoBehaviour:
     - parameter: 5
       value: -10
       isPercentege: 1
-    DurationDays: 0
-    customId: DEC_ECO_CRASH_PAY_DEBT_MOD_0
+    durationDays: 0
+    customId: DEC_EVENT_ID_PAY_DEBT_MOD_1

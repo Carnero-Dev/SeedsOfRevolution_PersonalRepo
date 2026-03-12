@@ -11,6 +11,7 @@ public static class SaveSystem {
     private static string settingsSavePath => "settings_save";
 
     public static event Action OnGameSaved;
+    public static event Action OnCallSave;
     public static event Action OnGameLoaded;
     public static event Action OnGameDataCleared;
 
@@ -37,6 +38,7 @@ public static class SaveSystem {
     }
  public static void Save<T>(T data) where T : IData
     {
+        if (data is GameData) OnCallSave?.Invoke();
         string path = GetPath(GetSavePathName(data));
 
         if (data is GameData gd) {

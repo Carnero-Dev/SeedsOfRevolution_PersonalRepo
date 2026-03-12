@@ -2,15 +2,17 @@ using UnityEngine;
 using System;
 //TODO: Refactorizar timeManager para usar TimeData y asignar geters y seters
 
-public class ActiveModifier : MonoBehaviour {
-    public ModifierInstructions modifierInstruciton;
+public class ActiveModifier {
+    public ModifierInstructions instructions;
     public ExpirationDate expirationDate;
 
-    public ActiveModifier(ModifierInstructions instructions, TimeManagerData currentDate) {
-        this.modifierInstruciton = instructions;
-        this.expirationDate = CalculateExpirationDate(instructions.durationDays, currentDate);
+	public void Initialize(ModifierInstructions instructions) {
+        this.instructions = instructions;
+        this.expirationDate = CalculateExpirationDate(instructions.durationDays);
+        Debug.Log($"Modifier with id {instructions.customId} Init");
     }
-    ExpirationDate CalculateExpirationDate(int durationDays, TimeManagerData currentDate) {
+    ExpirationDate CalculateExpirationDate(int durationDays) {
+        TimeManagerData currentDate = GameDataService.Current.gameTime;
         DateTime date = new DateTime(currentDate.year, currentDate.month, currentDate.day);
         date = date.AddDays(durationDays);
         if (durationDays <= -1) return new ExpirationDate(0, 0, 9999); // Si es permanente, Fecha "infinita"

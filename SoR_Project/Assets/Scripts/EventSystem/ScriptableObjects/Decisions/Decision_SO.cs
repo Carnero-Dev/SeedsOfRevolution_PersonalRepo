@@ -11,14 +11,11 @@ public class Decision_SO : ScriptableObject {
 	private void OnValidate() {
         // Sincronizamos la ID con todos los modificadores del array
         if (modifiersArray != null) {
-            for (int i = 0; i < modifiersArray.Length; i++) {
-                // Inyectamos la ID del padre en el struct hijo
+            int i = 0;
+            foreach (var mod in modifiersArray) {
                 modifiersArray[i].decisionId = decisionId;
-                
-                // Generamos un customId automático si está vacío
-                if (string.IsNullOrEmpty(modifiersArray[i].customId)) {
-                    modifiersArray[i].customId = $"{decisionId}_MOD_{i}";
-                }
+                if (string.IsNullOrEmpty(modifiersArray[i].customId)) modifiersArray[i].customId = $"{decisionId}_MOD_{i}";
+                i++;
             }
         }
     }
