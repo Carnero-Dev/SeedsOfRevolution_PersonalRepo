@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEditor.Compilation;
 //TODO: Refactorizar timeManager para usar TimeData y asignar geters y seters
 
 public class ActiveModifier {

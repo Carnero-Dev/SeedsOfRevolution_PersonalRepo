@@ -13,11 +13,11 @@ public class SOR_Enums
         Capital
     }
      public static ProvinceType provinceType;
-
+    [Serializable]
      public enum GameModes {
         Game, UI
      }
-
+    [Serializable]
      public enum Parameters {
          Infuelnce,
          Popularity,
@@ -27,5 +27,10 @@ public class SOR_Enums
          Determination,
          Stability
      }
+    [Serializable]
+    public struct ParameterValue{
+        public Parameters parameter;
+        public float value;
+    }
      #endregion
 }

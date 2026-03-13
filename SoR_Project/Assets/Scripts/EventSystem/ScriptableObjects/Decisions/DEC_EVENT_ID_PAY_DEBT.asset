@@ -22,18 +22,15 @@ MonoBehaviour:
     - AND
     parametersToModify:
     - parameter: 0
-      value: -15
-      isPercentege: 0
-    - parameter: 6
-      value: 0.05
-      isPercentege: 0
-    durationDays: 0
+      value: 15
+    - parameter: 4
+      value: -0.1
+    durationDays: 10
     customId: DEC_ECO_CRASH_PAY_DEBT_MOD_0
   - decisionId: DEC_EVENT_ID_PAY_DEBT
     provincesToModify: []
     parametersToModify:
     - parameter: 5
-      value: -10
-      isPercentege: 1
-    durationDays: 0
+      value: -0.5
+    durationDays: 15
     customId: DEC_EVENT_ID_PAY_DEBT_MOD_1

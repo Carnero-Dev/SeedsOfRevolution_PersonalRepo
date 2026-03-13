@@ -8,11 +8,17 @@ public class ModifierManager : MonoBehaviour {
 
     // Caché
     private Dictionary<string, ActiveModifier> _activeModifiers = new();  
-    private TimeManager _timeManager;
     private GameInitializer _gameInitializer;
+    private ProvinceManager _provinceManager;
+    private TimeManager _timeManager;
+
+    private Dictionary<SOR_Enums.Parameters, float> _acumulatedModifierValues = new Dictionary<SOR_Enums.Parameters, float>();
 
 	private void Start() {
         _gameInitializer = ServiceLocator.Get<GameInitializer>();
+        _provinceManager = ServiceLocator.Get<ProvinceManager>();
+        _timeManager = ServiceLocator.Get<TimeManager>();
+
         if (_gameInitializer.IsInitialized) {
             Init();
         } else {
@@ -21,9 +27,9 @@ public class ModifierManager : MonoBehaviour {
 	}
 
 	public void Init() {
-        _timeManager = ServiceLocator.Get<TimeManager>();
-        _timeManager.OnDayPassedEvent += CheckModifiers;
+        CheckModifiers();
         SaveSystem.OnCallSave += SyncToData; // Guardar Datos
+        _timeManager.OnDayPassedEvent += ApplyDailyTick;
 
         _activeModifiers.Clear();
         foreach (var mod in data.activeModifiers) {
@@ -32,9 +38,9 @@ public class ModifierManager : MonoBehaviour {
     }
 
 	public void OnDisable() {
-		_timeManager.OnDayPassedEvent -= CheckModifiers;
         SaveSystem.OnCallSave -= SyncToData;
         _gameInitializer.OnGameInitialized -= Init;
+        _timeManager.OnDayPassedEvent -= ApplyDailyTick;
 	}
 
 	// Se asegura de que los los modificadores activos se gaurden en Json
@@ -56,10 +62,13 @@ public class ModifierManager : MonoBehaviour {
             _activeModifiers.Add(id, newMod);
             Debug.Log($"Modifier with id {id} Created");
         }
+        CheckModifiers();
     }
+    public Dictionary<SOR_Enums.Parameters, float> GetAcumulatedModifiers() => _acumulatedModifierValues;
 
-    private void CheckModifiers() {
+    public void CheckModifiers() {
         CheckModifiersExpiration();
+        CalculateModifierValue();
     }
 
     /// <summary>
@@ -90,5 +99,48 @@ public class ModifierManager : MonoBehaviour {
         if (expiration.year == current.year && expiration.month == current.month && expiration.day < current.day) return true;
         return false;
     }
+
+
+    private void CalculateModifierValue() {
+        _acumulatedModifierValues.Clear();
+        foreach (var kvp in _activeModifiers) {
+        var mod = kvp.Value;
+
+        // 2. Necesitas un bucle para recorrer TODOS los parámetros de este modificador
+        foreach (var paramMod in mod.instructions.parametersToModify) {
+            
+            // 3. NO asignes nada de vuelta a mod.instructions... eso borra tus datos.
+            // Simplemente leemos y acumulamos.
+            if (!_acumulatedModifierValues.ContainsKey(paramMod.parameter)) {
+                _acumulatedModifierValues.Add(paramMod.parameter, paramMod.value);
+            } else {
+                _acumulatedModifierValues[paramMod.parameter] += paramMod.value;
+            }
+        }
+    }
+	}
+    public void ApplyDailyTick() {
+    CheckModifiers();
+    var parameterController = ServiceLocator.Get<ParameterController>();
+
+    foreach (var kvp in _activeModifiers) {
+        foreach (var paramMod in kvp.Value.instructions.parametersToModify) {
+            
+            switch (paramMod.parameter) {
+                case SOR_Enums.Parameters.Infuelnce: 
+                    parameterController.influence += paramMod.value;
+                    break;
+                case SOR_Enums.Parameters.Fame:
+                    parameterController.fame += paramMod.value;
+                    break;
+                case SOR_Enums.Parameters.Determination:
+                    parameterController.determination += paramMod.value;
+                    break;
+                // Aquí irían los de provincias si corresponde
+            }
+        }
+    }
+    
+}
 
 }
