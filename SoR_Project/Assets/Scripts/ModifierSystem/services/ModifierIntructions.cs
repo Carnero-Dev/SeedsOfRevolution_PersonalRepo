@@ -6,7 +6,7 @@ public struct ModifierInstructions  {
     public string[] provincesToModify;
     public SOR_Enums.ParameterValue[] parametersToModify;
     public int durationDays;
-    [Tooltip("Si se deja vacío, se genera: ID_DEC_MOD_Index")]
+    [Tooltip("Si se deja vacío, se genera: {decisionId}_MOD_Index")]
     public string customId;  
 }
 

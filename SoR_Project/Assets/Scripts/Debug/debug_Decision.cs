@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class debug_Decision : MonoBehaviour
 {
     public Button button;
-    public Decision_SO decision;
+    public SO_Decision decision;
     ModifierManager modifierManager;
 
     private void Start()

@@ -32,5 +32,10 @@ public class SOR_Enums
         public Parameters parameter;
         public float value;
     }
+    public enum EventCategory {
+        Generic,
+        Political,
+        Economic
+    }
      #endregion
 }

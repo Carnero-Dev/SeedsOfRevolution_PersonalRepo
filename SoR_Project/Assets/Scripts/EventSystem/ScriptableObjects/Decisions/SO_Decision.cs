@@ -1,8 +1,8 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Decision_SO", menuName = "SOR/EventSystem/Decisions")]
-public class Decision_SO : ScriptableObject {
-	[ShowOnly] public string eventId = "EVENT_ID"; //TODO: Recoger ID real del evento padre
+[CreateAssetMenu(fileName = "DEC_{REDUCED_NAME}", menuName = "SOR/EventSystem/Decisions")]
+public class SO_Decision : ScriptableObject {
+	// [ShowOnly] public string eventId = "EVENT_ID"; //TODO: Recoger ID real del evento padre
 	public string decisionId; 
 	public string decisionTitle;
 	[TextArea] public string decisionDescription;
