@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ParameterController : MonoBehaviour {
@@ -6,6 +7,7 @@ public class ParameterController : MonoBehaviour {
 	private ProvinceManager _provinceManager;
 	private TimeManager _timeManager;
 	private GameInitializer _gameInitializer;
+	private ModifierManager _modifierManager;
 
 	// Parámetros globales del jugador
 	public float influence { get {return Mathf.Clamp(_currentData.influence, 0, 99999); } set{_currentData.influence = Mathf.Clamp(value, 0, 99999);} }
@@ -23,6 +25,7 @@ public class ParameterController : MonoBehaviour {
 		_timeManager = ServiceLocator.Get<TimeManager>();
 		_provinceManager = ServiceLocator.Get<ProvinceManager>();
 		_gameInitializer = ServiceLocator.Get<GameInitializer>();
+		_modifierManager = ServiceLocator.Get<ModifierManager>();
 
 		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
 		_gameInitializer.OnGameInitialized += () => UpdateGlobalParameters();
@@ -71,7 +74,7 @@ public class ParameterController : MonoBehaviour {
 
 	private void UpdateInfluence() {
 		float baseInfluence = totalAffiliates / 500f;
-		//? Aplicar modificadores
-		_currentData.influence = baseInfluence;
+		_currentData.influence += baseInfluence;
 	}
+
 }

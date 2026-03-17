@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-
+//TODO: Refactorizar timeManager para usar TimeData y asignar geters y seters
 /// <summary>
 /// Clase que gestiona el tiempo de juego respecto al tiempo real y ejecuta acciones con respecto al paso de días, meses, años, etc
 /// Author: Carlos Carnero Cabrera
