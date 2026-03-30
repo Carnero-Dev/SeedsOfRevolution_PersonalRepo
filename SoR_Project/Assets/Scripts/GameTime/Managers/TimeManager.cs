@@ -105,6 +105,9 @@ public class TimeManager : MonoBehaviour {
             ChangeTimeScale(_currentTimeScaleIndex - 1);
         }
     }
+    /// <summary>
+    /// Pausa (false) o reanuda (true) el tiempo del juego, guardando la velocidad actual para retomarla al reanudar
+    /// </summary>
     public void PauseReanudeTime(bool pause) {
         if (pause) {
             ChangeTimeScale(_lastTimeScaleIndex);

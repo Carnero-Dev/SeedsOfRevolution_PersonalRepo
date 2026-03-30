@@ -9,4 +9,5 @@ public class GameData : IData {
     public ProvinceData[] provinces = Array.Empty<ProvinceData>();
     public ParametersData parameters = new();
     public List<ActiveModifier> activeModifiers = new List<ActiveModifier>();
+    public EventData eventData;
 }

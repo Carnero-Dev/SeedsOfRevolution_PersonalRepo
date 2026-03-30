@@ -12,6 +12,7 @@ public class CarneroGameInstaller : MonoBehaviour
     public ParameterController parameterController;
     public GameInitializer gameInitializer;
     public ModifierManager modificatorManager;
+    public EventManager eventManager;
     
     private void Awake() {
         InstallGameScene(); 
@@ -29,5 +30,6 @@ public class CarneroGameInstaller : MonoBehaviour
         ServiceLocator.Register<ParameterController>(parameterController);
         ServiceLocator.Register<GameInitializer>(gameInitializer);
         ServiceLocator.Register<ModifierManager>(modificatorManager);
+        ServiceLocator.Register<EventManager>(eventManager);
     }
 }
