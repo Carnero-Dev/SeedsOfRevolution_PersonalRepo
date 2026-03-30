@@ -93,8 +93,4 @@ public class EventManager : MonoBehaviour {
         date = date.AddDays(daysToAdd);
         return new ExpirationDate(date.Day, date.Month, date.Year);
     }
-
-    
-
-
 }

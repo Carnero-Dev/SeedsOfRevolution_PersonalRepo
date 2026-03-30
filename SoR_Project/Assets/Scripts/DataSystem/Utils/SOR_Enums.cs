@@ -39,7 +39,7 @@ public class SOR_Enums
         Economic
     }
     [Serializable]
-    public struct EventData {
+    public struct EventStorage {
         public string eventId;
         public string title;
         public string description;
