@@ -4,5 +4,5 @@ using System.Collections.Generic;
 public class EventData {
     public List<EventStatus> eventStatuses = new();
     public ExpirationDate globalAvailableDate;
-    public string activeEventId;
+    public List<string> activeEventQueue = new();
 }

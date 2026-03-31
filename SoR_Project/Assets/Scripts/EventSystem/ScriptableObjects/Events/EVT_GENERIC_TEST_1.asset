@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c0a87f446ba1a54bb583c2b454b1ee8, type: 3}
   m_Name: EVT_GENERIC_TEST_1
   m_EditorClassIdentifier: 
-  eventData:
+  eventStorage:
     eventId: event_1
-    title: Evento Test
-    description: Evento de testeo to guapo
+    title: Evento de mierda
+    description: Elige una decision mi pana
     category: 0
     thumbnail: {fileID: 21300000, guid: 308087206af0ede4693efa37a54be673, type: 3}
-    weight: 20
+    weight: 0
     isUnique: 0
+    triggerHour: 6
     decisions:
     - {fileID: 11400000, guid: d04ebc1f8ef5cd747a42a67a0effec00, type: 2}

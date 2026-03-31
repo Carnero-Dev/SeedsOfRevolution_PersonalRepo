@@ -42,13 +42,14 @@ public class SOR_Enums
     public struct EventStorage {
         public string eventId;
         public string title;
-        public string description;
+        [TextArea] public string description;
         public EventCategory category;
         public Sprite thumbnail;
         public int weight;
         public bool isUnique;
         [Tooltip("Optional, if null, use weight")] 
         public DateTime triggerDate;
+        public int triggerHour;
         public SO_Decision[] decisions;
     }
      #endregion
