@@ -16,6 +16,7 @@ public class GameInitializer : MonoBehaviour
         _eventManager = ServiceLocator.Get<EventManager>();
         MapDynamicInitializer.Initialize(currentMap);
         _provinceManager.Init(currentMap);
+        _eventManager.Init(currentMap);
         IsInitialized = true;
         OnGameInitialized?.Invoke();
     }

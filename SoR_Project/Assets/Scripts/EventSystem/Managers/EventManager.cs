@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 public class EventManager : MonoBehaviour {
+    public EventUiController eventUiController;
     private GameData data => GameDataService.Current;
     private SO_MapTemplate _mapTemplate;
     private TimeManager _timeManager;
@@ -50,17 +51,13 @@ public class EventManager : MonoBehaviour {
             return cooldownOk && uniqueOk;
         }).ToList();
 
-        // 3. Roll por pesos
-        int totalWeight = eligibleEvents.Sum(e => e.eventData.weight);
-        int roll = SeedRandom.RangeInt(SeedCategory.GLOBAL,0, totalWeight);
-        int cursor = 0;
-
-        foreach (var ev in eligibleEvents) {
-            cursor += ev.eventData.weight;
-            if (roll <= cursor) {
-                //TriggerEvent(ev);
-                break;
-            }
+        // 3. Roll 
+        int roll = SeedRandom.RangeInt(SeedCategory.GLOBAL,0, 100);
+        if (roll < 30 && eligibleEvents.Count > 0) {
+            var ev = eligibleEvents[SeedRandom.RangeInt(SeedCategory.GLOBAL,0, eligibleEvents.Count)];
+            data.eventData.activeEventId = ev.eventData.eventId;
+            eventUiController.TriggerEventUi(ev);
+            _timeManager.PauseReanudeTime(false);
         }
     }
     private bool IsAvailable(ExpirationDate cooldownDate, TimeManagerData current) {
@@ -84,7 +81,7 @@ public class EventManager : MonoBehaviour {
         data.eventData.globalAvailableDate = CalculateFutureDate(7); 
 
         data.eventData.activeEventId = null;
-        _timeManager.PauseReanudeTime(false);
+        _timeManager.PauseReanudeTime(true);
     }
 
     private ExpirationDate CalculateFutureDate(int daysToAdd) {
