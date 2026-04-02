@@ -31,3 +31,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a1a621711692d1041bb472f433019b03, type: 2}
   eventsBatery:
   - {fileID: 11400000, guid: f00d6a061b2d19b4692535cbcb1c1ad0, type: 2}
+  - {fileID: 11400000, guid: c64c2aa0d2938e54eacb8118cee50e81, type: 2}
