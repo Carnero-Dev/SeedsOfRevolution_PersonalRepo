@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -17,12 +18,13 @@ public class EventUiController : MonoBehaviour {
     private EventManager _eventManager;
     private GameData _data => GameDataService.Current;
 
-    private CanvasGroup _canvasGroup;
+    private CanvasGroup _eventCanvasGroup;
+    [SerializeField] private CanvasGroup _interfaceCanvasGroup;
 
     public void Start() {
         _timeManager = ServiceLocator.Get<TimeManager>();
         _eventManager = ServiceLocator.Get<EventManager>();
-        _canvasGroup = this.gameObject.GetComponent<CanvasGroup>();
+        _eventCanvasGroup = this.gameObject.GetComponent<CanvasGroup>();
         SetVisibility(false);
         _eventManager.OnDecisionSelected += CloseEventUi;
         _timeManager.OnHourPassedEvent += CheckForHourEvent;
@@ -39,9 +41,13 @@ public class EventUiController : MonoBehaviour {
     }
 
     private void SetVisibility(bool visible) {
-        _canvasGroup.alpha = visible ? 1 : 0;
-        _canvasGroup.interactable = visible;
-        _canvasGroup.blocksRaycasts = visible;
+        _eventCanvasGroup.alpha = visible ? 1 : 0;
+        _eventCanvasGroup.interactable = visible;
+        _eventCanvasGroup.blocksRaycasts = visible;
+
+        if (_interfaceCanvasGroup != null) {
+            _interfaceCanvasGroup.interactable = !visible;
+        }
     }
 
     private void CheckForHourEvent() {
@@ -55,22 +61,24 @@ public class EventUiController : MonoBehaviour {
     }
 
     private void TriggerEventUi(SO_Event _event) {
-         _timeManager.PauseReanudeTime(false);
-        eventTitle.text = _event.eventStorage.title;
-        eventDescription.text = _event.eventStorage.description;
-        eventThumbnail.sprite = _event.eventStorage.thumbnail;
+        _timeManager.PauseReanudeTime(false);
+        _timeManager.ChangeTimeInputState(false); 
+            eventTitle.text = _event.eventStorage.title;
+            eventDescription.text = _event.eventStorage.description;
+            eventThumbnail.sprite = _event.eventStorage.thumbnail;
 
-        foreach (var decision in _event.eventStorage.decisions) {
-            GameObject decisionObj = Instantiate(decisionPrefab, decisionContainer.transform);
-            DecisionButtonController decisionButton = decisionObj.GetComponent<DecisionButtonController>();
-            decisionButton.InitButton(decision, this, _event.eventStorage.eventId);
-        }
-       SetVisibility(true);
+            foreach (var decision in _event.eventStorage.decisions) {
+                GameObject decisionObj = Instantiate(decisionPrefab, decisionContainer.transform);
+                DecisionButtonController decisionButton = decisionObj.GetComponent<DecisionButtonController>();
+                decisionButton.InitButton(decision, this, _event.eventStorage.eventId);
+            }
+        SetVisibility(true);
     }
 
     public void CloseEventUi() {
-         _timeManager.PauseReanudeTime(true);
         SetVisibility(false);
+        _timeManager.ChangeTimeInputState(true); 
+        _timeManager.PauseReanudeTime(true);
         foreach (Transform child in decisionContainer.transform) {
             Destroy(child.gameObject);
         }

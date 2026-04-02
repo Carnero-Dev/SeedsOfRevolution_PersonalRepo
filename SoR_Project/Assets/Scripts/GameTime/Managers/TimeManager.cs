@@ -13,6 +13,7 @@ public class TimeManager : MonoBehaviour {
     private int [] _timesScales = new int [4]; // Establece las velocidades del juego (EN ORDEN INCLUYENDO PAUSA)
     private int _currentTimeScaleIndex = 1;  // Establece cual es la velocidad actual
     private int _lastTimeScaleIndex = 1;  // Establece cual es la velocidad actual
+    private bool _timeInputEnabled { get; set; } = true; // Controla si el jugador puede cambiar la velocidad del tiempo
 
     // Actions
     public Action OnHourPassedEvent;
@@ -90,6 +91,8 @@ public class TimeManager : MonoBehaviour {
     #endregion
     #region Time Controller
     private void ChangeTimeScale(int newIndex) {
+        if (_timeInputEnabled == false) return;
+        _lastTimeScaleIndex = _currentTimeScaleIndex;
         _currentTimeScaleIndex = newIndex;
         _TIMESCALE = _timesScales[_currentTimeScaleIndex];
         OnGameTimeScaleChanged?.Invoke();
@@ -109,6 +112,7 @@ public class TimeManager : MonoBehaviour {
     /// Pausa (false) o reanuda (true) el tiempo del juego, guardando la velocidad actual para retomarla al reanudar
     /// </summary>
     public void PauseReanudeTime(bool pause) {
+        if (_timeInputEnabled == false) return;
         if (pause) {
             ChangeTimeScale(_lastTimeScaleIndex);
             OnGameTimeReanudated?.Invoke();
@@ -118,8 +122,11 @@ public class TimeManager : MonoBehaviour {
             OnGameTimePaused?.Invoke();
         }
     }
-
+    /// <summary>
+    /// Intercala entre pausar y reanudar el tiempo del juego según el estado actual, guardando la velocidad actual para retomarla al reanudar
+    /// </summary>
     public void PauseReanudeTime() {
+        if (_timeInputEnabled == false) return;
         if (_currentTimeScaleIndex != 0) {
             _lastTimeScaleIndex = _currentTimeScaleIndex;
             ChangeTimeScale(0);
@@ -131,10 +138,18 @@ public class TimeManager : MonoBehaviour {
     }
 
     public void SetTimeScale(int index) {
+        if (_timeInputEnabled == false) return;
         int targetIndex = Mathf.Clamp(index, 1, _timesScales.Length - 1);
         ChangeTimeScale(targetIndex);
     }
     public int GetCurrentTimeScale() => _currentTimeScaleIndex;
+    /// <summary>
+    /// Habilita o deshabilita la capacidad del jugador de cambiar la velocidad del tiempo
+    /// </summary> <param name="value">true para habilitar, false para deshabilitar</param>
+    public bool ChangeTimeInputState(bool value) {
+        _timeInputEnabled = value;
+        return _timeInputEnabled;
+    }
 
     #endregion
 }
