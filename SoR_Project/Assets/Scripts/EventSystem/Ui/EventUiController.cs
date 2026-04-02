@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +13,7 @@ public class EventUiController : MonoBehaviour {
 
     private TimeManager _timeManager;
     private EventManager _eventManager;
+    private GameInitializer _gameInitializer;
     private GameData _data => GameDataService.Current;
 
     private CanvasGroup _eventCanvasGroup;
@@ -24,20 +22,28 @@ public class EventUiController : MonoBehaviour {
     public void Start() {
         _timeManager = ServiceLocator.Get<TimeManager>();
         _eventManager = ServiceLocator.Get<EventManager>();
+        _gameInitializer = ServiceLocator.Get<GameInitializer>();
         _eventCanvasGroup = this.gameObject.GetComponent<CanvasGroup>();
         SetVisibility(false);
         _eventManager.OnDecisionSelected += CloseEventUi;
         _timeManager.OnHourPassedEvent += CheckForHourEvent;
 
-        // Comprobar si hay eventos activos al cargar el juego
-        if (_eventManager.GetActiveEventsQueue().Length > 0) {
-            CheckForHourEvent();
-        }
+        if (_gameInitializer.IsInitialized) CheckForActiveEvents();
+         else _gameInitializer.OnGameInitialized += CheckForActiveEvents;
+        
     }
 
     private void OnDisable() {
         _timeManager.OnHourPassedEvent -= CheckForHourEvent;
         _eventManager.OnDecisionSelected -= CloseEventUi;
+        _gameInitializer.OnGameInitialized -= CheckForActiveEvents;
+        
+    }
+
+    private void CheckForActiveEvents() {
+        if(_eventManager.GetActiveEventsQueue().Length > 0) {
+            CheckForHourEvent();
+        }
     }
 
     private void SetVisibility(bool visible) {
