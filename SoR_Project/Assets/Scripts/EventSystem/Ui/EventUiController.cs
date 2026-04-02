@@ -15,27 +15,40 @@ public class EventUiController : MonoBehaviour {
 
     private TimeManager _timeManager;
     private EventManager _eventManager;
-     private GameData _data => GameDataService.Current;
+    private GameData _data => GameDataService.Current;
+
+    private CanvasGroup _canvasGroup;
 
     public void Start() {
         _timeManager = ServiceLocator.Get<TimeManager>();
         _eventManager = ServiceLocator.Get<EventManager>();
-        this.gameObject.SetActive(false);
-        _eventManager.OnResumeActiveEvent += CheckForHourEvent;
+        _canvasGroup = this.gameObject.GetComponent<CanvasGroup>();
+        SetVisibility(false);
         _eventManager.OnDecisionSelected += CloseEventUi;
         _timeManager.OnHourPassedEvent += CheckForHourEvent;
+
+        // Comprobar si hay eventos activos al cargar el juego
+        if (_eventManager.GetActiveEventsQueue().Length > 0) {
+            CheckForHourEvent();
+        }
     }
 
     private void OnDisable() {
         _timeManager.OnHourPassedEvent -= CheckForHourEvent;
         _eventManager.OnDecisionSelected -= CloseEventUi;
-        _eventManager.OnResumeActiveEvent -= CheckForHourEvent;
+    }
+
+    private void SetVisibility(bool visible) {
+        _canvasGroup.alpha = visible ? 1 : 0;
+        _canvasGroup.interactable = visible;
+        _canvasGroup.blocksRaycasts = visible;
     }
 
     private void CheckForHourEvent() {
         if(_eventManager.GetActiveEventsQueue().Length == 0) return;
 
-        var eventToTrigger = _eventManager.GetActiveEventsQueue().FirstOrDefault(e => e.eventStorage.triggerHour == _data.gameTime.hour);
+        int currentHour = _data.gameTime.hour;
+        var eventToTrigger = _eventManager.GetActiveEventsQueue().FirstOrDefault(e => e.eventStorage.triggerHour == currentHour);       
         if (eventToTrigger != null) {
             TriggerEventUi(eventToTrigger);
         }
@@ -52,12 +65,12 @@ public class EventUiController : MonoBehaviour {
             DecisionButtonController decisionButton = decisionObj.GetComponent<DecisionButtonController>();
             decisionButton.InitButton(decision, this, _event.eventStorage.eventId);
         }
-        this.gameObject.SetActive(true);
+       SetVisibility(true);
     }
 
     public void CloseEventUi() {
          _timeManager.PauseReanudeTime(true);
-        this.gameObject.SetActive(false);
+        SetVisibility(false);
         foreach (Transform child in decisionContainer.transform) {
             Destroy(child.gameObject);
         }

@@ -11,7 +11,6 @@ public class EventManager : MonoBehaviour {
     private ModifierManager _modifierManager;
     private Dictionary<string, SO_Event> _currentDayEventQueue = new Dictionary<string, SO_Event>();
 
-    public Action OnResumeActiveEvent;
     public Action OnDecisionSelected;
 
     public void Init(SO_MapTemplate map) {
@@ -22,10 +21,6 @@ public class EventManager : MonoBehaviour {
         SyncEventData();
         SaveSystem.OnCallSave += SyncToData; // Guardar Datos
         _timeManager.OnDayPassedEvent += HandleEventRoll;
-        
-        if (data.eventData.activeEventQueue.Count > 0) {
-            OnResumeActiveEvent?.Invoke();
-        }
     }
 
     public void OnDisable() {
@@ -47,7 +42,7 @@ public class EventManager : MonoBehaviour {
         data.eventData.globalAvailableDate = CalculateFutureDate(3); 
 
         // Eliminar evento activo del guardado
-       _currentDayEventQueue.Remove(parentEventId); //! QUE COÑO PASA AQUI QUE NO SE ELIMINAN
+       _currentDayEventQueue.Remove(parentEventId);
         OnDecisionSelected?.Invoke();
     }
 
@@ -70,20 +65,22 @@ public class EventManager : MonoBehaviour {
             if (!data.eventData.eventStatuses.Any(s => s.eventId == ev.eventStorage.eventId)) {
                 data.eventData.eventStatuses.Add(new EventStatus(ev.eventStorage.eventId));
             }
+            if (data.eventData.activeEventQueue.Contains(ev.eventStorage.eventId)) {
+                _currentDayEventQueue.Add(ev.eventStorage.eventId, ev);
+            }
         }
     }
 
     public void HandleEventRoll() {
-        var storage = data.eventData;
 
         // Check Cooldown Global
-        if (!IsAvailable(storage.globalAvailableDate, data.gameTime)) return;
+        if (!IsAvailable(data.eventData.globalAvailableDate, data.gameTime)) return;
 
         // Filtrar eventos elegibles
         var eligibleEvents = _mapTemplate.eventsBatery.Where(e => {
-            var status = storage.eventStatuses.Find(s => s.eventId == e.eventStorage.eventId);
+            var status = data.eventData.eventStatuses.Find(s => s.eventId == e.eventStorage.eventId);
             bool cooldownOk = IsAvailable(status.availableDate, data.gameTime);
-            bool uniqueOk = !e.eventStorage.isUnique || !status.hasTriggered;
+            bool uniqueOk = e.eventStorage.isUnique ? !status.hasTriggered : true;
             
             return cooldownOk && uniqueOk;
         }).ToList();
