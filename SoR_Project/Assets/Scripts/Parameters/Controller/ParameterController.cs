@@ -29,9 +29,9 @@ public class ParameterController : MonoBehaviour {
 
 		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
 		_gameInitializer.OnGameInitialized += () => UpdateGlobalParameters();
-		// if(_gameInitializer.IsInitialized) UpdateGlobalParameters();
-
-		_gameInitializer.OnGameInitialized += () => ComputeTotalPopulation();
+		
+		if(_gameInitializer.IsInitialized) { UpdateGlobalParameters(); ComputeTotalPopulation(); }
+		else _gameInitializer.OnGameInitialized += () => { ComputeTotalPopulation(); UpdateGlobalParameters(); };
 	}
 
 	void OnDisable() {

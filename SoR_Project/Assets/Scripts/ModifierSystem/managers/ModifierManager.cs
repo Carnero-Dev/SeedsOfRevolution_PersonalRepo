@@ -106,11 +106,7 @@ public class ModifierManager : MonoBehaviour {
         foreach (var kvp in _activeModifiers) {
         var mod = kvp.Value;
 
-        // 2. Necesitas un bucle para recorrer TODOS los parámetros de este modificador
         foreach (var paramMod in mod.instructions.parametersToModify) {
-            
-            // 3. NO asignes nada de vuelta a mod.instructions... eso borra tus datos.
-            // Simplemente leemos y acumulamos.
             if (!_acumulatedModifierValues.ContainsKey(paramMod.parameter)) {
                 _acumulatedModifierValues.Add(paramMod.parameter, paramMod.value);
             } else {
@@ -124,6 +120,7 @@ public class ModifierManager : MonoBehaviour {
     var parameterController = ServiceLocator.Get<ParameterController>();
 
     foreach (var kvp in _activeModifiers) {
+        var provincesToModify = kvp.Value.instructions.provincesToModify;
         foreach (var paramMod in kvp.Value.instructions.parametersToModify) {
             
             switch (paramMod.parameter) {
@@ -136,7 +133,30 @@ public class ModifierManager : MonoBehaviour {
                 case SOR_Enums.Parameters.Determination:
                     parameterController.determination += paramMod.value;
                     break;
-                // Aquí irían los de provincias si corresponde
+                case SOR_Enums.Parameters.Popularity:
+                    foreach (var provinceId in provincesToModify) {
+                        var province = _provinceManager.GetProvinceById(provinceId);
+                        if (province != null) {
+                            province.popularity += paramMod.value;
+                        }
+                    }
+                    break;
+                case SOR_Enums.Parameters.Aligned:
+                    foreach (var provinceId in provincesToModify) {
+                        var province = _provinceManager.GetProvinceById(provinceId);
+                        if (province != null) {
+                            province.aligned += paramMod.value;
+                        }
+                    }
+                    break;
+                case SOR_Enums.Parameters.Affiliates:
+                    foreach (var provinceId in provincesToModify) {
+                        var province = _provinceManager.GetProvinceById(provinceId);
+                        if (province != null) {
+                            province.affiliates += paramMod.value;
+                        }
+                    }
+                    break; 
             }
         }
     }

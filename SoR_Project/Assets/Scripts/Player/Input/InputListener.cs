@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 [CreateAssetMenu(fileName = "InputListener", menuName = "SOR/Input/InputListener")]
@@ -74,6 +76,18 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
 
     private bool IsPhasePerformed(InputAction.CallbackContext context) => context.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
     private bool IsPhaseCanceled(InputAction.CallbackContext context) => context.phase == UnityEngine.InputSystem.InputActionPhase.Canceled;
+    private bool IsPointerOverUI() {
+    if (EventSystem.current == null) return false;
+
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Mouse.current.position.ReadValue();
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        // Si hay resultados, hay UI bloqueando
+        return results.Count > 0;
+    }
 
     #region IPlayerActions Implementation
     void PlayerInput.IPlayerActions.OnMove(InputAction.CallbackContext context) {
@@ -81,7 +95,7 @@ public class InputListener : ScriptableObject, PlayerInput.IPlayerActions, Playe
     }
 
     void PlayerInput.IPlayerActions.OnLeftClick(InputAction.CallbackContext context) {
-        if (IsPhasePerformed(context)) {
+        if (IsPhasePerformed(context) && !IsPointerOverUI()) {
             OnLeftStartClickEvent?.Invoke();
         }
         if (IsPhaseCanceled(context)) {

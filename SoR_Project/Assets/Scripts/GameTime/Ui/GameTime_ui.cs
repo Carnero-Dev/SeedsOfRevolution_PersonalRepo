@@ -25,14 +25,17 @@ public class GameTime_ui : MonoBehaviour {
         _pauseTimeButton.onClick.AddListener(HandlePauseReanudeTime);
         _resumeTimeButton.onClick.AddListener(HandlePauseReanudeTime);
 
-        
-
-        // Init
-        _gameInitializer.OnGameInitialized += () => {
+        if (_gameInitializer.IsInitialized) {
             UpdateHourText();
             UpdateDateText();
             UpdateScaleText();
-        };
+        } else {
+            _gameInitializer.OnGameInitialized += () => {
+                UpdateHourText();
+                UpdateDateText();
+                UpdateScaleText();
+            };
+        }
 
         // Events
         _timeManager.OnHourPassedEvent += UpdateHourText;
