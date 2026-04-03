@@ -18,12 +18,15 @@ MonoBehaviour:
   modifiersArray:
   - decisionId: DEC_EVENT_ID_PAY_DEBT
     provincesToModify:
-    - AND
+    - MAD
+    - CAT
     parametersToModify:
     - parameter: 0
       value: -15
     - parameter: 4
       value: -0.1
+    - parameter: 2
+      value: 1000
     durationDays: 10
     customId: DEC_ECO_CRASH_PAY_DEBT_MOD_0
   - decisionId: DEC_EVENT_ID_PAY_DEBT

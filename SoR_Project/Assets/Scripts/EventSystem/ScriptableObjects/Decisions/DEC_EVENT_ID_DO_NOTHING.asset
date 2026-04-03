@@ -22,8 +22,12 @@ MonoBehaviour:
     parametersToModify:
     - parameter: 4
       value: -0.1
+    - parameter: 1
+      value: 5000
+    - parameter: 3
+      value: -600
     durationDays: 10
-    customId: DEC_ECO_CRASH_PAY_DEBT_MOD_0
+    customId: DEC_EVENT_DO_NOTHING_MOD_0
   - decisionId: DEC_EVENT_ID_DO_NOTHING
     provincesToModify: []
     parametersToModify:
