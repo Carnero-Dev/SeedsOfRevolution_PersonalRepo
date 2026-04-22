@@ -28,10 +28,9 @@ public class ParameterController : MonoBehaviour {
 		_modifierManager = ServiceLocator.Get<ModifierManager>();
 
 		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
-		_gameInitializer.OnGameInitialized += () => UpdateGlobalParameters();
 		
-		if(_gameInitializer.IsInitialized) { UpdateGlobalParameters(); ComputeTotalPopulation(); }
-		else _gameInitializer.OnGameInitialized += () => { ComputeTotalPopulation(); UpdateGlobalParameters(); };
+		if(_gameInitializer.IsInitialized) { ComputeProvincialTotals(); ComputeTotalPopulation(); }
+		else _gameInitializer.OnGameInitialized += () => { ComputeTotalPopulation(); ComputeProvincialTotals(); };
 	}
 
 	void OnDisable() {
@@ -74,7 +73,7 @@ public class ParameterController : MonoBehaviour {
 
 	private void UpdateInfluence() {
 		float baseInfluence = totalAffiliates / 500f;
-		_currentData.influence += baseInfluence;
+		influence += baseInfluence;
 	}
 
 }
