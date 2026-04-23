@@ -27,14 +27,14 @@ public class ParameterController : MonoBehaviour {
 		_gameInitializer = ServiceLocator.Get<GameInitializer>();
 		_modifierManager = ServiceLocator.Get<ModifierManager>();
 
-		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
+		_modifierManager.OnModifiersApplied += UpdateGlobalParameters;
 		
 		if(_gameInitializer.IsInitialized) { ComputeProvincialTotals(); ComputeTotalPopulation(); }
 		else _gameInitializer.OnGameInitialized += () => { ComputeTotalPopulation(); ComputeProvincialTotals(); };
 	}
 
 	void OnDisable() {
-		_timeManager.OnDayPassedEvent -= UpdateGlobalParameters;
+		_modifierManager.OnModifiersApplied -= UpdateGlobalParameters;
 		_gameInitializer.OnGameInitialized -= () => UpdateGlobalParameters();
 		_gameInitializer.OnGameInitialized -= () => ComputeTotalPopulation();
 	}

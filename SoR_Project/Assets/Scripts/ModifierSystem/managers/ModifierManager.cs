@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -9,10 +10,14 @@ public class ModifierManager : MonoBehaviour {
     // Caché
     private Dictionary<string, ActiveModifier> _activeModifiers = new();  
     private GameInitializer _gameInitializer;
+    private ModifierService _service = new();
+    
     private ProvinceManager _provinceManager;
     private TimeManager _timeManager;
 
     private Dictionary<SOR_Enums.Parameters, float> _acumulatedModifierValues = new Dictionary<SOR_Enums.Parameters, float>();
+
+    public Action OnModifiersApplied; // Evento para avisar que los modificadores ya se aplicaron (Después del tick diario)
 
 	private void Start() {
         _gameInitializer = ServiceLocator.Get<GameInitializer>();
@@ -35,6 +40,7 @@ public class ModifierManager : MonoBehaviour {
         foreach (var mod in data.activeModifiers) {
             _activeModifiers.TryAdd(mod.instructions.customId, mod);
         }
+        RefreshProjections();
     }
 
 	public void OnDisable() {
@@ -49,6 +55,10 @@ public class ModifierManager : MonoBehaviour {
         Debug.Log("Modifier Synced");
     } 
 
+    public void RefreshProjections() => _service.GenerateProjections(_activeModifiers.Values, _provinceManager);
+
+    public ProvinceChangeReport GetReport(string id, SOR_Enums.Parameters p) => _service.GetReport(id, p);
+
 	public void ReadModifier(ModifierInstructions instructions) {
         if (instructions.parametersToModify == null) return;
         string id = instructions.customId;
@@ -62,6 +72,7 @@ public class ModifierManager : MonoBehaviour {
             _activeModifiers.Add(id, newMod);
             Debug.Log($"Modifier with id {id} Created");
         }
+        RefreshProjections();
         CheckModifiers();
     }
     public Dictionary<SOR_Enums.Parameters, float> GetAcumulatedModifiers() => _acumulatedModifierValues;
@@ -116,51 +127,82 @@ public class ModifierManager : MonoBehaviour {
     }
 	}
     public void ApplyDailyTick() {
-    CheckModifiers();
-    var parameterController = ServiceLocator.Get<ParameterController>();
+    //CheckModifiers();
+    //var parameterController = ServiceLocator.Get<ParameterController>();
+    RefreshProjections();
+        var pc = ServiceLocator.Get<ParameterController>();
 
-    foreach (var kvp in _activeModifiers) {
-        var provincesToModify = kvp.Value.instructions.provincesToModify;
-        foreach (var paramMod in kvp.Value.instructions.parametersToModify) {
-            
-            switch (paramMod.parameter) {
-                case SOR_Enums.Parameters.Infuelnce: 
-                    parameterController.influence += paramMod.value;
-                    break;
-                case SOR_Enums.Parameters.Fame:
-                    parameterController.fame += paramMod.value;
-                    break;
-                case SOR_Enums.Parameters.Determination:
-                    parameterController.determination += paramMod.value;
-                    break;
-                case SOR_Enums.Parameters.Popularity:
-                    foreach (var provinceId in provincesToModify) {
-                        var province = _provinceManager.GetProvinceById(provinceId);
-                        if (province != null) {
-                            province.popularity += paramMod.value;
-                        }
-                    }
-                    break;
-                case SOR_Enums.Parameters.Aligned:
-                    foreach (var provinceId in provincesToModify) {
-                        var province = _provinceManager.GetProvinceById(provinceId);
-                        if (province != null) {
-                            province.aligned += paramMod.value;
-                        }
-                    }
-                    break;
-                case SOR_Enums.Parameters.Affiliates:
-                    foreach (var provinceId in provincesToModify) {
-                        var province = _provinceManager.GetProvinceById(provinceId);
-                        if (province != null) {
-                            province.affiliates += paramMod.value;
-                        }
-                    }
-                    break; 
+        foreach (var target in _service.Projections) {
+            if (target.Key == "Global") {
+                foreach (var p in target.Value) ApplyGlobal(p.Key, p.Value.finalValue, pc);
+            } else {
+                var province = _provinceManager.GetProvinceById(target.Key);
+                if (province == null) continue;
+                foreach (var p in target.Value) ApplyToProvince(province, p.Key, p.Value.finalValue);
             }
         }
-    }
+        
+        CheckModifiersExpiration();
+        RefreshProjections(); // Proyectar nuevo día
+        OnModifiersApplied?.Invoke(); // Avisamos que los valores ya han cambiado
+
+    // foreach (var kvp in _activeModifiers) {
+    //     var provincesToModify = kvp.Value.instructions.provincesToModify;
+    //     foreach (var paramMod in kvp.Value.instructions.parametersToModify) {
+            
+    //         switch (paramMod.parameter) {
+    //             case SOR_Enums.Parameters.Infuelnce: 
+    //                 parameterController.influence += paramMod.value;
+    //                 break;
+    //             case SOR_Enums.Parameters.Fame:
+    //                 parameterController.fame += paramMod.value;
+    //                 break;
+    //             case SOR_Enums.Parameters.Determination:
+    //                 parameterController.determination += paramMod.value;
+    //                 break;
+    //             case SOR_Enums.Parameters.Popularity:
+    //                 foreach (var provinceId in provincesToModify) {
+    //                     var province = _provinceManager.GetProvinceById(provinceId);
+    //                     if (province != null) {
+    //                         province.popularity += paramMod.value;
+    //                     }
+    //                 }
+    //                 break;
+    //             case SOR_Enums.Parameters.Aligned:
+    //                 foreach (var provinceId in provincesToModify) {
+    //                     var province = _provinceManager.GetProvinceById(provinceId);
+    //                     if (province != null) {
+    //                         province.aligned += paramMod.value;
+    //                     }
+    //                 }
+    //                 break;
+    //             case SOR_Enums.Parameters.Affiliates:
+    //                 foreach (var provinceId in provincesToModify) {
+    //                     var province = _provinceManager.GetProvinceById(provinceId);
+    //                     if (province != null) {
+    //                         province.affiliates += paramMod.value;
+    //                     }
+    //                 }
+    //                 break; 
+    //         }
+    //     }
+    // }
     
 }
+private void ApplyToProvince(ProvinceInfo p, SOR_Enums.Parameters param, float val) {
+        switch (param) {
+            case SOR_Enums.Parameters.Popularity: p.popularity += val; break;
+            case SOR_Enums.Parameters.Aligned: p.aligned += val; break;
+            case SOR_Enums.Parameters.Affiliates: p.affiliates += val; break;
+        }
+    }
+
+    private void ApplyGlobal(SOR_Enums.Parameters param, float val, ParameterController pc) {
+        switch (param) {
+            case SOR_Enums.Parameters.Infuelnce: pc.influence += val; break;
+            case SOR_Enums.Parameters.Fame: pc.fame += val; break;
+            case SOR_Enums.Parameters.Determination: pc.determination += val; break;
+        }
+    }
 
 }
