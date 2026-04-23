@@ -24,7 +24,7 @@ MonoBehaviour:
       value: -0.1
     - parameter: 1
       value: 5000
-    - parameter: 3
+    - parameter: 2
       value: -600
     durationDays: 10
     customId: DEC_EVENT_DO_NOTHING_MOD_0

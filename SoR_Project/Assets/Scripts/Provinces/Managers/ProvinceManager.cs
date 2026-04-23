@@ -37,6 +37,10 @@ public class ProvinceManager : MonoBehaviour {
 		EnsureCacheLoaded();
 		return _gameProvinces.Values;
 	}
+	public string[] GetAllGameProvincesIds() {
+		EnsureCacheLoaded();
+		return _gameProvinces.Keys.ToArray();
+	}
 	
 	private ProvinceData CreateInitialProvince(SO_Province soProvince) {
 		return new ProvinceData {
