@@ -27,22 +27,20 @@ public class ParameterController : MonoBehaviour {
 		_gameInitializer = ServiceLocator.Get<GameInitializer>();
 		_modifierManager = ServiceLocator.Get<ModifierManager>();
 
-		_timeManager.OnDayPassedEvent += UpdateGlobalParameters;
-		_gameInitializer.OnGameInitialized += () => UpdateGlobalParameters();
+		_modifierManager.OnModifiersApplied += UpdateGlobalParameters;
 		
-		if(_gameInitializer.IsInitialized) { UpdateGlobalParameters(); ComputeTotalPopulation(); }
-		else _gameInitializer.OnGameInitialized += () => { ComputeTotalPopulation(); UpdateGlobalParameters(); };
+		if(_gameInitializer.IsInitialized) { ComputeProvincialTotals(); ComputeTotalPopulation(); }
+		else _gameInitializer.OnGameInitialized += () => { ComputeTotalPopulation(); ComputeProvincialTotals(); };
 	}
 
 	void OnDisable() {
-		_timeManager.OnDayPassedEvent -= UpdateGlobalParameters;
+		_modifierManager.OnModifiersApplied -= UpdateGlobalParameters;
 		_gameInitializer.OnGameInitialized -= () => UpdateGlobalParameters();
 		_gameInitializer.OnGameInitialized -= () => ComputeTotalPopulation();
 	}
 
 	public void UpdateGlobalParameters() {
 		ComputeProvincialTotals();
-		UpdateInfluence();
 
 		OnParametersUpdated?.Invoke();
 	}
@@ -71,10 +69,4 @@ public class ParameterController : MonoBehaviour {
 		this.totalAligned = totalAligned;
 		this.totalAffiliates = totalAffiliates;
 	}
-
-	private void UpdateInfluence() {
-		float baseInfluence = totalAffiliates / 500f;
-		_currentData.influence += baseInfluence;
-	}
-
 }
