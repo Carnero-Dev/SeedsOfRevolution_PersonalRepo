@@ -60,8 +60,8 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 		if(_modifierManager.GetReport("Global", parameter) == null) finalValue = 0f;
 		else finalValue = _modifierManager.GetReport("Global", parameter).finalValue;
 		switch (finalValue) {
-			case < 0: return $"- {Mathf.Abs(finalValue).ToString("F2")}";
-			case > 0: return $"+ {finalValue.ToString("F2")}";
+			case < 0: return $"- {Mathf.Abs(finalValue):F2}";
+			case > 0: return $"+ {finalValue:F2}";
 			default: return "0";
 		}
 	}
@@ -70,10 +70,19 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 		float finalValue;
 		finalValue = _modifierManager.GetTotalProvincesParameterValue(parameter);
 
+		if(parameter == SOR_Enums.Parameters.Popularity) {
+			float percentage = finalValue / _parameterController.totalPopulation * 100f;
+			switch (percentage) {
+				case < 0: return $"- {Mathf.Abs(percentage):F2}%";
+				case > 0: return $"+ {percentage:F2}%";
+				default: return "0%";
+			}
+		}
 		switch (finalValue) {
-			case < 0: return $"- {Mathf.Abs(finalValue).ToString("F2")}";
-			case > 0: return $"+ {finalValue.ToString("F2")}";
+			case < 0: return $"- {Mathf.Abs(finalValue):N0}";
+			case > 0: return $"+ {finalValue:N0}";
 			default: return "0";
 		}
+
 	}
 }
