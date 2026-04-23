@@ -19,6 +19,7 @@ public class ModifierManager : MonoBehaviour {
     private Dictionary<SOR_Enums.Parameters, float> _acumulatedModifierValues = new Dictionary<SOR_Enums.Parameters, float>();
 
     public Action OnModifiersApplied; // Evento para avisar que los modificadores ya se aplicaron (Después del tick diario)
+    public Action OnModifiersChanged; // Evento para avisar que los modificadores cambiaron (Se llama al agregar, eliminar o actualizar un modificador, pero antes de aplicar el tick diario)
 
 	private void Start() {
         _gameInitializer = ServiceLocator.Get<GameInitializer>();
@@ -34,15 +35,16 @@ public class ModifierManager : MonoBehaviour {
 	}
 
 	public void Init() {
-        CheckModifiers();
-        SaveSystem.OnCallSave += SyncToData; // Guardar Datos
-        _timeManager.OnDayPassedEvent += ApplyDailyTick;
-
         _activeModifiers.Clear();
         foreach (var mod in data.activeModifiers) {
             _activeModifiers.TryAdd(mod.instructions.customId, mod);
         }
+        CheckModifiers();
+        _parameterController.UpdateGlobalParameters();
         RefreshProjections();
+        SaveSystem.OnCallSave += SyncToData; // Guardar Datos
+        _timeManager.OnDayPassedEvent += ApplyDailyTick;
+
     }
 
 	public void OnDisable() {
@@ -57,11 +59,17 @@ public class ModifierManager : MonoBehaviour {
         Debug.Log("Modifier Synced");
     } 
 
-    public void RefreshProjections() => _service.GenerateProjections(_activeModifiers.Values, _provinceManager, _parameterController);
+    // Llama al servicio para generar las proyecciones actuales y avisa que los modificadores cambiaron (para actualizar UI u otros sistemas relacionados)
+    public void RefreshProjections() {
+        _service.GenerateProjections(_activeModifiers.Values, _provinceManager, _parameterController);
+        OnModifiersChanged?.Invoke();
+    }
 
+    // Métodos de consulta para UI u otros sistemas
     public ChangeReport GetReport(string id, SOR_Enums.Parameters p) => _service.GetReport(id, p);
     public float GetTotalProvincesParameterValue(SOR_Enums.Parameters p) => _service.GetTotalProvincesParameterValue(p);
 
+    // Método para leer un nuevo modificador (desde eventos, decisiones, etc), lo agrega o actualiza en la lista de activos, chequea expiración y refresca proyecciones
 	public void ReadModifier(ModifierInstructions instructions) {
         if (instructions.parametersToModify == null) return;
         string id = instructions.customId;
@@ -75,8 +83,9 @@ public class ModifierManager : MonoBehaviour {
             _activeModifiers.Add(id, newMod);
             Debug.Log($"Modifier with id {id} Created");
         }
-        RefreshProjections();
+        //TODO: Detectar si hay un parámetro provincial sin provincias añadidas en el modificador para aplicarlas a todas
         CheckModifiers();
+        RefreshProjections();
     }
     public Dictionary<SOR_Enums.Parameters, float> GetAcumulatedModifiers() => _acumulatedModifierValues;
 
@@ -129,11 +138,7 @@ public class ModifierManager : MonoBehaviour {
         }
     }
 	}
-    public void ApplyDailyTick() {
-    //CheckModifiers();
-    //var parameterController = ServiceLocator.Get<ParameterController>();
-    RefreshProjections();
-
+    private void ApplyDailyTick() {
         foreach (var target in _service.Projections) {
             if (target.Key == "Global") {
                 foreach (var p in target.Value) ApplyGlobal(p.Key, p.Value.finalValue, _parameterController);
@@ -143,55 +148,13 @@ public class ModifierManager : MonoBehaviour {
                 foreach (var p in target.Value) ApplyToProvince(province, p.Key, p.Value.finalValue);
             }
         }
-        
+        OnModifiersChanged?.Invoke(); // Avisamos que los modificadores cambiaron
         CheckModifiersExpiration();
         RefreshProjections(); // Proyectar nuevo día
         OnModifiersApplied?.Invoke(); // Avisamos que los valores ya han cambiado
-
-    // foreach (var kvp in _activeModifiers) {
-    //     var provincesToModify = kvp.Value.instructions.provincesToModify;
-    //     foreach (var paramMod in kvp.Value.instructions.parametersToModify) {
-            
-    //         switch (paramMod.parameter) {
-    //             case SOR_Enums.Parameters.Infuelnce: 
-    //                 parameterController.influence += paramMod.value;
-    //                 break;
-    //             case SOR_Enums.Parameters.Fame:
-    //                 parameterController.fame += paramMod.value;
-    //                 break;
-    //             case SOR_Enums.Parameters.Determination:
-    //                 parameterController.determination += paramMod.value;
-    //                 break;
-    //             case SOR_Enums.Parameters.Popularity:
-    //                 foreach (var provinceId in provincesToModify) {
-    //                     var province = _provinceManager.GetProvinceById(provinceId);
-    //                     if (province != null) {
-    //                         province.popularity += paramMod.value;
-    //                     }
-    //                 }
-    //                 break;
-    //             case SOR_Enums.Parameters.Aligned:
-    //                 foreach (var provinceId in provincesToModify) {
-    //                     var province = _provinceManager.GetProvinceById(provinceId);
-    //                     if (province != null) {
-    //                         province.aligned += paramMod.value;
-    //                     }
-    //                 }
-    //                 break;
-    //             case SOR_Enums.Parameters.Affiliates:
-    //                 foreach (var provinceId in provincesToModify) {
-    //                     var province = _provinceManager.GetProvinceById(provinceId);
-    //                     if (province != null) {
-    //                         province.affiliates += paramMod.value;
-    //                     }
-    //                 }
-    //                 break; 
-    //         }
-    //     }
-    // }
     
-}
-private void ApplyToProvince(ProvinceInfo p, SOR_Enums.Parameters param, float val) {
+    }
+    private void ApplyToProvince(ProvinceInfo p, SOR_Enums.Parameters param, float val) {
         switch (param) {
             case SOR_Enums.Parameters.Popularity: p.popularity += val; break;
             case SOR_Enums.Parameters.Aligned: p.aligned += val; break;

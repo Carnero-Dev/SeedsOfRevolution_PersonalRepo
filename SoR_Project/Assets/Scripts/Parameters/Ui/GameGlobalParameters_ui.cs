@@ -24,11 +24,19 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 		_parameterController = ServiceLocator.Get<ParameterController>();
 		_gameInitializer = ServiceLocator.Get<GameInitializer>();
 		_modifierManager = ServiceLocator.Get<ModifierManager>();
+
+		_modifierManager.OnModifiersChanged += UpdateUI;
+
+		if (_gameInitializer.IsInitialized) {
+            UpdateUI();
+        } else {
+            _gameInitializer.OnGameInitialized += UpdateUI;
+        }
 	}
 
-	private void Update() {
-		if(!_gameInitializer.IsInitialized) return; 
-		UpdateUI();
+	private void OnDisable() {
+		_modifierManager.OnModifiersChanged -= UpdateUI;
+		_gameInitializer.OnGameInitialized -= UpdateUI;
 	}
 
 	private void UpdateUI() {
@@ -48,7 +56,7 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 	}
 
 	private string GetGlobalModifierFinalValue(SOR_Enums.Parameters parameter) {
-		float finalValue = 0;
+		float finalValue;
 		if(_modifierManager.GetReport("Global", parameter) == null) finalValue = 0f;
 		else finalValue = _modifierManager.GetReport("Global", parameter).finalValue;
 		switch (finalValue) {

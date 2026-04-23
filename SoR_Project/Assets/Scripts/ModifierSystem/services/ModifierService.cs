@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ModifierService {
     // [ID] -> [Parámetro] -> Reporte
@@ -9,10 +10,10 @@ public class ModifierService {
     public void GenerateProjections(IEnumerable<ActiveModifier> activeModifiers, ProvinceManager provinceManager, ParameterController parameterController) {
         _projections.Clear();
 
-        // 1. Asegurar parámetros pasivos obligatorios (aunque no haya mods)
-        EnsureMandatoryReports(parameterController);
+        // Asegurar parámetros pasivos obligatorios (aunque no haya mods)
+        EnsureMandatoryReports();
 
-        // 2. Cargar modificadores activos
+        // Cargar modificadores activos
         foreach (var mod in activeModifiers) {
             foreach (var paramMod in mod.instructions.parametersToModify) {
                 if (IsGlobal(paramMod.parameter)) {
@@ -25,13 +26,12 @@ public class ModifierService {
                 }
             }
         }
-
-        // 3. Resolver fórmulas (aplicará crecimientos pasivos sobre los reportes existentes)
+        // Resolver fórmulas (aplicará crecimientos pasivos sobre los reportes existentes)
         ResolveFormulas(provinceManager, parameterController);
     }
 
-    private void EnsureMandatoryReports(ParameterController pc) {
-        // Forzamos la creación del reporte de Influencia Global
+    // Forzamos la creación del reporte de Influencia Global
+    private void EnsureMandatoryReports() {
         GetOrCreateReport("Global", SOR_Enums.Parameters.Influence);
 		GetOrCreateReport("Global", SOR_Enums.Parameters.Fame);
 		GetOrCreateReport("Global", SOR_Enums.Parameters.Determination);
@@ -45,7 +45,7 @@ public class ModifierService {
 
 	private ChangeReport GetOrCreateReport(string targetId, SOR_Enums.Parameters param) {
         if (!_projections.ContainsKey(targetId)) _projections[targetId] = new();
-        if (!_projections[targetId].ContainsKey(param)) _projections[targetId][param] = new();
+        if (!_projections[targetId].ContainsKey(param)) _projections[targetId][param] = new ChangeReport();
         return _projections[targetId][param];
     }
 
@@ -57,7 +57,7 @@ public class ModifierService {
         report.changes.Add(new ParameterChange { sourceName = source, value = value });
         report.totalBase += value;
     }
-
+	// Contiene todas las formulas para parámetros específicos dentro del juego. Se pueden aplicar utilizando los reportes generados para alterar modificadores actuales.
     private void ResolveFormulas(ProvinceManager provinceManager, ParameterController parameterController) {
         foreach (var targetEntry in _projections) {
             foreach (var paramEntry in targetEntry.Value) {
@@ -69,8 +69,21 @@ public class ModifierService {
                     var province = provinceManager.GetProvinceById(targetEntry.Key);
                     if (province != null && report.totalBase > 0) {
                         float bonus = report.totalBase * 100f / province.Population;
-                        report.finalValue = report.totalBase * bonus;
+                        report.finalValue = report.totalBase + (report.totalBase * bonus);
                         report.changes.Add(new ParameterChange { sourceName = "Efecto Red", value = bonus });
+                        continue;
+                    }
+                }
+				//? FÓRMULA: ALINEADOS (Solo si hay modificadores)
+                if (param == SOR_Enums.Parameters.Aligned && targetEntry.Key != "Global") {
+                    var province = provinceManager.GetProvinceById(targetEntry.Key);
+                    if (province != null && report.totalBase !=0) {
+						float stabilityFactor = (50f - province.stability) / 100f;
+                    	float stabilityBonus = report.totalBase * stabilityFactor;
+
+						string label = stabilityFactor >= 0 ? "Baja Estabilidad" : "Alta Estabilidad";
+                    	report.finalValue = report.totalBase + stabilityBonus;
+                        report.changes.Add(new ParameterChange { sourceName = $"Bonus {label}", value = stabilityBonus });
                         continue;
                     }
                 }
