@@ -21,7 +21,7 @@ MonoBehaviour:
     parametersToModify:
     - parameter: 1
       value: 800
-    - parameter: 2
+    - parameter: 3
       value: 250
     - parameter: 6
       value: -0.1
