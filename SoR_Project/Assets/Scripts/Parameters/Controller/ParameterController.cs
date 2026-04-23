@@ -41,7 +41,7 @@ public class ParameterController : MonoBehaviour {
 
 	public void UpdateGlobalParameters() {
 		ComputeProvincialTotals();
-		UpdateInfluence();
+		//UpdateInfluence();
 
 		OnParametersUpdated?.Invoke();
 	}
@@ -71,9 +71,9 @@ public class ParameterController : MonoBehaviour {
 		this.totalAffiliates = totalAffiliates;
 	}
 
-	private void UpdateInfluence() {
-		float baseInfluence = totalAffiliates / 500f;
-		influence += baseInfluence;
-	}
+	// private void UpdateInfluence() {
+	// 	float baseInfluence = totalAffiliates / 500f;
+	// 	influence += baseInfluence;
+	// }
 
 }

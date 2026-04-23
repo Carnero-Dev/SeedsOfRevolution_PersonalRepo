@@ -10,6 +10,7 @@ public class ModifierManager : MonoBehaviour {
     // Caché
     private Dictionary<string, ActiveModifier> _activeModifiers = new();  
     private GameInitializer _gameInitializer;
+    private ParameterController _parameterController;
     private ModifierService _service = new();
     
     private ProvinceManager _provinceManager;
@@ -23,6 +24,7 @@ public class ModifierManager : MonoBehaviour {
         _gameInitializer = ServiceLocator.Get<GameInitializer>();
         _provinceManager = ServiceLocator.Get<ProvinceManager>();
         _timeManager = ServiceLocator.Get<TimeManager>();
+        _parameterController = ServiceLocator.Get<ParameterController>();
 
         if (_gameInitializer.IsInitialized) {
             Init();
@@ -55,9 +57,10 @@ public class ModifierManager : MonoBehaviour {
         Debug.Log("Modifier Synced");
     } 
 
-    public void RefreshProjections() => _service.GenerateProjections(_activeModifiers.Values, _provinceManager);
+    public void RefreshProjections() => _service.GenerateProjections(_activeModifiers.Values, _provinceManager, _parameterController);
 
-    public ProvinceChangeReport GetReport(string id, SOR_Enums.Parameters p) => _service.GetReport(id, p);
+    public ChangeReport GetReport(string id, SOR_Enums.Parameters p) => _service.GetReport(id, p);
+    public float GetTotalProvincesParameterValue(SOR_Enums.Parameters p) => _service.GetTotalProvincesParameterValue(p);
 
 	public void ReadModifier(ModifierInstructions instructions) {
         if (instructions.parametersToModify == null) return;
@@ -130,11 +133,10 @@ public class ModifierManager : MonoBehaviour {
     //CheckModifiers();
     //var parameterController = ServiceLocator.Get<ParameterController>();
     RefreshProjections();
-        var pc = ServiceLocator.Get<ParameterController>();
 
         foreach (var target in _service.Projections) {
             if (target.Key == "Global") {
-                foreach (var p in target.Value) ApplyGlobal(p.Key, p.Value.finalValue, pc);
+                foreach (var p in target.Value) ApplyGlobal(p.Key, p.Value.finalValue, _parameterController);
             } else {
                 var province = _provinceManager.GetProvinceById(target.Key);
                 if (province == null) continue;
