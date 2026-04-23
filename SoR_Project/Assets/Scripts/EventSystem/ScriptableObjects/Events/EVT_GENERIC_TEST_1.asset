@@ -23,3 +23,4 @@ MonoBehaviour:
     triggerHour: 6
     decisions:
     - {fileID: 11400000, guid: d04ebc1f8ef5cd747a42a67a0effec00, type: 2}
+    - {fileID: 11400000, guid: 67a09f0e401d0444284cb15c41b6bde7, type: 2}

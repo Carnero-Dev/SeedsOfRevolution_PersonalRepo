@@ -73,17 +73,18 @@ public class ModifierManager : MonoBehaviour {
 	public void ReadModifier(ModifierInstructions instructions) {
         if (instructions.parametersToModify == null) return;
         string id = instructions.customId;
+        ModifierInstructions instance = instructions.Clone();
+        
 
         if (_activeModifiers.TryGetValue(id, out ActiveModifier existing)) {
-            existing.Initialize(instructions);
+            existing.Initialize(instance, _provinceManager);
             Debug.Log($"Modifier with id {id} Updated");
         } else {
             ActiveModifier newMod = new ActiveModifier();
-            newMod.Initialize(instructions);
+            newMod.Initialize(instance, _provinceManager);
             _activeModifiers.Add(id, newMod);
             Debug.Log($"Modifier with id {id} Created");
         }
-        //TODO: Detectar si hay un parámetro provincial sin provincias añadidas en el modificador para aplicarlas a todas
         CheckModifiers();
         RefreshProjections();
     }
@@ -159,6 +160,7 @@ public class ModifierManager : MonoBehaviour {
             case SOR_Enums.Parameters.Popularity: p.popularity += val; break;
             case SOR_Enums.Parameters.Aligned: p.aligned += val; break;
             case SOR_Enums.Parameters.Affiliates: p.affiliates += val; break;
+            case SOR_Enums.Parameters.Stability: p.stability += val; break;
         }
     }
 

@@ -16,10 +16,12 @@ public class ModifierService {
         // Cargar modificadores activos
         foreach (var mod in activeModifiers) {
             foreach (var paramMod in mod.instructions.parametersToModify) {
+				// Parametros globales
                 if (IsGlobal(paramMod.parameter)) {
                     AddToProjection("Global", paramMod.parameter, mod.instructions.customId, paramMod.value);
                 } else { 
-                    if (mod.instructions.provincesToModify == null) continue;
+				// Parametros provinciales
+					if (mod.instructions.provincesToModify == null) continue;
                     foreach (var pId in mod.instructions.provincesToModify) {
                         AddToProjection(pId, paramMod.parameter, mod.instructions.customId, paramMod.value);
                     }

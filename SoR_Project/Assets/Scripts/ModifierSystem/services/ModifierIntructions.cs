@@ -8,5 +8,15 @@ public struct ModifierInstructions  {
     public int durationDays;
     [Tooltip("Si se deja vacío, se genera: {decisionId}_MOD_Index")]
     public string customId;  
-}
 
+    public ModifierInstructions Clone()
+    {
+        return new ModifierInstructions {
+            decisionId = decisionId,
+            provincesToModify = provincesToModify,
+            parametersToModify = parametersToModify,
+            durationDays = durationDays,
+            customId = customId
+        };
+    }
+}

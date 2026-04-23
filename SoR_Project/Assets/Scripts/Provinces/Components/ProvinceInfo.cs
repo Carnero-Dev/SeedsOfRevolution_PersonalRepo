@@ -14,16 +14,18 @@ public class ProvinceInfo : MonoBehaviour
 
     
     // SO -> TO INFO
+    [SerializeField, ShowOnly] private string provinceId;
     [SerializeField, ShowOnly] private string provinceName;
     [SerializeField, ShowOnly] private int population  = 1;
     [SerializeField, ShowOnly] private string provinceType;
+    public string ProvinceId => provinceId;
     public string ProvinceName => provinceName;
     public int Population => population;
     public string ProvinceType => provinceType;
 
     public float stability {
-        get { return Mathf.Clamp(_currentData.stability, -100, 100) ;}
-        set {_currentData.stability = Mathf.Clamp(value, -100, 100); }
+        get { return Mathf.Clamp(_currentData.stability, 0, 100) ;}
+        set {_currentData.stability = Mathf.Clamp(value, 0, 100); }
     }
 
     public float popularity {
@@ -40,15 +42,16 @@ public class ProvinceInfo : MonoBehaviour
     }  
 
     void OnDisable() {
-        _timeManager.OnDayPassedEvent-=debugShowInfo;
+        //_timeManager.OnDayPassedEvent-=debugShowInfo;
     }
 
     public void InitProvinceData(SO_Province soProvince) {
         this.soProvince = soProvince;
         _timeManager = ServiceLocator.Get<TimeManager>();
-        _timeManager.OnDayPassedEvent+=debugShowInfo;
+        //_timeManager.OnDayPassedEvent+=debugShowInfo;
 
         if (soProvince != null) {
+            provinceId = soProvince.provinceId;
             provinceName = soProvince.provinceName;
             population = soProvince.provincePopulation;
             provinceType = soProvince.provinceType;
