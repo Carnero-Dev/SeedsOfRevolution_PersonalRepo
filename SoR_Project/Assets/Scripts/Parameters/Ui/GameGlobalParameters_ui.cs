@@ -39,15 +39,29 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 		_fameText.text = _parametersData.fame.ToString("F2") + "%";
 		_determinationText.text = _parametersData.determination.ToString("F2") + "%";
 
-		_modifierReportInfluenceText.text = GetModifierFinalValue(SOR_Enums.Parameters.Influence);
-		_modifierReportFameText.text = GetModifierFinalValue(SOR_Enums.Parameters.Fame);
-		_modifierReportDeterminationText.text = GetModifierFinalValue(SOR_Enums.Parameters.Determination);
+		_modifierReportInfluenceText.text = GetGlobalModifierFinalValue(SOR_Enums.Parameters.Influence);
+		_modifierReportFameText.text = GetGlobalModifierFinalValue(SOR_Enums.Parameters.Fame);
+		_modifierReportDeterminationText.text = GetGlobalModifierFinalValue(SOR_Enums.Parameters.Determination);
+		_modifierReportPopularityText.text = GetProvincialModifierFinalValue(SOR_Enums.Parameters.Popularity);
+		_modifierReportAlignedText.text = GetProvincialModifierFinalValue(SOR_Enums.Parameters.Aligned);
+		_modifierReportAffiliatesText.text = GetProvincialModifierFinalValue(SOR_Enums.Parameters.Affiliates);
 	}
 
-	private string GetModifierFinalValue(SOR_Enums.Parameters parameter) {
+	private string GetGlobalModifierFinalValue(SOR_Enums.Parameters parameter) {
 		float finalValue = 0;
 		if(_modifierManager.GetReport("Global", parameter) == null) finalValue = 0f;
 		else finalValue = _modifierManager.GetReport("Global", parameter).finalValue;
+		switch (finalValue) {
+			case < 0: return $"- {Mathf.Abs(finalValue).ToString("F2")}";
+			case > 0: return $"+ {finalValue.ToString("F2")}";
+			default: return "0";
+		}
+	}
+
+	private string GetProvincialModifierFinalValue(SOR_Enums.Parameters parameter) {
+		float finalValue;
+		finalValue = _modifierManager.GetTotalProvincesParameterValue(parameter);
+
 		switch (finalValue) {
 			case < 0: return $"- {Mathf.Abs(finalValue).ToString("F2")}";
 			case > 0: return $"+ {finalValue.ToString("F2")}";
