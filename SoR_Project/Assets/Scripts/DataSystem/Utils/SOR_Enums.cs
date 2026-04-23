@@ -20,7 +20,7 @@ public class SOR_Enums
      }
     [Serializable]
      public enum Parameters {
-         Infuelnce,
+         Influence,
          Popularity,
          Affiliates,
          Aligned,

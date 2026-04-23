@@ -199,7 +199,7 @@ private void ApplyToProvince(ProvinceInfo p, SOR_Enums.Parameters param, float v
 
     private void ApplyGlobal(SOR_Enums.Parameters param, float val, ParameterController pc) {
         switch (param) {
-            case SOR_Enums.Parameters.Infuelnce: pc.influence += val; break;
+            case SOR_Enums.Parameters.Influence: pc.influence += val; break;
             case SOR_Enums.Parameters.Fame: pc.fame += val; break;
             case SOR_Enums.Parameters.Determination: pc.determination += val; break;
         }

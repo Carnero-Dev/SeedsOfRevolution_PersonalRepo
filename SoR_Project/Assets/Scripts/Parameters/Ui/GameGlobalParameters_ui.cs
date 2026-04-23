@@ -4,6 +4,7 @@ using TMPro;
 public class GameGlobalParameters_ui : MonoBehaviour {
 	private ParameterController _parameterController;
 	private GameInitializer _gameInitializer;
+	private ModifierManager _modifierManager;
 	private ParametersData _parametersData => GameDataService.Current.parameters;
 	[SerializeField] private TextMeshProUGUI _influenceText;
 	[SerializeField] private TextMeshProUGUI _totalPopularityText;
@@ -12,9 +13,17 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 	[SerializeField] private TextMeshProUGUI _fameText;
 	[SerializeField] private TextMeshProUGUI _determinationText;
 
+	[SerializeField] private TextMeshProUGUI _modifierReportInfluenceText;
+	[SerializeField] private TextMeshProUGUI _modifierReportPopularityText;
+	[SerializeField] private TextMeshProUGUI _modifierReportAlignedText;
+	[SerializeField] private TextMeshProUGUI _modifierReportAffiliatesText;
+	[SerializeField] private TextMeshProUGUI _modifierReportFameText;
+	[SerializeField] private TextMeshProUGUI _modifierReportDeterminationText;
+
 	private void Start() {
 		_parameterController = ServiceLocator.Get<ParameterController>();
 		_gameInitializer = ServiceLocator.Get<GameInitializer>();
+		_modifierManager = ServiceLocator.Get<ModifierManager>();
 	}
 
 	private void Update() {
@@ -29,6 +38,20 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 		_totalAffiliatesText.text = _parameterController.totalAffiliates.ToString("N0");
 		_fameText.text = _parametersData.fame.ToString("F2") + "%";
 		_determinationText.text = _parametersData.determination.ToString("F2") + "%";
+
+		_modifierReportInfluenceText.text = GetModifierFinalValue(SOR_Enums.Parameters.Influence);
+		_modifierReportFameText.text = GetModifierFinalValue(SOR_Enums.Parameters.Fame);
+		_modifierReportDeterminationText.text = GetModifierFinalValue(SOR_Enums.Parameters.Determination);
 	}
 
+	private string GetModifierFinalValue(SOR_Enums.Parameters parameter) {
+		float finalValue = 0;
+		if(_modifierManager.GetReport("Global", parameter) == null) finalValue = 0f;
+		else finalValue = _modifierManager.GetReport("Global", parameter).finalValue;
+		switch (finalValue) {
+			case < 0: return $"- {Mathf.Abs(finalValue).ToString("F2")}";
+			case > 0: return $"+ {finalValue.ToString("F2")}";
+			default: return "0";
+		}
+	}
 }
