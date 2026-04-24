@@ -29,7 +29,6 @@ public class EventManager : MonoBehaviour {
     }
 
     public void TriggerDecision(SO_Decision decision, string parentEventId) {
-        //TODO: Aplicar efectos de la decisión
         foreach(var modifier in decision.modifiersArray) {
             _modifierManager.ReadModifier(modifier);
         }
