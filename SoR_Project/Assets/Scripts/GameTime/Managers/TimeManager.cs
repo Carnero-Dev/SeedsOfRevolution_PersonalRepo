@@ -7,6 +7,9 @@ using System;
 /// </summary>
 public class TimeManager : MonoBehaviour {
     private TimeManagerData _data => GameDataService.Current.gameTime;
+    private SO_CalendarConfig _calendar;
+    private int _currentAbsDay; // Día relativo al inicio
+    public int CurrentAbsDay => _currentAbsDay;
     [SerializeField] 
     [Tooltip("Cada segundo en la vida real es X horas en el juego")]
         private int _TIMESCALE = 300; // Controla la velocidad del mundo con respecto a las fechas
@@ -25,6 +28,14 @@ public class TimeManager : MonoBehaviour {
     public Action OnGameTimeReanudated;
     public Action OnGameTimeScaleChanged;
 
+    public void Init(SO_CalendarConfig calendarConfig) {
+        _calendar = calendarConfig;
+        // Si el año es el por defecto (-1) aplicamos la fecha de inicio del mapa
+        if (_data.year < 0) { 
+            _calendar.ApplyStartDateToData(_data);
+        }
+        _currentAbsDay = _calendar.GetRelativeAbsDay(_data.day, _data.month, _data.year);
+    }
     void Start() {
         PauseReanudeTime();
     }
@@ -43,50 +54,40 @@ public class TimeManager : MonoBehaviour {
 
     #region Calculate Time
     void CalculateTime() {
-        // Comprueba si ha pasado 24 horas para pasar de dia y resetear el contador  
+        if (_currentTimeScaleIndex == 0) return;
+
         _data.minute += Time.deltaTime * _TIMESCALE;
-        if(_data.minute >= 59) { 
-            if(_data.hour >= 23 || _data.hour < 0) {
-                _data.minute = 0;
+
+        if (_data.minute >= 60) {
+            _data.minute = 0;
+            _data.hour++;
+            OnHourPassedEvent?.Invoke();
+
+            if (_data.hour >= 24) {
                 _data.hour = 0;
-                OnHourPassedEvent?.Invoke();
-                _data.day = CheckMonth() ? 1 : _data.day + 1; // Checkea si ha pasado de mes para resetear el dia        
-                OnDayPassedEvent?.Invoke();
-            } else
-            _data.hour++; _data.minute = 0; OnHourPassedEvent?.Invoke(); 
-        }   
+                ProcessDayPass();
+            }
+        }
     }
 
-    bool CheckMonth(){
-        // Formatear valores mínimos
-        if (_data.month < 1) _data.month = 1;
-        if (_data.day < 1) _data.day = 1;
+    void ProcessDayPass() {
+        _data.day++;
+        _currentAbsDay++; // Incremento lineal simple
 
-        if ((_data.month == 1 || _data.month == 3 || _data.month == 5 || _data.month == 7 || _data.month == 8 || _data.month == 10 || _data.month == 12) 
-        && _data.day >= 31) {
-            // Checkea si pasamos año nuevo para resetear mes y avanzar de año
-            if(_data.month == 12) {
+        int maxDays = _calendar.GetDaysInMonth(_data.month, _data.year);
+
+        if (_data.day > maxDays) {
+            _data.day = 1;
+            _data.month++;
+            OnMonthPassedEvent?.Invoke();
+
+            if (_data.month > _calendar.months.Length) {
                 _data.month = 1;
                 _data.year++;
                 OnYearPassedEvent?.Invoke();
-            } else {
-                _data.month++;
             }
-            OnMonthPassedEvent?.Invoke();
-            return true;
         }
-        if ((_data.month == 4 || _data.month == 6 || _data.month == 9 || _data.month == 11) 
-        && _data.day >= 30) {
-            _data.month++;
-            OnMonthPassedEvent?.Invoke();
-            return true;
-        }
-        if (_data.month == 2 && _data.day >= 28) {
-            _data.month++;
-            OnMonthPassedEvent?.Invoke();
-            return true;
-        }
-        return false;
+        OnDayPassedEvent?.Invoke();
     }
     #endregion
     #region Time Controller
