@@ -8,7 +8,7 @@ public class ActiveModifier {
     public ModifierInstructions instructions;
     public ExpirationDate expirationDate;
 
-	public void Initialize(ModifierInstructions instructions, ProvinceManager provinceManager) {
+	public void Initialize(ModifierInstructions instructions, ProvinceManager provinceManager, TimeManager timeManager) {
         // Si no hay provincias especificadas, pero el modificador tiene parámetros provinciales
         if (instructions.provincesToModify == null || instructions.provincesToModify.Length == 0) {
             // Solo llenamos si realmente hay algún parámetro que NO sea global
@@ -23,25 +23,24 @@ public class ActiveModifier {
             }
         }
         this.instructions = instructions;
-        this.expirationDate = CalculateExpirationDate(instructions.durationDays);
+        this.expirationDate = CalculateExpirationDate(instructions.durationDays, timeManager);
         Debug.Log($"Modifier with id {instructions.customId} Init");
     }
-    ExpirationDate CalculateExpirationDate(int durationDays) {
-        TimeManagerData currentDate = GameDataService.Current.gameTime;
-        DateTime date = new DateTime(currentDate.year, currentDate.month, currentDate.day);
-        date = date.AddDays(durationDays);
-        if (durationDays <= -1) return new ExpirationDate(0, 0, 9999); // Si es permanente, Fecha "infinita"
-        return new ExpirationDate(date.Day, date.Month, date.Year);
+    ExpirationDate CalculateExpirationDate(int durationDays, TimeManager timeManager) {
+        // Si es permanente (-1), usamos el valor máximo de int
+        if (durationDays <= -1) return new ExpirationDate(int.MaxValue);
+
+        // Día actual + duración = Día de muerte
+        int targetDay = timeManager.CurrentAbsDay + durationDays;
+        return new ExpirationDate(targetDay);
     }
 }
 
 [Serializable]
 public struct ExpirationDate {
-    public int day;
-    public int month;
-    public int year;
+    public int absoluteDay; // Día relativo al inicio del juego
 
-    public ExpirationDate(int d, int m, int y) {
-        day = d; month = m; year = y;
+    public ExpirationDate(int absDay) {
+        absoluteDay = absDay;
     }
 }

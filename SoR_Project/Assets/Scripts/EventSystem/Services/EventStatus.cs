@@ -6,9 +6,9 @@ public class EventStatus {
     public ExpirationDate availableDate;
     public bool hasTriggered; // Para eventos únicos
 
-    public EventStatus(string id) {
+    public EventStatus(string id, int startAbsDay = 0) {
         eventId = id;
-        availableDate = new ExpirationDate(0, 0, 0); // Disponible desde el inicio
+        availableDate = new ExpirationDate(startAbsDay);
         hasTriggered = false;
     }
 }

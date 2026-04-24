@@ -71,39 +71,43 @@ public class EventManager : MonoBehaviour {
     }
 
     public void HandleEventRoll() {
+        int today = _timeManager.CurrentAbsDay;
 
         // Check Cooldown Global
-        if (!IsAvailable(data.eventData.globalAvailableDate, data.gameTime)) return;
+        if (!IsAvailable(data.eventData.globalAvailableDate, today)) return;
 
         // Filtrar eventos elegibles
         var eligibleEvents = _mapTemplate.eventsBatery.Where(e => {
             var status = data.eventData.eventStatuses.Find(s => s.eventId == e.eventStorage.eventId);
-            bool cooldownOk = IsAvailable(status.availableDate, data.gameTime);
-            bool uniqueOk = e.eventStorage.isUnique ? !status.hasTriggered : true;
+            
+            // Si no existe status (evento nuevo), por defecto está disponible (absoluteDay = 0)
+            bool cooldownOk = status == null || IsAvailable(status.availableDate, today);
+            bool uniqueOk = e.eventStorage.isUnique ? (status == null || !status.hasTriggered) : true;
             
             return cooldownOk && uniqueOk;
         }).ToList();
 
         // Random event Roll 
-        int roll = SeedRandom.RangeInt(SeedCategory.GLOBAL,0, 100);
+        int roll = SeedRandom.RangeInt(SeedCategory.GLOBAL, 0, 100);
         if (roll < 30 && eligibleEvents.Count > 0) {
-            var ev = eligibleEvents[SeedRandom.RangeInt(SeedCategory.GLOBAL,0, eligibleEvents.Count)];
+            var ev = eligibleEvents[SeedRandom.RangeInt(SeedCategory.GLOBAL, 0, eligibleEvents.Count)];
+            
+            // Registrar el evento en la cola del día
             _currentDayEventQueue.Add(ev.eventStorage.eventId, ev);
+
+            // Si el evento tiene un cooldown tras ejecutarse, lo actualizamos así:
+            // status.availableDate = CalculateFutureDate(ev.eventStorage.cooldownDays);
         }
     }
 
-    private bool IsAvailable(ExpirationDate cooldownDate, TimeManagerData current) {
-        if (current.year > cooldownDate.year) return true;
-        if (current.year == cooldownDate.year && current.month > cooldownDate.month) return true;
-        if (current.year == cooldownDate.year && current.month == cooldownDate.month && current.day >= cooldownDate.day) return true;
-        return false;
+    private bool IsAvailable(ExpirationDate cooldownDate, int currentAbsDay) {
+        // Si el día actual es mayor o igual al día en que vence el cooldown, está disponible
+        return currentAbsDay >= cooldownDate.absoluteDay;
     }
 
 
     private ExpirationDate CalculateFutureDate(int daysToAdd) {
-        TimeManagerData current = data.gameTime;
-        DateTime date = new DateTime(current.year, current.month, current.day);
-        date = date.AddDays(daysToAdd);
-        return new ExpirationDate(date.Day, date.Month, date.Year);
+        // Día absoluto actual + días de espera = Día absoluto de disponibilidad
+        return new ExpirationDate(_timeManager.CurrentAbsDay + daysToAdd);
     }
 }
