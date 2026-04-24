@@ -29,14 +29,13 @@ public class ParameterController : MonoBehaviour {
 
 		_modifierManager.OnModifiersApplied += UpdateGlobalParameters;
 		
-		if(_gameInitializer.IsInitialized) { ComputeProvincialTotals(); ComputeTotalPopulation(); }
-		else _gameInitializer.OnGameInitialized += () => { ComputeTotalPopulation(); ComputeProvincialTotals(); };
+		if(_gameInitializer.IsInitialized) { ComputeProvincialTotals();}
+		else _gameInitializer.OnGameInitialized += () => { ComputeProvincialTotals(); };
 	}
 
 	void OnDisable() {
 		_modifierManager.OnModifiersApplied -= UpdateGlobalParameters;
-		_gameInitializer.OnGameInitialized -= () => UpdateGlobalParameters();
-		_gameInitializer.OnGameInitialized -= () => ComputeTotalPopulation();
+		_gameInitializer.OnGameInitialized -= () => ComputeProvincialTotals();
 	}
 
 	public void UpdateGlobalParameters() {
@@ -45,13 +44,11 @@ public class ParameterController : MonoBehaviour {
 		OnParametersUpdated?.Invoke();
 	}
 
-	private void ComputeTotalPopulation() {
-		foreach(var province in _provinceManager.GetMapTemplate().provinces) {
-			totalPopulation += province.provincePopulation;
-		}
-	}
-
 	private void ComputeProvincialTotals() {
+		if (_provinceManager == null) {
+        	_provinceManager = ServiceLocator.Get<ProvinceManager>();
+    	}
+		float totalPopulation = 0;
 		float totalPopularity = 0;
 		float totalAligned = 0;
 		float totalAffiliates = 0;
@@ -60,11 +57,12 @@ public class ParameterController : MonoBehaviour {
 		if (allProvincesData == null) return;
 		
 		foreach (var province in allProvincesData) {
+			totalPopulation += province.Population;
 			totalPopularity += province.popularity;
 			totalAligned += province.aligned;
 			totalAffiliates += province.affiliates;
 		}
-
+		this.totalPopulation = totalPopulation;
 		this.totalPopularity = totalPopularity;
 		this.totalAligned = totalAligned;
 		this.totalAffiliates = totalAffiliates;

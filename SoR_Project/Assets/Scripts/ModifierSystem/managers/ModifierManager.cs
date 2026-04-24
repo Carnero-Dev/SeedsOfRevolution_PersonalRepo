@@ -141,10 +141,9 @@ public class ModifierManager : MonoBehaviour {
                 foreach (var p in target.Value) ApplyToProvince(province, p.Key, p.Value.finalValue);
             }
         }
-        OnModifiersChanged?.Invoke(); // Avisamos que los modificadores cambiaron
         CheckModifiersExpiration();
-        RefreshProjections(); // Proyectar nuevo día
-        OnModifiersApplied?.Invoke(); // Avisamos que los valores ya han cambiado
+        OnModifiersApplied?.Invoke(); // Avisamos que los valores ya han cambiado (actualiza totales en ParameterController primero)
+        RefreshProjections(); // Proyectar nuevo día (ahora los totales están actualizados para la UI)
     
     }
     private void ApplyToProvince(ProvinceInfo p, SOR_Enums.Parameters param, float val) {
