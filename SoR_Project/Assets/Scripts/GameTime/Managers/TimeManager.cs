@@ -151,6 +151,7 @@ public class TimeManager : MonoBehaviour {
         _timeInputEnabled = value;
         return _timeInputEnabled;
     }
+    public string GetMonthName(int month) => _calendar.months[month - 1].name;
 
     #endregion
 }
