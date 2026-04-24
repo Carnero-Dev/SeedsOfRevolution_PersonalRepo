@@ -55,7 +55,7 @@ public class GameTime_ui : MonoBehaviour {
 	}
 
 	private void UpdateDateText() {
-        _dayMonthText.text = _timeData.day.ToString("00") + " de " + GetMonthName(_timeData.month);
+        _dayMonthText.text = _timeData.day.ToString("00") + " de " + _timeManager.GetMonthName(_timeData.month);
         _yearText.text = _timeData.year.ToString("0000");
     }
 
@@ -72,20 +72,4 @@ public class GameTime_ui : MonoBehaviour {
     private void HandlePauseReanudeTime() {
         _timeManager.PauseReanudeTime();
     }
-
-    private string GetMonthName(int month) => month switch {
-        1 => "Enero",
-        2 => "Febrero",
-        3 => "Marzo",
-        4 => "Abril",
-        5 => "Mayo",
-        6 => "Junio",
-        7 => "Julio",
-        8 => "Agosto",
-        9 => "Septiembre",
-        10 => "Octubre",
-        11 => "Noviembre",
-        12 => "Diciembre",
-        _ => "Error"
-    };
 }

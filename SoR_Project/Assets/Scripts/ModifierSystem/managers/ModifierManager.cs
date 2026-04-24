@@ -77,11 +77,11 @@ public class ModifierManager : MonoBehaviour {
         
 
         if (_activeModifiers.TryGetValue(id, out ActiveModifier existing)) {
-            existing.Initialize(instance, _provinceManager);
+            existing.Initialize(instance, _provinceManager, _timeManager);
             Debug.Log($"Modifier with id {id} Updated");
         } else {
             ActiveModifier newMod = new ActiveModifier();
-            newMod.Initialize(instance, _provinceManager);
+            newMod.Initialize(instance, _provinceManager, _timeManager);
             _activeModifiers.Add(id, newMod);
             Debug.Log($"Modifier with id {id} Created");
         }
@@ -99,31 +99,23 @@ public class ModifierManager : MonoBehaviour {
     /// Check if any modifiers on dictionary are expired and remove them
     /// </summary>
     private void CheckModifiersExpiration() {
-        List<string> expiredModifiers = new List<string>();
-        TimeManagerData currentDate = data.gameTime;
+    List<string> expiredModifiers = new List<string>();
+    
+    // Obtenemos el día absoluto actual desde el TimeManager
+    int today = _timeManager.CurrentAbsDay; 
 
-        foreach (var kvp in _activeModifiers) {
-            ActiveModifier mod = kvp.Value;
-            if (IsExpired(mod.expirationDate, currentDate)) {
-                expiredModifiers.Add(kvp.Key);
-            }
-        }
-
-        foreach (string id in expiredModifiers) {
-            _activeModifiers.Remove(id);
+    foreach (var kvp in _activeModifiers) {
+        // Si el día de hoy ya es igual o mayor al de expiración, fuera.
+        if (today >= kvp.Value.expirationDate.absoluteDay) {
+            expiredModifiers.Add(kvp.Key);
         }
     }
 
-    /// <summary>
-    /// Check if a modifier is expired
-    /// </summary>
-    private bool IsExpired(ExpirationDate expiration, TimeManagerData current) {
-        if (expiration.year < current.year) return true;
-        if (expiration.year == current.year && expiration.month < current.month) return true;
-        if (expiration.year == current.year && expiration.month == current.month && expiration.day < current.day) return true;
-        return false;
+    foreach (string id in expiredModifiers) {
+        _activeModifiers.Remove(id);
+        Debug.Log($"Modifier {id} expired and removed.");
     }
-
+}
 
     private void CalculateModifierValue() {
         _acumulatedModifierValues.Clear();
@@ -149,10 +141,9 @@ public class ModifierManager : MonoBehaviour {
                 foreach (var p in target.Value) ApplyToProvince(province, p.Key, p.Value.finalValue);
             }
         }
-        OnModifiersChanged?.Invoke(); // Avisamos que los modificadores cambiaron
         CheckModifiersExpiration();
-        RefreshProjections(); // Proyectar nuevo día
-        OnModifiersApplied?.Invoke(); // Avisamos que los valores ya han cambiado
+        OnModifiersApplied?.Invoke(); // Avisamos que los valores ya han cambiado (actualiza totales en ParameterController primero)
+        RefreshProjections(); // Proyectar nuevo día (ahora los totales están actualizados para la UI)
     
     }
     private void ApplyToProvince(ProvinceInfo p, SOR_Enums.Parameters param, float val) {

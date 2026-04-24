@@ -231,6 +231,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3066271010810116002, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_fontSize
+      value: 44.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066271010810116002, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 3066271010810116002, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3450826387207354573, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

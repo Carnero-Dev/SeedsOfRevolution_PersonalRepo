@@ -32,3 +32,4 @@ MonoBehaviour:
   eventsBatery:
   - {fileID: 11400000, guid: f00d6a061b2d19b4692535cbcb1c1ad0, type: 2}
   - {fileID: 11400000, guid: c64c2aa0d2938e54eacb8118cee50e81, type: 2}
+  calendarConfig: {fileID: 11400000, guid: c39d7a30783f556479984805ce9f21c2, type: 2}

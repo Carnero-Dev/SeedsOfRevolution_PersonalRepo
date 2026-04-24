@@ -7,4 +7,5 @@ public class SO_MapTemplate : ScriptableObject {
 	public Texture2D colorMap;
 	public SO_Province[] provinces;
 	public SO_Event[] eventsBatery;
+	public SO_CalendarConfig calendarConfig;
 }
