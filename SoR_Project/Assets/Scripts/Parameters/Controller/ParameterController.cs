@@ -20,6 +20,8 @@ public class ParameterController : MonoBehaviour {
 	public float totalPopulation {get; private set;} // Solo lectura, propositos visuales
 
 	public Action OnParametersUpdated;
+	public Action OnGameLost;
+    public Action OnGameWon;
 	
 	void Start() {
 		_timeManager = ServiceLocator.Get<TimeManager>();
@@ -40,8 +42,8 @@ public class ParameterController : MonoBehaviour {
 
 	public void UpdateGlobalParameters() {
 		ComputeProvincialTotals();
-
 		OnParametersUpdated?.Invoke();
+		CheckGameOverConditions();
 	}
 
 	private void ComputeProvincialTotals() {
@@ -67,4 +69,13 @@ public class ParameterController : MonoBehaviour {
 		this.totalAligned = totalAligned;
 		this.totalAffiliates = totalAffiliates;
 	}
+
+	private void CheckGameOverConditions() {
+        if (determination >= 0 || fame >= 0) {
+            OnGameLost?.Invoke();
+        }
+        else if (totalAligned >= totalPopulation * 0.5f) {
+            OnGameWon?.Invoke();
+        }
+    }
 }

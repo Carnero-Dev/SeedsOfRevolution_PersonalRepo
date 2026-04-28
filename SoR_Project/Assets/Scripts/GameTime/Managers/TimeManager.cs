@@ -147,7 +147,7 @@ public class TimeManager : MonoBehaviour {
     /// <summary>
     /// Habilita o deshabilita la capacidad del jugador de cambiar la velocidad del tiempo
     /// </summary> <param name="value">true para habilitar, false para deshabilitar</param>
-    public bool ChangeTimeInputState(bool value) {
+    public bool SetTimeInputActive(bool value) {
         _timeInputEnabled = value;
         return _timeInputEnabled;
     }

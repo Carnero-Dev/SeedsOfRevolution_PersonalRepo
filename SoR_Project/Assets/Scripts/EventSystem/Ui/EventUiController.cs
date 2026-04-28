@@ -68,7 +68,7 @@ public class EventUiController : MonoBehaviour {
 
     private void TriggerEventUi(SO_Event _event) {
         _timeManager.PauseReanudeTime(false);
-        _timeManager.ChangeTimeInputState(false); 
+        _timeManager.SetTimeInputActive(false); 
             eventTitle.text = _event.eventStorage.title;
             eventDescription.text = _event.eventStorage.description;
             eventThumbnail.sprite = _event.eventStorage.thumbnail;
@@ -83,7 +83,7 @@ public class EventUiController : MonoBehaviour {
 
     public void CloseEventUi() {
         SetVisibility(false);
-        _timeManager.ChangeTimeInputState(true); 
+        _timeManager.SetTimeInputActive(true); 
         _timeManager.PauseReanudeTime(true);
         foreach (Transform child in decisionContainer.transform) {
             Destroy(child.gameObject);

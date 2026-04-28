@@ -14,6 +14,7 @@ public class ProvinceInfo : MonoBehaviour
 
     
     // SO -> TO INFO
+    public bool isPlayerOnProvince; //debug
     [SerializeField, ShowOnly] private string provinceId;
     [SerializeField, ShowOnly] private string provinceName;
     [SerializeField, ShowOnly] private int population  = 1;
@@ -41,14 +42,24 @@ public class ProvinceInfo : MonoBehaviour
         set { _currentData.affiliates = Mathf.Clamp(value, 0, _currentData.aligned); }
     }  
 
+    private void Start() {
+        _timeManager = ServiceLocator.Get<TimeManager>();
+        _timeManager.OnDayPassedEvent += CheckPlayerInProvince;
+        CheckPlayerInProvince();
+    }
+
     void OnDisable() {
-        //_timeManager.OnDayPassedEvent-=debugShowInfo;
+        _timeManager.OnDayPassedEvent-= CheckPlayerInProvince;
+    }
+
+    public void CheckPlayerInProvince() {
+        if (isPlayerOnProvince) return;
+        if (popularity > 0 || aligned > 0 || affiliates > 0) isPlayerOnProvince = true;
     }
 
     public void InitProvinceData(SO_Province soProvince) {
         this.soProvince = soProvince;
         _timeManager = ServiceLocator.Get<TimeManager>();
-        //_timeManager.OnDayPassedEvent+=debugShowInfo;
 
         if (soProvince != null) {
             provinceId = soProvince.provinceId;
@@ -59,12 +70,5 @@ public class ProvinceInfo : MonoBehaviour
     }
     public void InsertData(ProvinceData data) => _currentData = data;
     public string GetProvinceId() => soProvince.provinceId;
-
-    void debugShowInfo() {
-        if(_currentData == null) return;
-        popularity += SeedRandom.RangeInt(SeedCategory.TEST, 100, 1000);
-        aligned += SeedRandom.RangeInt(SeedCategory.TEST, -10, 500);
-        affiliates += SeedRandom.RangeInt(SeedCategory.TEST, -10, 200);
-    }
 
 }
