@@ -18,8 +18,8 @@ MonoBehaviour:
     description: Ahi tiene 2 decisiones
     category: 0
     thumbnail: {fileID: 21300000, guid: acb9ef619f4eaad4ca102ef740d086f7, type: 3}
-    weight: 0
     isUnique: 0
+    cooldownDays: 2
     triggerHour: 12
     decisions:
     - {fileID: 11400000, guid: d04ebc1f8ef5cd747a42a67a0effec00, type: 2}

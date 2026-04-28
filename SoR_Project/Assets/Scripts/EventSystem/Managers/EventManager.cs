@@ -11,6 +11,10 @@ public class EventManager : MonoBehaviour {
     private ModifierManager _modifierManager;
     private Dictionary<string, SO_Event> _currentDayEventQueue = new Dictionary<string, SO_Event>();
 
+    [Header("Cooldown Defaults")]
+    [SerializeField] private int _DEFAULT_EVENT_COOLDOWN = 7;
+    [SerializeField] private int _DEFAULT_GLOBAL_COOLDOWN = 3;
+
     public Action OnDecisionSelected;
 
     public void Init(SO_MapTemplate map) {
@@ -34,14 +38,27 @@ public class EventManager : MonoBehaviour {
         }
         // Guardar boolean de que el evento ya se ha disparado para no volver a mostrarlo si es único
         var status = data.eventData.eventStatuses.Find(s => s.eventId == parentEventId);
+        SO_Event currentEvent = _mapTemplate.eventsBatery.FirstOrDefault(e => e.eventStorage.eventId == parentEventId);
         status.hasTriggered = true;
 
-        // Cálculo de cooldowns
-        status.availableDate = CalculateFutureDate(7); 
-        data.eventData.globalAvailableDate = CalculateFutureDate(3); 
+        if (status != null && currentEvent != null) {
+            // Marcar como disparado
+            status.hasTriggered = true;
 
-        // Eliminar evento activo del guardado
-       _currentDayEventQueue.Remove(parentEventId);
+            // Lógica de Cooldown Custom
+            //? Si es negativo (< 0), usamos el default del manager. Si no, el del evento.
+            int cooldownToApply = currentEvent.eventStorage.cooldownDays <= 0 
+                ? _DEFAULT_EVENT_COOLDOWN 
+                : currentEvent.eventStorage.cooldownDays;
+
+            status.availableDate = CalculateFutureDate(cooldownToApply);
+        }
+
+        // 4. Cooldown Global (se mantiene siempre)
+        data.eventData.globalAvailableDate = CalculateFutureDate(_DEFAULT_GLOBAL_COOLDOWN); 
+
+        // Limpiar cola
+        _currentDayEventQueue.Remove(parentEventId);
         OnDecisionSelected?.Invoke();
     }
 
@@ -94,9 +111,6 @@ public class EventManager : MonoBehaviour {
             
             // Registrar el evento en la cola del día
             _currentDayEventQueue.Add(ev.eventStorage.eventId, ev);
-
-            // Si el evento tiene un cooldown tras ejecutarse, lo actualizamos así:
-            // status.availableDate = CalculateFutureDate(ev.eventStorage.cooldownDays);
         }
     }
 
