@@ -1,9 +1,16 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, IGameManager
 {
     private GameInitializer _gameInitializer;
+    private ParameterController _parameterController;
+    private PlayerController _playerController;
+    [SerializeField] private debug_GameOverUi _gameOverUi;
+    private bool isNewGame;
+
+
 
 	private void OnEnable() {
         SaveSystem.OnGameLoaded += HandleGameLoaded;
@@ -16,8 +23,10 @@ public class GameManager : MonoBehaviour, IGameManager
         SaveSystem.OnGameSaved -= HandleGameSaved;        
         SaveSystem.OnGameDataCleared -= HandleDataCleared;
     }
-#region Handlers
-    private void HandleDataCleared() {
+
+
+	#region Handlers
+	private void HandleDataCleared() {
         Debug.Log("SaveSystem: Data Cleared");
     }
 
@@ -28,13 +37,34 @@ public class GameManager : MonoBehaviour, IGameManager
     private void HandleGameSaved() {
         Debug.Log("SaveSystem: Game Saved");
     }
-#endregion
+	#endregion
 
-#region GameFlow
+	public void Start() {
+		_gameInitializer = ServiceLocator.Get<GameInitializer>();
+        _parameterController = ServiceLocator.Get<ParameterController>();
+        _playerController = ServiceLocator.Get<PlayerController>();
+
+        _parameterController.OnGameLost += LostFlow;
+        _parameterController.OnGameWon += WonFlow;
+    }
+
+    private void LostFlow() {
+        _playerController.input.ChangeGameMode(SOR_Enums.GameModes.UI);
+        Time.timeScale = 0;
+        Debug.Log("Game Lost");
+    }
+
+    private void WonFlow() {
+        _playerController.input.ChangeGameMode(SOR_Enums.GameModes.UI);
+        Time.timeScale = 0;
+        Debug.Log("Game Won");
+    }
+
+	#region GameFlow
 	public void StartGame() {
 		if (SaveSystem.IsFileExist<GameData>()) OnLoadGame();
         else OnNewGame(SeedRandom.GetDebugState()); 
-        ServiceLocator.Get<GameInitializer>().Initialize();
+        _gameInitializer.Initialize(isNewGame);
         Debug.Log("Starting Game");
 	}
 	private void OnLoadGame() {
@@ -42,6 +72,7 @@ public class GameManager : MonoBehaviour, IGameManager
         var data = SaveSystem.Load<GameData>();
         GameDataService.Init(data);
         SeedRandom.RestoreState(data.run.seedState);
+        isNewGame = false;
 	}
 
 	private void OnNewGame(bool debugEnabled) {
@@ -52,6 +83,7 @@ public class GameManager : MonoBehaviour, IGameManager
 
         SaveSystem.Save(newData);
         Debug.Log($"New Game, debug mode: {debugEnabled}");
+        isNewGame = true;
 	}
 #endregion
 }
