@@ -10,22 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85769bd909372a64b972ab465d1b135c, type: 3}
-  m_Name: DEC_EVENT_ID_BLAMING_IMMIGRANTS
+  m_Name: DEC_WEB_RADICAL
   m_EditorClassIdentifier: 
-  decisionId: DEC_EVENT_ID_BLAMING_IMMIGRANTS
-  decisionTitle: Culpar a los inmigrantes
-  decisionDescription: Que se jodan
+  decisionId: DEC_WEB_RADICAL
+  decisionTitle: "Llamar a la acci\xF3n a nuestros seguidores"
+  decisionDescription: 
   modifiersArray:
-  - decisionId: DEC_EVENT_ID_BLAMING_IMMIGRANTS
+  - decisionId: DEC_WEB_RADICAL
     provincesToModify: []
     parametersToModify:
+    - parameter: 2
+      value: 2000
+    - parameter: 5
+      value: 0.5
     - parameter: 1
-      value: 800
-    - parameter: 3
-      value: 250
-    - parameter: 6
-      value: -0.1
+      value: -5000
     - parameter: 4
-      value: -0.8
-    durationDays: 15
-    customId: DEC_EVENT_ID_BLAMING_IMMIGRANTS_MOD_0
+      value: -0.1
+    - parameter: 0
+      value: -100
+    durationDays: 30
+    customId: DEC_WEB_RADICAL_MOD_0

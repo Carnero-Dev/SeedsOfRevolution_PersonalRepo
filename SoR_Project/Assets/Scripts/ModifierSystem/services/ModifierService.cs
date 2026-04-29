@@ -92,7 +92,7 @@ public class ModifierService {
 
 				//? FÓRMULA: INFLUENCIA GLOBAL (Siempre se aplica crecimiento pasivo)
 				if(param == SOR_Enums.Parameters.Influence && targetEntry.Key == "Global") {
-					float pasiveGrowth = parameterController.totalAffiliates / 500f;
+					float pasiveGrowth = parameterController.totalAffiliates / 10000f;
 					report.finalValue = report.totalBase + pasiveGrowth;
 					report.changes.Add(new ParameterChange { sourceName = "Crecimiento Pasivo", value = pasiveGrowth });
 					continue;

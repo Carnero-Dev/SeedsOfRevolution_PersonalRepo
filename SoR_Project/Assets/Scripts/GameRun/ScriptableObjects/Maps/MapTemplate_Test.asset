@@ -30,6 +30,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d8eb39df3518a84eb743c973d29f6bd, type: 2}
   - {fileID: 11400000, guid: a1a621711692d1041bb472f433019b03, type: 2}
   eventsBatery:
-  - {fileID: 11400000, guid: f00d6a061b2d19b4692535cbcb1c1ad0, type: 2}
+  - {fileID: 11400000, guid: c5e5a05a2f5b25441b0410035a84bdf8, type: 2}
   - {fileID: 11400000, guid: c64c2aa0d2938e54eacb8118cee50e81, type: 2}
+  - {fileID: 11400000, guid: ed9e303540d66dc4188551e652854b48, type: 2}
   calendarConfig: {fileID: 11400000, guid: c39d7a30783f556479984805ce9f21c2, type: 2}

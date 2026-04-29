@@ -10,28 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85769bd909372a64b972ab465d1b135c, type: 3}
-  m_Name: DEC_EVENT_ID_DO_NOTHING
+  m_Name: DEC_DISTURB_NOTHING
   m_EditorClassIdentifier: 
-  decisionId: DEC_EVENT_ID_DO_NOTHING
+  decisionId: DEC_DISTURB_NOTHING
   decisionTitle: No hacer nada
-  decisionDescription: Que la banca se rescate sola
+  decisionDescription: 
   modifiersArray:
-  - decisionId: DEC_EVENT_ID_DO_NOTHING
+  - decisionId: DEC_DISTURB_NOTHING
     provincesToModify:
-    - AND
+    - random_aviable
     parametersToModify:
+    - parameter: 6
+      value: -5
     - parameter: 4
-      value: -0.1
-    - parameter: 1
-      value: 5000
-    - parameter: 2
-      value: -600
-    durationDays: 10
-    customId: DEC_EVENT_DO_NOTHING_MOD_0
-  - decisionId: DEC_EVENT_ID_DO_NOTHING
-    provincesToModify: []
-    parametersToModify:
+      value: -2
     - parameter: 5
-      value: 0.2
-    durationDays: 15
-    customId: DEC_EVENT_ID_DO_NOTHING_MOD_1
+      value: 1
+    durationDays: 5
+    customId: DEC_DISTURB_NOTHING_MOD_0

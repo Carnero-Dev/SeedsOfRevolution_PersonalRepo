@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c0a87f446ba1a54bb583c2b454b1ee8, type: 3}
+  m_Name: EVT_GIRA_TEST
+  m_EditorClassIdentifier: 
+  eventStorage:
+    eventId: event_gira
+    title: Gira "Pueblo a Pueblo"
+    description: "El equipo decide hacer un tour por los pueblos de las provincias
+      con sedes para ganar adeptos a la revoluci\xF3n. \xBFDeber\xEDamos tener cuidado
+      con no llamar demasiado la atenci\xF3n, o destapar las mentiras del gobierno
+      para asegurar adeptos?"
+    category: 0
+    thumbnail: {fileID: 21300000, guid: 308087206af0ede4693efa37a54be673, type: 3}
+    isUnique: 0
+    cooldownDays: 30
+    triggerHour: 6
+    decisions:
+    - {fileID: 11400000, guid: 23d52c0a1b7c01149959864542439787, type: 2}
+    - {fileID: 11400000, guid: 31c54424ea1b49e47bf75ea54ba802fd, type: 2}
+    - {fileID: 11400000, guid: 59e50074748e4dc4484b906e22312554, type: 2}
