@@ -51,12 +51,14 @@ public class GameManager : MonoBehaviour, IGameManager
     private void LostFlow() {
         _playerController.input.ChangeGameMode(SOR_Enums.GameModes.UI);
         Time.timeScale = 0;
+        _gameOverUi.GameLostScreen();
         Debug.Log("Game Lost");
     }
 
     private void WonFlow() {
         _playerController.input.ChangeGameMode(SOR_Enums.GameModes.UI);
         Time.timeScale = 0;
+        _gameOverUi.GameWonScreen();
         Debug.Log("Game Won");
     }
 
