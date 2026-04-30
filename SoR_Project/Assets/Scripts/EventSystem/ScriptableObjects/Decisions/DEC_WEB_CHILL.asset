@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DEC_WEB_CHILL
   m_EditorClassIdentifier: 
   decisionId: DEC_WEB_CHILL
-  decisionTitle: "Llamar a la acci\xF3n a nuestros seguidores"
+  decisionTitle: Captar nuevos seguidores
   decisionDescription: 
   modifiersArray:
   - decisionId: DEC_WEB_CHILL
@@ -24,7 +24,7 @@ MonoBehaviour:
     - parameter: 4
       value: 0.1
     - parameter: 3
-      value: 4000
+      value: 5000
     - parameter: 0
       value: -100
     durationDays: 30

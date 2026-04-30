@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c0a87f446ba1a54bb583c2b454b1ee8, type: 3}
+  m_Name: EVT_MOVING_TEST
+  m_EditorClassIdentifier: 
+  eventStorage:
+    eventId: EVT_MOVING_TEST
+    title: Hora de expandirse
+    description: Tenemos fondos suficientes y contactos capaces de establecer una
+      red en una nueva provincia. Es hora de expandirse
+    category: 0
+    thumbnail: {fileID: 21300000, guid: 0250e0431c1aac448b4bcf11ed81edf5, type: 3}
+    isUnique: 0
+    cooldownDays: 30
+    triggerHour: 6
+    triggerDateByGameDays: 0
+    decisions:
+    - {fileID: 11400000, guid: c49900430385f8c4aaf79c2508982abd, type: 2}

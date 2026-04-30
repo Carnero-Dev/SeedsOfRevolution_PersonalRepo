@@ -18,7 +18,7 @@ MonoBehaviour:
   modifiersArray:
   - decisionId: DEC_DISTURB_NOTHING
     provincesToModify:
-    - random_aviable
+    - '[player_here]'
     parametersToModify:
     - parameter: 6
       value: -5
