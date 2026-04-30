@@ -72,18 +72,20 @@ public class ModifierManager : MonoBehaviour {
     // Método para leer un nuevo modificador (desde eventos, decisiones, etc), lo agrega o actualiza en la lista de activos, chequea expiración y refresca proyecciones
 	public void ReadModifier(ModifierInstructions instructions) {
         if (instructions.parametersToModify == null) return;
-        string id = instructions.customId;
         ModifierInstructions instance = instructions.Clone();
-        
+        ActiveModifier newMod = new ActiveModifier();
+        newMod.Initialize(instance, _provinceManager, _timeManager);
+        string uniqueId = GenerateUniqueId(newMod.instructions);
+        newMod.instructions.customId = uniqueId;
 
-        if (_activeModifiers.TryGetValue(id, out ActiveModifier existing)) {
-            existing.Initialize(instance, _provinceManager, _timeManager);
-            Debug.Log($"Modifier with id {id} Updated");
+        if (_activeModifiers.ContainsKey(uniqueId)) {
+            // Si ya existe exactamente en esas provincias, refrescamos (sobrescribimos)
+            _activeModifiers[uniqueId] = newMod;
+            Debug.Log($"Modifier {uniqueId} Refreshed");
         } else {
-            ActiveModifier newMod = new ActiveModifier();
-            newMod.Initialize(instance, _provinceManager, _timeManager);
-            _activeModifiers.Add(id, newMod);
-            Debug.Log($"Modifier with id {id} Created");
+            // Si son provincias distintas, se añade como nuevo
+            _activeModifiers.Add(uniqueId, newMod);
+            Debug.Log($"Modifier {uniqueId} Created");
         }
         CheckModifiers();
         RefreshProjections();
@@ -132,6 +134,20 @@ public class ModifierManager : MonoBehaviour {
             Debug.Log($"Modifier {id} expired and removed.");
         }
     }
+    private string GenerateUniqueId(ModifierInstructions inst) {
+        // Si no hay provincias (es global), nos quedamos con la ID base
+        if (inst.provincesToModify == null || inst.provincesToModify.Length == 0) {
+            return inst.customId; 
+        }
+
+        // Ordenamos los IDs para que "ProvA_ProvB" sea lo mismo que "ProvB_ProvA"
+        var sortedProvinces = inst.provincesToModify.OrderBy(s => s);
+        string provinceSuffix = string.Join("_", sortedProvinces);
+
+        // Resultado: DECISIONID_MOD0_Madrid_Toledo
+        return $"{inst.customId}_{provinceSuffix}";
+    }
+    
     private bool HasProvincialParams(ModifierInstructions inst) => 
         inst.parametersToModify.Any(p => IsProvincial(p.parameter));
     private bool IsProvincial(SOR_Enums.Parameters p) => 
