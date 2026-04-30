@@ -30,12 +30,12 @@ public class ProvinceInfo : MonoBehaviour
     }
 
     public float popularity {
-        get {return Mathf.Clamp(_currentData.popularity, 0, soProvince.provincePopulation) ;}
-        set { _currentData.popularity = Mathf.Clamp(value, 0, soProvince.provincePopulation); }
+        get {return Mathf.Clamp(_currentData.popularity, _currentData.aligned, soProvince.provincePopulation) ;}
+        set { _currentData.popularity = Mathf.Clamp(value, _currentData.aligned, soProvince.provincePopulation); }
     }
     public float aligned {
-        get {return Mathf.Clamp( _currentData.aligned, 0, _currentData.popularity) ;} 
-        set { _currentData.aligned = Mathf.Clamp(value, 0, _currentData.popularity); }
+        get {return Mathf.Clamp( _currentData.aligned, _currentData.affiliates, _currentData.popularity) ;} 
+        set { _currentData.aligned = Mathf.Clamp(value, _currentData.affiliates, _currentData.popularity); }
     }
     public float affiliates {
         get {return Mathf.Clamp( _currentData.affiliates, 0, _currentData.aligned) ;} 

@@ -11,7 +11,7 @@ public class ModifierService {
         _projections.Clear();
 
         // Asegurar parámetros pasivos obligatorios (aunque no haya mods)
-        EnsureMandatoryReports();
+        InitializeMandatoryReports(provinceManager);
 
         // Cargar modificadores activos
         foreach (var mod in activeModifiers) {
@@ -32,11 +32,18 @@ public class ModifierService {
         ResolveFormulas(provinceManager, parameterController);
     }
 
-    // Forzamos la creación del reporte de Influencia Global
-    private void EnsureMandatoryReports() {
+    // Forzamos la creación del reporte de parámetros que no dependan de modificadores
+    private void InitializeMandatoryReports(ProvinceManager provinceManager) {
+        // Parámetros Globales
         GetOrCreateReport("Global", SOR_Enums.Parameters.Influence);
-		GetOrCreateReport("Global", SOR_Enums.Parameters.Fame);
-		GetOrCreateReport("Global", SOR_Enums.Parameters.Determination);
+        GetOrCreateReport("Global", SOR_Enums.Parameters.Fame);
+        GetOrCreateReport("Global", SOR_Enums.Parameters.Determination);
+
+        // Parámetros de cada provincia (para asegurar el crecimiento pasivo)
+        foreach (var province in provinceManager.GetAllGameProvinces()) {
+            GetOrCreateReport(province.ProvinceId, SOR_Enums.Parameters.Popularity);
+        }
+        Debug.Log($"_projections.Count: {_projections.Count}");
     }
 
     private bool IsGlobal(SOR_Enums.Parameters param) {
@@ -62,23 +69,30 @@ public class ModifierService {
 	// Contiene todas las formulas para parámetros específicos dentro del juego. Se pueden aplicar utilizando los reportes generados para alterar modificadores actuales.
     private void ResolveFormulas(ProvinceManager provinceManager, ParameterController parameterController) {
         foreach (var targetEntry in _projections) {
+            string currentTargetId = targetEntry.Key;
             foreach (var paramEntry in targetEntry.Value) {
 				var param = paramEntry.Key;
                 var report = paramEntry.Value;
+                report.finalValue = report.totalBase;
 
-                //? FÓRMULA: POPULARIDAD (Solo si hay base positiva de modificadores)
-                if (param == SOR_Enums.Parameters.Popularity && targetEntry.Key != "Global") {
-                    var province = provinceManager.GetProvinceById(targetEntry.Key);
-                    if (province != null && report.totalBase > 0) {
-                        float bonus = report.totalBase * 100f / province.Population;
-                        report.finalValue = report.totalBase + (report.totalBase * bonus);
-                        report.changes.Add(new ParameterChange { sourceName = "Efecto Red", value = bonus });
-                        continue;
+                //? FÓRMULA: EFECTO RED (Crecimiento Pasivo)
+                if (param == SOR_Enums.Parameters.Popularity && currentTargetId != "Global") {
+                    var province = provinceManager.GetProvinceById(currentTargetId);
+                    if (province != null) {
+                        float networkIntensity = 0.01f; 
+                        float passiveGrowth = province.popularity * networkIntensity;
+                        report.finalValue += passiveGrowth;
+                        
+                        report.changes.Add(new ParameterChange { 
+                            sourceName = "Efecto Red (Pasivo)", 
+                            value = passiveGrowth 
+                        });
                     }
+                    continue;
                 }
 				//? FÓRMULA: ALINEADOS (Solo si hay modificadores)
-                if (param == SOR_Enums.Parameters.Aligned && targetEntry.Key != "Global") {
-                    var province = provinceManager.GetProvinceById(targetEntry.Key);
+                if (param == SOR_Enums.Parameters.Aligned && currentTargetId != "Global") {
+                    var province = provinceManager.GetProvinceById(currentTargetId);
                     if (province != null && report.totalBase !=0) {
 						float stabilityFactor = (50f - province.stability) / 100f;
                     	float stabilityBonus = report.totalBase * stabilityFactor;
@@ -91,14 +105,12 @@ public class ModifierService {
                 }
 
 				//? FÓRMULA: INFLUENCIA GLOBAL (Siempre se aplica crecimiento pasivo)
-				if(param == SOR_Enums.Parameters.Influence && targetEntry.Key == "Global") {
+				if(param == SOR_Enums.Parameters.Influence && currentTargetId == "Global") {
 					float pasiveGrowth = parameterController.totalAffiliates / 10000f;
 					report.finalValue = report.totalBase + pasiveGrowth;
 					report.changes.Add(new ParameterChange { sourceName = "Crecimiento Pasivo", value = pasiveGrowth });
 					continue;
 				}
-                
-                report.finalValue = report.totalBase;
             }
         }
     }
