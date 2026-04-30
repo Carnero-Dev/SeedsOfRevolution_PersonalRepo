@@ -6,6 +6,7 @@ public class SO_Decision : ScriptableObject {
 	public string decisionId; 
 	public string decisionTitle;
 	[TextArea] public string decisionDescription;
+    public bool skipIfNoAviableProvinces;
     public ModifierInstructions[] modifiersArray;
 
 	private void OnValidate() {

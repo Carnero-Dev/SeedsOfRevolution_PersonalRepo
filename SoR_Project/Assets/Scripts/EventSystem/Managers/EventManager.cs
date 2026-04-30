@@ -62,6 +62,10 @@ public class EventManager : MonoBehaviour {
         OnDecisionSelected?.Invoke();
     }
 
+    public void RemoveFromQueue(string eventId) {
+        _currentDayEventQueue.Remove(eventId);
+    }
+
     public SO_Event[] GetActiveEventsQueue() {
        return _currentDayEventQueue.Values.ToArray();
     }
@@ -97,11 +101,11 @@ public class EventManager : MonoBehaviour {
         var eligibleEvents = _mapTemplate.eventsBatery.Where(e => {
             var status = data.eventData.eventStatuses.Find(s => s.eventId == e.eventStorage.eventId);
             
-            // Si no existe status (evento nuevo), por defecto está disponible (absoluteDay = 0)
             bool cooldownOk = status == null || IsAvailable(status.availableDate, today);
             bool uniqueOk = e.eventStorage.isUnique ? (status == null || !status.hasTriggered) : true;
-            
-            return cooldownOk && uniqueOk;
+            bool hasValidDecisions = e.eventStorage.decisions.Any(d => _modifierManager.IsDecisionValid(d));
+
+            return cooldownOk && uniqueOk && hasValidDecisions;
         }).ToList();
 
         // Random event Roll 

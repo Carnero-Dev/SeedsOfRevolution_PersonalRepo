@@ -39,10 +39,15 @@ public class ActiveModifier {
         Debug.Log($"Modifier {this.instructions.customId} iniciado en {this.instructions.provincesToModify.Length} provincias");
     }
     private void ProcessFlags(ModifierInstructions inst, List<string> presentCandidates, List<string> absentCandidates) {
-        List<string> finalIds = inst.provincesToModify.Where(s => !s.StartsWith("[")).ToList();
+        // 1. Solo IDs que realmente existan en el mundo (evita IDs basura en el array)
+        var allProvinceIds = ServiceLocator.Get<ProvinceManager>().GetAllGameProvinces().Select(p => p.ProvinceId);
+        List<string> finalIds = inst.provincesToModify
+            .Where(s => !s.StartsWith("[") && allProvinceIds.Contains(s))
+            .ToList();
+
         List<string> flags = inst.provincesToModify.Where(s => s.StartsWith("[")).ToList();
 
-        // Limpiar candidatos de IDs que ya están explícitos en el array
+        // Limpiar candidatos
         presentCandidates.RemoveAll(id => finalIds.Contains(id));
         absentCandidates.RemoveAll(id => finalIds.Contains(id));
 

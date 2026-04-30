@@ -95,27 +95,86 @@ public class ModifierManager : MonoBehaviour {
         CalculateModifierValue();
     }
 
+    public bool IsDecisionValid(SO_Decision decision) {
+        // Si el diseñador no marcó el check, el evento salta siempre (comportamiento por defecto)
+        if (!decision.skipIfNoAviableProvinces) return true;
+
+        foreach (var mod in decision.modifiersArray) {
+            if (!HasProvincialParams(mod)) continue;
+
+            // Intentamos resolver qué provincias se verían afectadas
+            var resolved = ResolveProvincesPreview(mod);
+            
+            // Si un modificador provincial no encuentra NI UNA provincia válida, 
+            // invalidamos la decisión completa.
+            if (resolved.Count == 0) return false; 
+        }
+        return true;
+    }
     /// <summary>
     /// Check if any modifiers on dictionary are expired and remove them
     /// </summary>
     private void CheckModifiersExpiration() {
-    List<string> expiredModifiers = new List<string>();
-    
-    // Obtenemos el día absoluto actual desde el TimeManager
-    int today = _timeManager.CurrentAbsDay; 
+        List<string> expiredModifiers = new List<string>();
+        
+        // Obtenemos el día absoluto actual desde el TimeManager
+        int today = _timeManager.CurrentAbsDay; 
 
-    foreach (var kvp in _activeModifiers) {
-        // Si el día de hoy ya es igual o mayor al de expiración, fuera.
-        if (today >= kvp.Value.expirationDate.absoluteDay) {
-            expiredModifiers.Add(kvp.Key);
+        foreach (var kvp in _activeModifiers) {
+            // Si el día de hoy ya es igual o mayor al de expiración, fuera.
+            if (today >= kvp.Value.expirationDate.absoluteDay) {
+                expiredModifiers.Add(kvp.Key);
+            }
+        }
+
+        foreach (string id in expiredModifiers) {
+            _activeModifiers.Remove(id);
+            Debug.Log($"Modifier {id} expired and removed.");
         }
     }
+    private bool HasProvincialParams(ModifierInstructions inst) => 
+        inst.parametersToModify.Any(p => IsProvincial(p.parameter));
+    private bool IsProvincial(SOR_Enums.Parameters p) => 
+        p != SOR_Enums.Parameters.Influence && p != SOR_Enums.Parameters.Fame && p != SOR_Enums.Parameters.Determination;
 
-    foreach (string id in expiredModifiers) {
-        _activeModifiers.Remove(id);
-        Debug.Log($"Modifier {id} expired and removed.");
+    private List<string> ResolveProvincesPreview(ModifierInstructions inst) {
+        var allProvinces = _provinceManager.GetAllGameProvinces();
+        var allIds = allProvinces.Select(p => p.ProvinceId).ToList();
+        var presentIds = allProvinces.Where(p => p.isPlayerOnProvince).Select(p => p.ProvinceId).ToList();
+        var absentIds = allProvinces.Where(p => !p.isPlayerOnProvince).Select(p => p.ProvinceId).ToList();
+
+        // CASO A: Array vacío (Se aplica a donde esté el jugador)
+        if (inst.provincesToModify == null || inst.provincesToModify.Length == 0) {
+            return presentIds; 
+        }
+
+        // CASO B: Mezcla de IDs y Flags
+        List<string> explicitIds = inst.provincesToModify.Where(s => !s.StartsWith("[")).ToList();
+        int playerHereFlags = inst.provincesToModify.Count(s => s.ToLower() == "[player_here]");
+        int playerAwayFlags = inst.provincesToModify.Count(s => s.ToLower() == "[player_away]");
+
+        List<string> results = new List<string>();
+
+        // 1. Validar IDs explícitos: Solo cuentan si existen en el Manager
+        foreach (var id in explicitIds) {
+            if (allIds.Contains(id)) results.Add(id);
+        }
+
+        // 2. Validar Flags: ¿Hay suficientes candidatos para cubrir las flags pedidas?
+        // (Restamos los explicitIds de los candidatos para no duplicar, igual que en ActiveModifier)
+        int availablePresent = presentIds.Except(explicitIds).Count();
+        int availableAbsent = absentIds.Except(explicitIds).Count();
+
+        if (availablePresent >= playerHereFlags && availableAbsent >= playerAwayFlags) {
+            // Si hay suficientes, añadimos "huecos" simbólicos para que el Count sea > 0
+            for (int i = 0; i < playerHereFlags + playerAwayFlags; i++) results.Add("placeholder_id");
+        } else {
+            // Si faltan provincias para cumplir las flags, vaciamos resultados para invalidar
+            return new List<string>();
+        }
+
+        return results;
     }
-}
 
     private void CalculateModifierValue() {
         _acumulatedModifierValues.Clear();
