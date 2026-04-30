@@ -121,15 +121,48 @@ public class ModifierService {
         return null;
     }
 
-	public float GetTotalProvincesParameterValue(SOR_Enums.Parameters param) {
-		float total = 0;
-		foreach (var targetEntry in _projections) {
-			if (targetEntry.Key == "Global") continue; // Solo provincias
-			if (targetEntry.Value.TryGetValue(param, out var report)) total += report.finalValue;
-		}
-		return total;
-	}
-}
+	public float GetTotalProvincesParameterValue(SOR_Enums.Parameters param, ProvinceManager provinceManager) {
+        float total = 0;
+        foreach (var targetEntry in _projections) {
+                if (targetEntry.Key == "Global") continue; 
+
+                if (targetEntry.Value.TryGetValue(param, out var report)) {
+                    var province = provinceManager.GetProvinceById(targetEntry.Key);
+                    if (province == null) continue;
+
+                    float change = report.finalValue;
+                    bool shouldIgnore = false;
+
+                    switch (param) {
+                        case SOR_Enums.Parameters.Popularity:
+                            // CAP: No puede subir más de la Población
+                            if (change > 0 && province.popularity >= province.Population) shouldIgnore = true;
+                            // SUELO: No puede bajar de los Alineados actuales
+                            if (change < 0 && province.popularity <= province.aligned) shouldIgnore = true;
+                            break;
+
+                        case SOR_Enums.Parameters.Aligned:
+                            // CAP: No puede haber más alineados que populares (o población total)
+                            if (change > 0 && province.aligned >= province.popularity) shouldIgnore = true;
+                            // SUELO: No puede ser menor que 0
+                            if (change < 0 && province.aligned <= 0) shouldIgnore = true;
+                            break;
+                        case SOR_Enums.Parameters.Affiliates:
+                            // CAP: No puede haber más afiliados que alineados
+                            if (change > 0 && province.affiliates >= province.aligned) shouldIgnore = true;
+                            // SUELO: No puede ser menor que 0
+                            if (change < 0 && province.affiliates <= 0) shouldIgnore = true;
+                            break;
+                    }
+
+                    if (!shouldIgnore) {
+                        total += change;
+                    }
+                }
+            }
+            return total;
+        }
+    }
 [System.Serializable]
 public class ParameterChange {
     public string sourceName; 

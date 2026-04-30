@@ -67,7 +67,7 @@ public class ModifierManager : MonoBehaviour {
 
     // Métodos de consulta para UI u otros sistemas
     public ChangeReport GetReport(string id, SOR_Enums.Parameters p) => _service.GetReport(id, p);
-    public float GetTotalProvincesParameterValue(SOR_Enums.Parameters p) => _service.GetTotalProvincesParameterValue(p);
+    public float GetTotalProvincesParameterValue(SOR_Enums.Parameters p) => _service.GetTotalProvincesParameterValue(p, _provinceManager);
 
     // Método para leer un nuevo modificador (desde eventos, decisiones, etc), lo agrega o actualiza en la lista de activos, chequea expiración y refresca proyecciones
 	public void ReadModifier(ModifierInstructions instructions) {
