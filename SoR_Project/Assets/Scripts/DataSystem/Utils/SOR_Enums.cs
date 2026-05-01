@@ -45,11 +45,12 @@ public class SOR_Enums
         [TextArea] public string description;
         public EventCategory category;
         public Sprite thumbnail;
-        public int weight;
         public bool isUnique;
-        [Tooltip("Optional, if null, use weight")] 
-        public DateTime triggerDate;
+        [Tooltip("Si es negativo, se utiliza el cooldown por defecto del juego")]
+        public int cooldownDays;
         public int triggerHour;
+        [Tooltip("Opcional, si el formato no es correcto o es vacio (xx/xx/xxxx), no se tiene en cuenta")]
+        public string triggerDate;
         public SO_Decision[] decisions;
     }
      #endregion

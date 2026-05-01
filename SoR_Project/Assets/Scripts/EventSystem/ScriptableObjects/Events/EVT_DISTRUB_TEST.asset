@@ -10,17 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c0a87f446ba1a54bb583c2b454b1ee8, type: 3}
-  m_Name: EVT_GENERIC_TEST_2
+  m_Name: EVT_DISTRUB_TEST
   m_EditorClassIdentifier: 
   eventStorage:
-    eventId: event_2
-    title: Evento de mierda 2
-    description: Ahi tiene 2 decisiones
+    eventId: event_disturb
+    title: Distrubios en manifestaciones locales
+    description: "Un grupo de adeptos ha decidido que es buena idea quemar contenedores
+      y aprovechar el caos para robar en comercios locales. \xBFQue deber\xEDamos
+      hacer al respecto?"
     category: 0
     thumbnail: {fileID: 21300000, guid: acb9ef619f4eaad4ca102ef740d086f7, type: 3}
-    weight: 0
     isUnique: 0
-    triggerHour: 12
+    cooldownDays: 30
+    triggerHour: 16
     decisions:
-    - {fileID: 11400000, guid: d04ebc1f8ef5cd747a42a67a0effec00, type: 2}
-    - {fileID: 11400000, guid: 64e3182266e88b84caf2221d80b243da, type: 2}
+    - {fileID: 11400000, guid: ba6a90dff412dda43a1e2e3599001314, type: 2}
+    - {fileID: 11400000, guid: 25dba2cc096e64448965d558285ab094, type: 2}

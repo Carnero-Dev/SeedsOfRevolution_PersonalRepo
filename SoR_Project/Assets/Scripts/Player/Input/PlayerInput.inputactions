@@ -343,6 +343,17 @@
                     "action": "SetTimeScale",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "65adbda0-170c-4195-aab1-5ba00a5ce3eb",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetTimeScale",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

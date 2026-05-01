@@ -67,23 +67,25 @@ public class ModifierManager : MonoBehaviour {
 
     // Métodos de consulta para UI u otros sistemas
     public ChangeReport GetReport(string id, SOR_Enums.Parameters p) => _service.GetReport(id, p);
-    public float GetTotalProvincesParameterValue(SOR_Enums.Parameters p) => _service.GetTotalProvincesParameterValue(p);
+    public float GetTotalProvincesParameterValue(SOR_Enums.Parameters p) => _service.GetTotalProvincesParameterValue(p, _provinceManager);
 
     // Método para leer un nuevo modificador (desde eventos, decisiones, etc), lo agrega o actualiza en la lista de activos, chequea expiración y refresca proyecciones
 	public void ReadModifier(ModifierInstructions instructions) {
         if (instructions.parametersToModify == null) return;
-        string id = instructions.customId;
         ModifierInstructions instance = instructions.Clone();
-        
+        ActiveModifier newMod = new ActiveModifier();
+        newMod.Initialize(instance, _provinceManager, _timeManager);
+        string uniqueId = GenerateUniqueId(newMod.instructions);
+        newMod.instructions.customId = uniqueId;
 
-        if (_activeModifiers.TryGetValue(id, out ActiveModifier existing)) {
-            existing.Initialize(instance, _provinceManager, _timeManager);
-            Debug.Log($"Modifier with id {id} Updated");
+        if (_activeModifiers.ContainsKey(uniqueId)) {
+            // Si ya existe exactamente en esas provincias, refrescamos (sobrescribimos)
+            _activeModifiers[uniqueId] = newMod;
+            Debug.Log($"Modifier {uniqueId} Refreshed");
         } else {
-            ActiveModifier newMod = new ActiveModifier();
-            newMod.Initialize(instance, _provinceManager, _timeManager);
-            _activeModifiers.Add(id, newMod);
-            Debug.Log($"Modifier with id {id} Created");
+            // Si son provincias distintas, se añade como nuevo
+            _activeModifiers.Add(uniqueId, newMod);
+            Debug.Log($"Modifier {uniqueId} Created");
         }
         CheckModifiers();
         RefreshProjections();
@@ -95,27 +97,100 @@ public class ModifierManager : MonoBehaviour {
         CalculateModifierValue();
     }
 
+    public bool IsDecisionValid(SO_Decision decision) {
+        // Si el diseñador no marcó el check, el evento salta siempre (comportamiento por defecto)
+        if (!decision.skipIfNoAviableProvinces) return true;
+
+        foreach (var mod in decision.modifiersArray) {
+            if (!HasProvincialParams(mod)) continue;
+
+            // Intentamos resolver qué provincias se verían afectadas
+            var resolved = ResolveProvincesPreview(mod);
+            
+            // Si un modificador provincial no encuentra NI UNA provincia válida, 
+            // invalidamos la decisión completa.
+            if (resolved.Count == 0) return false; 
+        }
+        return true;
+    }
     /// <summary>
     /// Check if any modifiers on dictionary are expired and remove them
     /// </summary>
     private void CheckModifiersExpiration() {
-    List<string> expiredModifiers = new List<string>();
-    
-    // Obtenemos el día absoluto actual desde el TimeManager
-    int today = _timeManager.CurrentAbsDay; 
+        List<string> expiredModifiers = new List<string>();
+        
+        // Obtenemos el día absoluto actual desde el TimeManager
+        int today = _timeManager.CurrentAbsDay; 
 
-    foreach (var kvp in _activeModifiers) {
-        // Si el día de hoy ya es igual o mayor al de expiración, fuera.
-        if (today >= kvp.Value.expirationDate.absoluteDay) {
-            expiredModifiers.Add(kvp.Key);
+        foreach (var kvp in _activeModifiers) {
+            // Si el día de hoy ya es igual o mayor al de expiración, fuera.
+            if (today >= kvp.Value.expirationDate.absoluteDay) {
+                expiredModifiers.Add(kvp.Key);
+            }
+        }
+
+        foreach (string id in expiredModifiers) {
+            _activeModifiers.Remove(id);
+            Debug.Log($"Modifier {id} expired and removed.");
         }
     }
+    private string GenerateUniqueId(ModifierInstructions inst) {
+        // Si no hay provincias (es global), nos quedamos con la ID base
+        if (inst.provincesToModify == null || inst.provincesToModify.Length == 0) {
+            return inst.customId; 
+        }
 
-    foreach (string id in expiredModifiers) {
-        _activeModifiers.Remove(id);
-        Debug.Log($"Modifier {id} expired and removed.");
+        // Ordenamos los IDs para que "ProvA_ProvB" sea lo mismo que "ProvB_ProvA"
+        var sortedProvinces = inst.provincesToModify.OrderBy(s => s);
+        string provinceSuffix = string.Join("_", sortedProvinces);
+
+        // Resultado: DECISIONID_MOD0_Madrid_Toledo
+        return $"{inst.customId}_{provinceSuffix}";
     }
-}
+    
+    private bool HasProvincialParams(ModifierInstructions inst) => 
+        inst.parametersToModify.Any(p => IsProvincial(p.parameter));
+    private bool IsProvincial(SOR_Enums.Parameters p) => 
+        p != SOR_Enums.Parameters.Influence && p != SOR_Enums.Parameters.Fame && p != SOR_Enums.Parameters.Determination;
+
+    private List<string> ResolveProvincesPreview(ModifierInstructions inst) {
+        var allProvinces = _provinceManager.GetAllGameProvinces();
+        var allIds = allProvinces.Select(p => p.ProvinceId).ToList();
+        var presentIds = allProvinces.Where(p => p.isPlayerOnProvince).Select(p => p.ProvinceId).ToList();
+        var absentIds = allProvinces.Where(p => !p.isPlayerOnProvince).Select(p => p.ProvinceId).ToList();
+
+        // CASO A: Array vacío (Se aplica a donde esté el jugador)
+        if (inst.provincesToModify == null || inst.provincesToModify.Length == 0) {
+            return presentIds; 
+        }
+
+        // CASO B: Mezcla de IDs y Flags
+        List<string> explicitIds = inst.provincesToModify.Where(s => !s.StartsWith("[")).ToList();
+        int playerHereFlags = inst.provincesToModify.Count(s => s.ToLower() == "[player_here]");
+        int playerAwayFlags = inst.provincesToModify.Count(s => s.ToLower() == "[player_away]");
+
+        List<string> results = new List<string>();
+
+        // 1. Validar IDs explícitos: Solo cuentan si existen en el Manager
+        foreach (var id in explicitIds) {
+            if (allIds.Contains(id)) results.Add(id);
+        }
+
+        // 2. Validar Flags: ¿Hay suficientes candidatos para cubrir las flags pedidas?
+        // (Restamos los explicitIds de los candidatos para no duplicar, igual que en ActiveModifier)
+        int availablePresent = presentIds.Except(explicitIds).Count();
+        int availableAbsent = absentIds.Except(explicitIds).Count();
+
+        if (availablePresent >= playerHereFlags && availableAbsent >= playerAwayFlags) {
+            // Si hay suficientes, añadimos "huecos" simbólicos para que el Count sea > 0
+            for (int i = 0; i < playerHereFlags + playerAwayFlags; i++) results.Add("placeholder_id");
+        } else {
+            // Si faltan provincias para cumplir las flags, vaciamos resultados para invalidar
+            return new List<string>();
+        }
+
+        return results;
+    }
 
     private void CalculateModifierValue() {
         _acumulatedModifierValues.Clear();

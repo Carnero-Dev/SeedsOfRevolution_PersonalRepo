@@ -41,8 +41,8 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 
 	private void UpdateUI() {
 		_influenceText.text = _parametersData.influence.ToString("N0");
-		_totalPopularityText.text = (_parameterController.totalPopularity / _parameterController.totalPopulation * 100).ToString("F2") + " %";
-		_totalAlignedText.text = _parameterController.totalAligned.ToString("N0");
+		_totalPopularityText.text = _parameterController.totalPopularity.ToString("N0");
+		_totalAlignedText.text = (_parameterController.totalAligned / _parameterController.totalPopulation * 100).ToString("F2") + " %";
 		_totalAffiliatesText.text = _parameterController.totalAffiliates.ToString("N0");
 		_fameText.text = _parametersData.fame.ToString("F2") + "%";
 		_determinationText.text = _parametersData.determination.ToString("F2") + "%";
@@ -69,15 +69,6 @@ public class GameGlobalParameters_ui : MonoBehaviour {
 	private string GetProvincialModifierFinalValue(SOR_Enums.Parameters parameter) {
 		float finalValue;
 		finalValue = _modifierManager.GetTotalProvincesParameterValue(parameter);
-
-		if(parameter == SOR_Enums.Parameters.Popularity) {
-			float percentage = finalValue / _parameterController.totalPopulation * 100f;
-			switch (percentage) {
-				case < 0: return $"- {Mathf.Abs(percentage):F2}%";
-				case > 0: return $"+ {percentage:F2}%";
-				default: return "0%";
-			}
-		}
 		switch (finalValue) {
 			case < 0: return $"- {Mathf.Abs(finalValue):N0}";
 			case > 0: return $"+ {finalValue:N0}";

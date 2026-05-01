@@ -10,22 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85769bd909372a64b972ab465d1b135c, type: 3}
-  m_Name: DEC_EVENT_ID_BLAMING_IMMIGRANTS
+  m_Name: DEC_BOICOT_RADICAL
   m_EditorClassIdentifier: 
-  decisionId: DEC_EVENT_ID_BLAMING_IMMIGRANTS
-  decisionTitle: Culpar a los inmigrantes
-  decisionDescription: Que se jodan
+  decisionId: DEC_BOICOT_RADICAL
+  decisionTitle: Hackear el discurso
+  decisionDescription: 
+  skipIfNoAviableProvinces: 0
   modifiersArray:
-  - decisionId: DEC_EVENT_ID_BLAMING_IMMIGRANTS
-    provincesToModify: []
+  - decisionId: DEC_BOICOT_RADICAL
+    provincesToModify:
+    - '[all]'
     parametersToModify:
     - parameter: 1
-      value: 800
+      value: 50000
     - parameter: 3
-      value: 250
+      value: 30000
+    - parameter: 2
+      value: 10000
+    - parameter: 0
+      value: -1000
     - parameter: 6
-      value: -0.1
+      value: -0.5
     - parameter: 4
-      value: -0.8
-    durationDays: 15
-    customId: DEC_EVENT_ID_BLAMING_IMMIGRANTS_MOD_0
+      value: -2
+    - parameter: 5
+      value: 2
+    durationDays: 14
+    customId: DEC_BOICOT_RADICAL_MOD_0

@@ -10,7 +10,7 @@ public class ParameterController : MonoBehaviour {
 	private ModifierManager _modifierManager;
 
 	// Parámetros globales del jugador
-	public float influence { get {return Mathf.Clamp(_currentData.influence, 0, 99999); } set{_currentData.influence = Mathf.Clamp(value, 0, 99999);} }
+	public float influence { get {return Mathf.Clamp(_currentData.influence, -99999, 99999); } set{_currentData.influence = Mathf.Clamp(value, -99999, 99999);} }
 	public float fame { get {return Mathf.Clamp(_currentData.fame, -100, 100); } set{ _currentData.fame =Mathf.Clamp(value, -100, 100);} }
 	public float determination { get {return Mathf.Clamp(_currentData.determination, 0, 100); } set{_currentData.determination = Mathf.Clamp(value, 0, 100);} }
 	// Parámetros provinciales globales (Solo Lectura, no persistente)
@@ -20,6 +20,8 @@ public class ParameterController : MonoBehaviour {
 	public float totalPopulation {get; private set;} // Solo lectura, propositos visuales
 
 	public Action OnParametersUpdated;
+	public Action OnGameLost;
+    public Action OnGameWon;
 	
 	void Start() {
 		_timeManager = ServiceLocator.Get<TimeManager>();
@@ -40,8 +42,8 @@ public class ParameterController : MonoBehaviour {
 
 	public void UpdateGlobalParameters() {
 		ComputeProvincialTotals();
-
 		OnParametersUpdated?.Invoke();
+		CheckGameOverConditions();
 	}
 
 	private void ComputeProvincialTotals() {
@@ -67,4 +69,14 @@ public class ParameterController : MonoBehaviour {
 		this.totalAligned = totalAligned;
 		this.totalAffiliates = totalAffiliates;
 	}
+
+	private void CheckGameOverConditions() {
+        if (determination <= 0 || fame <= 0) {
+            OnGameLost?.Invoke();
+        }
+        else if (totalAligned >= totalPopulation * 0.5f && influence >= 5000) {
+			Debug.Log(totalPopulation);
+            OnGameWon?.Invoke();
+        }
+    }
 }

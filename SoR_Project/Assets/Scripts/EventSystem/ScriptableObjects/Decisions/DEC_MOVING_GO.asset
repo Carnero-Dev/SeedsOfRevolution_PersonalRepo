@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85769bd909372a64b972ab465d1b135c, type: 3}
+  m_Name: DEC_MOVING_GO
+  m_EditorClassIdentifier: 
+  decisionId: DEC_MOVING_GO
+  decisionTitle: Nos vamos
+  decisionDescription: 
+  skipIfNoAviableProvinces: 1
+  modifiersArray:
+  - decisionId: DEC_MOVING_GO
+    provincesToModify:
+    - '[player_away]'
+    - '[player_away]'
+    parametersToModify:
+    - parameter: 0
+      value: -200
+    - parameter: 5
+      value: 0.5
+    - parameter: 1
+      value: 1000
+    - parameter: 3
+      value: 150
+    - parameter: 2
+      value: 50
+    durationDays: 7
+    customId: DEC_MOVING_GO_MOD_0

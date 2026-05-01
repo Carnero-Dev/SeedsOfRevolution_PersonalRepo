@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c0a87f446ba1a54bb583c2b454b1ee8, type: 3}
-  m_Name: EVT_GENERIC_TEST_1
+  m_Name: EVT_MOVING_TEST
   m_EditorClassIdentifier: 
   eventStorage:
-    eventId: event_1
-    title: Evento de mierda
-    description: Elige una decision mi pana
+    eventId: EVT_MOVING_TEST
+    title: Hora de expandirse
+    description: Tenemos fondos suficientes y contactos capaces de establecer una
+      red en una nueva provincia. Es hora de expandirse
     category: 0
-    thumbnail: {fileID: 21300000, guid: 308087206af0ede4693efa37a54be673, type: 3}
-    weight: 0
+    thumbnail: {fileID: 21300000, guid: 0250e0431c1aac448b4bcf11ed81edf5, type: 3}
     isUnique: 0
+    cooldownDays: 30
     triggerHour: 6
+    triggerDate: 
     decisions:
-    - {fileID: 11400000, guid: d04ebc1f8ef5cd747a42a67a0effec00, type: 2}
-    - {fileID: 11400000, guid: 67a09f0e401d0444284cb15c41b6bde7, type: 2}
+    - {fileID: 11400000, guid: c49900430385f8c4aaf79c2508982abd, type: 2}

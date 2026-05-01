@@ -1,5 +1,4 @@
 using System;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 
 public class CarneroGameInstaller : MonoBehaviour
@@ -13,6 +12,7 @@ public class CarneroGameInstaller : MonoBehaviour
     public GameInitializer gameInitializer;
     public ModifierManager modificatorManager;
     public EventManager eventManager;
+    public PlayerController playerController;
     
     private void Awake() {
         InstallGameScene(); 
@@ -31,5 +31,6 @@ public class CarneroGameInstaller : MonoBehaviour
         ServiceLocator.Register<GameInitializer>(gameInitializer);
         ServiceLocator.Register<ModifierManager>(modificatorManager);
         ServiceLocator.Register<EventManager>(eventManager);
+        ServiceLocator.Register<PlayerController>(playerController);
     }
 }

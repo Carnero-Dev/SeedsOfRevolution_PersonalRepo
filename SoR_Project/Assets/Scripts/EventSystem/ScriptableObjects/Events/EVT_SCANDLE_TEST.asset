@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c0a87f446ba1a54bb583c2b454b1ee8, type: 3}
+  m_Name: EVT_SCANDLE_TEST
+  m_EditorClassIdentifier: 
+  eventStorage:
+    eventId: EVT_SCANDLE_TEST
+    title: "Esc\xE1ndalo de corrupci\xF3n en el gobierno"
+    description: "Se ha declarado sentencia para el pol\xEDtico \xC1valos por esc\xE1ndalos
+      de corrupci\xF3n relacionados con el mundo criminal, drogas y prostituci\xF3n.
+      Ha salido absuelto del caso en un juicio a puerta cerrada. Parece que el pueblo
+      pide un gran cambio, tal vez es el momento perfecto para encaminar este enfado
+      hacia una gran revoluci\xF3n contra el status quo. \xBFComo deber\xEDamos aprovecharlo?"
+    category: 0
+    thumbnail: {fileID: 21300000, guid: 691df1ff7f49ad7488b1f1ad15fba3d6, type: 3}
+    isUnique: 1
+    cooldownDays: 0
+    triggerHour: 0
+    triggerDate: 01/04/2026
+    decisions:
+    - {fileID: 11400000, guid: 91ec96f17c24de2408f298070f42b3ec, type: 2}
+    - {fileID: 11400000, guid: 0de230c9306adac46b2fb2ad76c6301e, type: 2}

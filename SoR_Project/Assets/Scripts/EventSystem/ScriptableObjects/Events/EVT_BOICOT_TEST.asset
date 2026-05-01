@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c0a87f446ba1a54bb583c2b454b1ee8, type: 3}
+  m_Name: EVT_BOICOT_TEST
+  m_EditorClassIdentifier: 
+  eventStorage:
+    eventId: EVT_INTERNATIONAL_TEST
+    title: Boicot al discurso anual del Rey
+    description: "Nuestro movimiento cruza fronteras. En estas \xE9pocas navide\xF1as,
+      el rey suele dar un discurso a toda la poblaci\xF3n. Una oportunidad asi en
+      un momento como este, no se puede desaprovechar. \xBFComo deber\xEDamos actuar
+      en esta situaci\xF3n? Cualquier paso en falso podr\xEDa suponer nuestro fin,
+      asi que tenemos que pensar con cabeza."
+    category: 0
+    thumbnail: {fileID: 21300000, guid: 9efe9de78753a454f999a9b86bc4692c, type: 3}
+    isUnique: 0
+    cooldownDays: 365
+    triggerHour: 21
+    triggerDate: 25/12/2026
+    decisions:
+    - {fileID: 11400000, guid: 918a0abe69d19544d8830150bd5fe834, type: 2}
+    - {fileID: 11400000, guid: 50e047a9337f629439bebfc598c0e3c9, type: 2}
