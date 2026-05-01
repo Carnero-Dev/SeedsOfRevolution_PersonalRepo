@@ -10,26 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85769bd909372a64b972ab465d1b135c, type: 3}
-  m_Name: DEC_WEB_RADICAL
+  m_Name: DEC_BOICOT_CHILL
   m_EditorClassIdentifier: 
-  decisionId: DEC_WEB_RADICAL
-  decisionTitle: "Llamar a la acci\xF3n a nuestros seguidores"
+  decisionId: DEC_BOICOT_CHILL
+  decisionTitle: "Manifestaci\xF3n multitudinaria"
   decisionDescription: 
   skipIfNoAviableProvinces: 0
   modifiersArray:
-  - decisionId: DEC_WEB_RADICAL
+  - decisionId: DEC_BOICOT_CHILL
     provincesToModify:
-    - '[all_player_here]'
+    - '[all]'
     parametersToModify:
-    - parameter: 2
-      value: 2000
-    - parameter: 5
-      value: 0.5
     - parameter: 1
-      value: -1000
-    - parameter: 4
-      value: -0.1
+      value: 30000
+    - parameter: 3
+      value: 50000
+    - parameter: 2
+      value: 10000
     - parameter: 0
-      value: -100
-    durationDays: 30
-    customId: DEC_WEB_RADICAL_MOD_0
+      value: -500
+    - parameter: 6
+      value: -2
+    - parameter: 4
+      value: 1
+    - parameter: 5
+      value: 1
+    durationDays: 14
+    customId: DEC_BOICOT_CHILL_MOD_0

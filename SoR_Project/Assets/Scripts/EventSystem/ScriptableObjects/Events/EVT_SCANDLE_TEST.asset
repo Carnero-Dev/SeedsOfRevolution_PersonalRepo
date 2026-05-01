@@ -15,7 +15,7 @@ MonoBehaviour:
   eventStorage:
     eventId: EVT_SCANDLE_TEST
     title: "Esc\xE1ndalo de corrupci\xF3n en el gobierno"
-    description: "Se ha declarado sentencia para el pol\xEDtico \xC1balos por esc\xE1ndalos
+    description: "Se ha declarado sentencia para el pol\xEDtico \xC1valos por esc\xE1ndalos
       de corrupci\xF3n relacionados con el mundo criminal, drogas y prostituci\xF3n.
       Ha salido absuelto del caso en un juicio a puerta cerrada. Parece que el pueblo
       pide un gran cambio, tal vez es el momento perfecto para encaminar este enfado
@@ -25,7 +25,7 @@ MonoBehaviour:
     isUnique: 1
     cooldownDays: 3
     triggerHour: 0
-    triggerDate: 01/02/2026
+    triggerDate: 01/04/2026
     decisions:
     - {fileID: 11400000, guid: 91ec96f17c24de2408f298070f42b3ec, type: 2}
     - {fileID: 11400000, guid: 0de230c9306adac46b2fb2ad76c6301e, type: 2}

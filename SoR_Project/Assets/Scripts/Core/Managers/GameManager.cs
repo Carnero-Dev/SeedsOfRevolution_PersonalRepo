@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour, IGameManager
         SaveSystem.OnGameLoaded -= HandleGameLoaded;
         SaveSystem.OnGameSaved -= HandleGameSaved;        
         SaveSystem.OnGameDataCleared -= HandleDataCleared;
+        _parameterController.OnGameLost -= LostFlow;
+        _parameterController.OnGameWon -= WonFlow;
     }
 
 
@@ -40,12 +42,7 @@ public class GameManager : MonoBehaviour, IGameManager
 	#endregion
 
 	public void Start() {
-		_gameInitializer = ServiceLocator.Get<GameInitializer>();
-        _parameterController = ServiceLocator.Get<ParameterController>();
-        _playerController = ServiceLocator.Get<PlayerController>();
-
-        _parameterController.OnGameLost += LostFlow;
-        _parameterController.OnGameWon += WonFlow;
+        _playerController.input.ChangeGameMode(SOR_Enums.GameModes.Game);
     }
 
     private void LostFlow() {
@@ -64,6 +61,13 @@ public class GameManager : MonoBehaviour, IGameManager
 
 	#region GameFlow
 	public void StartGame() {
+		_gameInitializer = ServiceLocator.Get<GameInitializer>();
+        _parameterController = ServiceLocator.Get<ParameterController>();
+        _playerController = ServiceLocator.Get<PlayerController>();
+
+        _parameterController.OnGameLost += LostFlow;
+        _parameterController.OnGameWon += WonFlow;
+
 		if (SaveSystem.IsFileExist<GameData>()) OnLoadGame();
         else OnNewGame(SeedRandom.GetDebugState()); 
         _gameInitializer.Initialize(isNewGame);
