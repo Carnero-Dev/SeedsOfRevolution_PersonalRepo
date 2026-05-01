@@ -15,6 +15,7 @@ MonoBehaviour:
   decisionId: DEC_DISTURB_CONDEMN
   decisionTitle: Condenar comportamiento
   decisionDescription: 
+  skipIfNoAviableProvinces: 1
   modifiersArray:
   - decisionId: DEC_DISTURB_CONDEMN
     provincesToModify:

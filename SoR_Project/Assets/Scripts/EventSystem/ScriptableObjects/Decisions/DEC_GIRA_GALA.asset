@@ -15,9 +15,11 @@ MonoBehaviour:
   decisionId: DEC_GIRA_GALA
   decisionTitle: Evento de Gala
   decisionDescription: 
+  skipIfNoAviableProvinces: 0
   modifiersArray:
   - decisionId: DEC_GIRA_GALA
-    provincesToModify: []
+    provincesToModify:
+    - '[all_player_here]'
     parametersToModify:
     - parameter: 0
       value: 500

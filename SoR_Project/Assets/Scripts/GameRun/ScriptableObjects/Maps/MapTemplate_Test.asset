@@ -34,4 +34,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c64c2aa0d2938e54eacb8118cee50e81, type: 2}
   - {fileID: 11400000, guid: ed9e303540d66dc4188551e652854b48, type: 2}
   - {fileID: 11400000, guid: 48326c7da9ca5404db230e37e01c6ca3, type: 2}
+  - {fileID: 11400000, guid: 40eb23582219eb34db2999c42a912071, type: 2}
   calendarConfig: {fileID: 11400000, guid: c39d7a30783f556479984805ce9f21c2, type: 2}

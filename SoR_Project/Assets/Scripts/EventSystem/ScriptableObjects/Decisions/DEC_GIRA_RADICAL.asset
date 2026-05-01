@@ -15,9 +15,11 @@ MonoBehaviour:
   decisionId: DEC_GIRA_RADICAL
   decisionTitle: Discurso Radical
   decisionDescription: 
+  skipIfNoAviableProvinces: 0
   modifiersArray:
   - decisionId: DEC_GIRA_RADICAL
-    provincesToModify: []
+    provincesToModify:
+    - '[all_player_here]'
     parametersToModify:
     - parameter: 3
       value: 20000

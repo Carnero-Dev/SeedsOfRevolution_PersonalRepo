@@ -62,7 +62,7 @@ public class EventUiController : MonoBehaviour {
         if(_eventManager.GetActiveEventsQueue().Length == 0) return;
 
         int currentHour = _data.gameTime.hour;
-        var eventToTrigger = _eventManager.GetActiveEventsQueue().FirstOrDefault(e => e.eventStorage.triggerHour == currentHour);       
+        var eventToTrigger = _eventManager.GetActiveEventsQueue().FirstOrDefault(e => e.eventStorage.triggerHour <= 0 ? true : e.eventStorage.triggerHour == currentHour);       
         if (eventToTrigger != null) {
             TriggerEventUi(eventToTrigger);
         }

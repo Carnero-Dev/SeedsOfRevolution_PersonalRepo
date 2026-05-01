@@ -303,6 +303,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: popularity_Modificator
       objectReference: {fileID: 0}
+    - target: {fileID: 4369578446257344002, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_fontSize
+      value: 25.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369578446257344002, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 4369578446257344002, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4903388908308873842, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_Name
       value: aligned_Modificator
@@ -348,8 +360,16 @@ PrefabInstance:
       value: -4.4857483
       objectReference: {fileID: 0}
     - target: {fileID: 5627274555122676304, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 5627274555122676304, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_fontSizeBase
       value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 5627274555122676304, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6236323118285968701, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_Name
@@ -406,6 +426,18 @@ PrefabInstance:
     - target: {fileID: 7455645310538629200, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8362101583950924067, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_fontSize
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 8362101583950924067, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 8362101583950924067, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8385889727334222977, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_AnchorMax.y

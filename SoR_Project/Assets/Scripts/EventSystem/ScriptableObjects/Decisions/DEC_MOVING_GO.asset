@@ -15,6 +15,7 @@ MonoBehaviour:
   decisionId: DEC_MOVING_GO
   decisionTitle: Nos vamos
   decisionDescription: 
+  skipIfNoAviableProvinces: 1
   modifiersArray:
   - decisionId: DEC_MOVING_GO
     provincesToModify:

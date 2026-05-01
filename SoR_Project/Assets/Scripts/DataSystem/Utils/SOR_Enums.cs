@@ -49,8 +49,8 @@ public class SOR_Enums
         [Tooltip("Si es negativo, se utiliza el cooldown por defecto del juego")]
         public int cooldownDays;
         public int triggerHour;
-        [Tooltip("Opcional, si es 0 o negativo, no se tiene en cuenta")]
-        public int triggerDateByGameDays;
+        [Tooltip("Opcional, si el formato no es correcto o es vacio (xx/xx/xxxx), no se tiene en cuenta")]
+        public string triggerDate;
         public SO_Decision[] decisions;
     }
      #endregion

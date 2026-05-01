@@ -15,9 +15,11 @@ MonoBehaviour:
   decisionId: DEC_WEB_RADICAL
   decisionTitle: "Llamar a la acci\xF3n a nuestros seguidores"
   decisionDescription: 
+  skipIfNoAviableProvinces: 0
   modifiersArray:
   - decisionId: DEC_WEB_RADICAL
-    provincesToModify: []
+    provincesToModify:
+    - '[all_player_here]'
     parametersToModify:
     - parameter: 2
       value: 2000

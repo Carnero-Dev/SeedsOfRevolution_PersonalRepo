@@ -10,25 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85769bd909372a64b972ab465d1b135c, type: 3}
-  m_Name: DEC_GIRA_CENTRO
+  m_Name: DEC_SCANDAL_RADICAL
   m_EditorClassIdentifier: 
-  decisionId: DEC_GIRA_CENTRO
-  decisionTitle: Discurso centrista
+  decisionId: DEC_SCANDAL_RADICAL
+  decisionTitle: Qumar las calles
   decisionDescription: 
   skipIfNoAviableProvinces: 0
   modifiersArray:
-  - decisionId: DEC_GIRA_CENTRO
+  - decisionId: DEC_SCANDAL_RADICAL
     provincesToModify:
-    - '[all_player_here]'
+    - '[all_fragmented]'
     parametersToModify:
     - parameter: 1
-      value: 10000
-    durationDays: 7
-    customId: DEC_GIRA_CENTRO_MOD_0
-  - decisionId: DEC_GIRA_CENTRO
-    provincesToModify: []
+      value: 100000
+    - parameter: 3
+      value: 40000
+    - parameter: 2
+      value: 20000
+    durationDays: 30
+    customId: DEC_SCANDAL_RADICAL_MOD_0
+  - decisionId: DEC_SCANDAL_RADICAL
+    provincesToModify:
+    - '[all]'
     parametersToModify:
+    - parameter: 6
+      value: -3
+    - parameter: 4
+      value: -3
     - parameter: 5
-      value: -5
-    durationDays: 1
-    customId: DEC_GIRA_CENTRO_MOD_1
+      value: 3
+    durationDays: 14
+    customId: DEC_SCANDAL_RADICAL_MOD_1

@@ -104,8 +104,17 @@ public class EventManager : MonoBehaviour {
             bool cooldownOk = status == null || IsAvailable(status.availableDate, today);
             bool uniqueOk = e.eventStorage.isUnique ? (status == null || !status.hasTriggered) : true;
             bool hasValidDecisions = e.eventStorage.decisions.Any(d => _modifierManager.IsDecisionValid(d));
+            bool triggerDateOk;
+            if (e.eventStorage.triggerDate != null && e.eventStorage.triggerDate.Split("/").Length == 3) {
+                triggerDateOk = _timeManager.CurrentAbsDay >= _mapTemplate.calendarConfig.GetRelativeAbsDay(
+                    int.Parse(e.eventStorage.triggerDate.Split('/')[0]), 
+                    int.Parse(e.eventStorage.triggerDate.Split('/')[1]), 
+                    int.Parse(e.eventStorage.triggerDate.Split('/')[2]));
+            } else {
+               triggerDateOk = true;
+            }
 
-            return cooldownOk && uniqueOk && hasValidDecisions;
+            return cooldownOk && uniqueOk && hasValidDecisions && triggerDateOk;
         }).ToList();
 
         // Random event Roll 
@@ -120,6 +129,7 @@ public class EventManager : MonoBehaviour {
 
     private bool IsAvailable(ExpirationDate cooldownDate, int currentAbsDay) {
         // Si el día actual es mayor o igual al día en que vence el cooldown, está disponible
+        if (cooldownDate.absoluteDay <= 0) return true;
         return currentAbsDay >= cooldownDate.absoluteDay;
     }
 

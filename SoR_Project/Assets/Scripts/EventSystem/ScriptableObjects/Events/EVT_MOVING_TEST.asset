@@ -20,7 +20,7 @@ MonoBehaviour:
     category: 0
     thumbnail: {fileID: 21300000, guid: 0250e0431c1aac448b4bcf11ed81edf5, type: 3}
     isUnique: 0
-    cooldownDays: 30
+    cooldownDays: 5
     triggerHour: 6
     triggerDateByGameDays: 0
     decisions:

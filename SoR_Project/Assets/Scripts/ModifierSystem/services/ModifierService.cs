@@ -23,6 +23,7 @@ public class ModifierService {
 				// Parametros provinciales
 					if (mod.instructions.provincesToModify == null) continue;
                     foreach (var pId in mod.instructions.provincesToModify) {
+                        if (string.IsNullOrEmpty(pId) || pId.StartsWith("[")) continue;
                         AddToProjection(pId, paramMod.parameter, mod.instructions.customId, paramMod.value);
                     }
                 }
