@@ -23,6 +23,8 @@ MonoBehaviour:
     parametersToModify:
     - parameter: 1
       value: 10000
+    - parameter: 3
+      value: 5000
     durationDays: 7
     customId: DEC_GIRA_CENTRO_MOD_0
   - decisionId: DEC_GIRA_CENTRO

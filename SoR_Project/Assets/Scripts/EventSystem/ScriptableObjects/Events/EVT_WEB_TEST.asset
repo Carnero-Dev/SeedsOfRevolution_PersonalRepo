@@ -19,10 +19,11 @@ MonoBehaviour:
       para captar adeptos. \xBFDeber\xEDamos enofcarnos en captar p\xFAblico, o llamar
       a la acci\xF3n a nuestrsos seguidores?"
     category: 0
-    thumbnail: {fileID: 21300000, guid: acb9ef619f4eaad4ca102ef740d086f7, type: 3}
+    thumbnail: {fileID: 21300000, guid: 461477dfd7b645a458563c09dc5cb578, type: 3}
     isUnique: 0
     cooldownDays: 30
     triggerHour: 10
+    triggerDate: 
     decisions:
     - {fileID: 11400000, guid: a323e479d49f2304282fcb0b5f96d305, type: 2}
     - {fileID: 11400000, guid: 507a9dcb9337987488dbffcd1843e1fa, type: 2}

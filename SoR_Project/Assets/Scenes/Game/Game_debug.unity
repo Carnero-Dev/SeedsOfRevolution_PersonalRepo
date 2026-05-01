@@ -167,6 +167,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1072330704438190343, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 536.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1072330704438190343, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -344
+      objectReference: {fileID: 0}
     - target: {fileID: 1821595807323021091, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -198,6 +206,14 @@ PrefabInstance:
     - target: {fileID: 2548541166555742974, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897646584373921616, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_margin.z
+      value: -1.2122803
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897646584373921616, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2912908153995610499, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_AnchorMax.y
@@ -282,6 +298,10 @@ PrefabInstance:
     - target: {fileID: 4119689012209316145, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6279592120742761706, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
+      propertyPath: m_margin.z
+      value: -43.009033
       objectReference: {fileID: 0}
     - target: {fileID: 6874441045661015887, guid: 50fb1be50c10569419c411c9cbe8c8b8, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3528,7 +3548,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!224 &1437819060
 RectTransform:

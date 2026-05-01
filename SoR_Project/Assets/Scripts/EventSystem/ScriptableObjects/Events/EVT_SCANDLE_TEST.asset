@@ -23,7 +23,7 @@ MonoBehaviour:
     category: 0
     thumbnail: {fileID: 21300000, guid: 691df1ff7f49ad7488b1f1ad15fba3d6, type: 3}
     isUnique: 1
-    cooldownDays: 3
+    cooldownDays: 0
     triggerHour: 0
     triggerDate: 01/04/2026
     decisions:

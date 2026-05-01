@@ -22,8 +22,10 @@ MonoBehaviour:
     - '[all_player_here]'
     parametersToModify:
     - parameter: 0
-      value: 500
+      value: 100
     - parameter: 4
-      value: 10
-    durationDays: 1
+      value: 2
+    - parameter: 2
+      value: 200
+    durationDays: 5
     customId: DEC_GIRA_MOD_1

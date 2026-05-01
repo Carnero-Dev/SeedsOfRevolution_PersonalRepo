@@ -27,5 +27,7 @@ MonoBehaviour:
       value: 1
     - parameter: 5
       value: -2
+    - parameter: 3
+      value: 5000
     durationDays: 5
     customId: DEC_DISTURB_CONDEMN_MOD_0

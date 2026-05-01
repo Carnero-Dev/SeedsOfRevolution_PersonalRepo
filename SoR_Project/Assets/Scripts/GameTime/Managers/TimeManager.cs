@@ -13,7 +13,7 @@ public class TimeManager : MonoBehaviour {
     [SerializeField] 
     [Tooltip("Cada segundo en la vida real es X horas en el juego")]
         private int _TIMESCALE = 300; // Controla la velocidad del mundo con respecto a las fechas
-    private int [] _timesScales = new int [4]; // Establece las velocidades del juego (EN ORDEN INCLUYENDO PAUSA)
+    private int [] _timesScales = new int [5]; // Establece las velocidades del juego (EN ORDEN INCLUYENDO PAUSA)
     private int _currentTimeScaleIndex = 1;  // Establece cual es la velocidad actual
     private int _lastTimeScaleIndex = 1;  // Establece cual es la velocidad actual
     private bool _timeInputEnabled { get; set; } = true; // Controla si el jugador puede cambiar la velocidad del tiempo
@@ -50,6 +50,7 @@ public class TimeManager : MonoBehaviour {
         _timesScales[1] = _TIMESCALE;
         _timesScales[2] = _TIMESCALE * 2;
         _timesScales[3] = _TIMESCALE * 3;
+        _timesScales[4] = _TIMESCALE * 5;
 	}
 
     #region Calculate Time
