@@ -13,7 +13,9 @@ public class dev_InfoHud : MonoBehaviour
     [SerializeField] TextMeshProUGUI seedText;
     [SerializeField] TextMeshProUGUI devInfoText;
     [SerializeField] Button controlsButton;
+    [SerializeField] Button howToPlayButton;
     [SerializeField] Button closeControlsButton;
+    [SerializeField] Button closeHowToPlayButton;
     [SerializeField] Button reanudeButton;
     [SerializeField] Button saveButton;
     [SerializeField] Button loadButton;
@@ -21,6 +23,7 @@ public class dev_InfoHud : MonoBehaviour
     [SerializeField] Button exitButton;
     [SerializeField] GameObject PauseMenuRef;
     [SerializeField] GameObject ControlLayerRef;
+    [SerializeField] GameObject HowToPlayLayerRef;
     
     void Start(){
        _timeManager = ServiceLocator.Get<TimeManager>();
@@ -31,8 +34,14 @@ public class dev_InfoHud : MonoBehaviour
        controlsButton.onClick.AddListener(() => {
            ControlLayerRef.SetActive(true);
        });
+       howToPlayButton.onClick.AddListener(() => {
+           HowToPlayLayerRef.SetActive(true);
+       });
        closeControlsButton.onClick.AddListener(() => {
            ControlLayerRef.SetActive(false);
+       });
+       closeHowToPlayButton.onClick.AddListener(() => {
+           HowToPlayLayerRef.SetActive(false);
        });
         reanudeButton.onClick.AddListener(() =>  SimulateKeyP());
         saveButton.onClick.AddListener(() => {
